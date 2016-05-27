@@ -16,7 +16,7 @@ public class License {
 	/* Should not be persisted. */
     private static final String license1 = "(^[A-Z]{2}-[A-Z]{2}-[0-9]{2}$)";
     private static final String license2 = "(^[A-Z]{2}-[0-9]{2}-[A-Z]{2}$)";
-    private static final String license3 = "(^[0-9]{2}-[A-Z]{2}-[A-Z]{2}$)";
+    private static final String license3 = "(^[0-9]{2}-[0-9]{2}-[A-Z]{2}$)";
     private static final String license_pattern = license1 + "|" + license2 + "|" + license3;
 	
     @Id

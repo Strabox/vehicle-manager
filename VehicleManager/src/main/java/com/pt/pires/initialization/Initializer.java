@@ -1,6 +1,7 @@
 package com.pt.pires.initialization;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Component;
 import com.pt.pires.domain.License;
 import com.pt.pires.domain.LicensedVehicle;
 import com.pt.pires.domain.UnlicensedVehicle;
-import com.pt.pires.repositories.LicensedVehicleRepository;
-import com.pt.pires.repositories.VehicleRepository;
+import com.pt.pires.domain.Vehicle;
+import com.pt.pires.persistence.VehicleRepository;
 
 
 /**
@@ -21,12 +22,9 @@ import com.pt.pires.repositories.VehicleRepository;
  */
 @Component
 public class Initializer {
-
-	@Autowired
-	private VehicleRepository r;
 	
 	@Autowired
-	private LicensedVehicleRepository r2;
+	private VehicleRepository rr;
 	
 	@EventListener({ContextRefreshedEvent.class})
     void contextRefreshedEvent() throws Exception {
@@ -35,13 +33,11 @@ public class Initializer {
 	
 	private void initialize() throws Exception{
 		//Initializations...
-		LicensedVehicle l = new LicensedVehicle("WOw", "lol",new License("HH-HH-22", new Date()));
-		UnlicensedVehicle u = new UnlicensedVehicle("wa", "nice");
-		r.save(l);
-		r.save(u);
-		LicensedVehicle l1 = r2.findOne("WOw");
-		if(l1 != null)
-			System.out.println(l1.getLicense().getLicense());
+		LicensedVehicle l = new LicensedVehicle("Carrinha Mitsubishi", "lol",
+				new License("89-30-OZ", new Date()));
+		UnlicensedVehicle u = new UnlicensedVehicle("Tractor Verde Fergunson", "Fergunson");
+		rr.save(u);
+		rr.save(l);
 	}
 	
 }

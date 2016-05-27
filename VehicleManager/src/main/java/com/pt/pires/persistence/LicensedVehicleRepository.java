@@ -1,4 +1,4 @@
-package com.pt.pires.repositories;
+package com.pt.pires.persistence;
 
 import org.springframework.data.repository.CrudRepository;
 

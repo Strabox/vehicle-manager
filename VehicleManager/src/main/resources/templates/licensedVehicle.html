@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="pt" xmlns:th="http://www.thymeleaf.org">
 	<head>
-	    <title th:text="${vehicleName}"></title>
+	    <title th:text="${vehicle.name}"></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	    
@@ -13,9 +13,20 @@
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-	    <div class="container">
-			<h1>My First Bootstrap Page</h1>
-			<p>This is some text.</p> 
+		<div class="row">
+			<div class="col-sm-2">
+				<div class="container-fluid">
+					<h2>Menu</h2>                
+					<ul class="nav nav-pills nav-stacked" role="tablist">
+						<li><a href="#">Inicio</a></li>
+						<li><a href="vehicles">Veículos</a></li>
+						<li><a href="#">Sair</a></li>        
+					</ul>
+				</div>
+			</div>
+			<div class="col-sm-10">
+			    
+			</div>
 		</div>
 	</body>
 </html>
