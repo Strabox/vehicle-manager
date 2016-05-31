@@ -1,5 +1,5 @@
 package com.pt.pires.services;
 
-public class SchedulingService {
+public class ExportService {
 	//TODO
 }

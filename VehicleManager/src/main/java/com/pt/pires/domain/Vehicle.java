@@ -54,6 +54,24 @@ public abstract class Vehicle {
 		notes.add(note);
 	}
 	
+	public void removeRegistration(long id){
+		for(Registration reg : registries){
+			if(reg.getId() == id){
+				registries.remove(reg);
+				break;
+			}
+		}
+	}
+	
+	public void removeNote(long id){
+		for(Note note : notes){
+			if(note.getId() == id){
+				notes.remove(note);
+				break;
+			}
+		}
+	}
+	
 	public int getAcquisitionYears(){
 		Calendar a = getCalendar(acquisitionDate);
 	    Calendar b = getCalendar(new Date());

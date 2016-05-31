@@ -11,3 +11,4 @@ buildNumber.properties
 /VehicleManager/.settings
 /VehicleManager/.classpath
 /VehicleManager/.project
+/VehicleManager/src/main/resources/other/myKeystore.p12
