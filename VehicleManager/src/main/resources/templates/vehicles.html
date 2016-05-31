@@ -16,87 +16,141 @@
 		<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
 		<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 		<script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-		
+	
 		<!-- Jasny - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css"/>
 		<!-- Jasny - Latest compiled and minified JavaScript -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 		
+		<!-- Form Validator for Bootstrap 3 -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
+		
 		<script src="/javascript/vehicles.js"></script>
 	</head>
 	<body>
-		<div class="row">
-			<div class="col-sm-2">
-				<div class="container-fluid">
-					<h2>Menu</h2>                
-					<ul class="nav nav-pills nav-stacked" role="tablist">
-						<li><a href="home">Inicio</a></li>
-						<li class="active"><a href="#">Veículos</a></li>
-						<li><a href="#">Sair</a></li>        
-					</ul>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-2">
+					<div class="container-fluid">
+						<h2>Menu</h2>                
+						<ul class="nav nav-pills nav-stacked" role="tablist">
+							<li><a href="home">Inicio</a></li>
+							<li class="active"><a href="#">Veículos</a></li>
+							<li><a href="#">Sair</a></li>        
+						</ul>
+					</div>
 				</div>
-			</div>
-			<div class="col-sm-10">
-			
-				<h2>Veículos</h2>
+				<div class="col-sm-10">
 				
-			    <table id="example"  class="table table-hover">
-				    <thead>
-				      <tr>
-				        <th>Nome</th>
-				        <th>Marca</th>
-				        <th></th>
-				      </tr>
-				    </thead>
-				    <tbody data-link="row" class="rowlink">
-				      <tr th:id="${vehicle.name}" th:each="vehicle : ${listLicensed}">
-				      	<td><a th:href="home" th:text="${vehicle.name}"></a></td>
-				      	<td th:text="${vehicle.brand}"></td>
-				      	<td><button type="button" class="btn btn-danger" th:onclick="'deleteVehicle(\'' + ${vehicle.name} + '\');'">Apagar</button></td>
-				      </tr>
-				      <tr th:id="${vehicle.name}" th:each="vehicle : ${listUnlicensed}">
-				      	<td><a href="home" th:text="${vehicle.name}"></a></td>
-				      	<td th:text="${vehicle.brand}"></td>
-				      	<td><button type="button" class="btn btn-danger" th:onclick="'deleteVehicle(\'' + ${vehicle.name} + '\');'">Apagar</button></td>
-				      </tr>
-				    </tbody>
-  				</table>
-  				
-  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal">Criar Veículo</button>
-  				
-  				<!-- Modal vehicles -->
-				<div id="vehicleModal" class="modal fade" role="dialog">
-					<div class="modal-dialog">
-					<!-- Modal content-->
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-								<h4 class="modal-title">Criar Veículo</h4>
-							</div>
-							<div class="modal-body">
-								<form role="form" action="/home" method="post">
-									<div class="form-group">
-										<label for="name">Nome:</label>
-										<input class="form-control" id="name" placeholder="Nome do Veículo"/>
-									</div>
-									<div class="form-group">
-										<label for="brand">Marca:</label>
-										<input class="form-control" id="brand" placeholder="Marca do Veículo"/>
-									</div>
-									<div class="form-group">
-										<label for="license">Matrícula:</label>
-										<input class="form-control" data-mask="ww-ww-ww" id="license" placeholder="Matrícula do Veículo"/>
-										<input type="date" class="form-control" id="date"/>
-									</div>
-								</form>
-							</div>
-							<div class="modal-footer">
-								<button type="submit" class="btn btn-default">Submeter</button>
+					<h2>Veículos</h2>
+					
+				    <table id="vehicles" class="table table-hover">
+					    <thead>
+					      <tr>
+					        <th>Nome</th>
+					        <th>Marca</th>
+					        <th>Data Aquisição</th>
+					        <th></th>
+					      </tr>
+					    </thead>
+					    <tbody id="vehiclesBody">
+					      <tr th:id="${vehicle.name}" th:each="vehicle : ${listLicensed}">
+					      	<td><a th:href="${'licensedVehicle?name=' + vehicle.name}" th:text="${vehicle.name}"></a></td>
+					      	<td th:text="${vehicle.brand}"></td>
+					      	<td th:text="${vehicle.acquisitionDate}"></td>
+					      	<td><button type="button" class="btn btn-danger" th:onclick="'prepareVehicleRemove(\'' + ${vehicle.name} + '\');'" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
+					      </tr>
+					      <tr th:id="${vehicle.name}" th:each="vehicle : ${listUnlicensed}">
+					      	<td><a th:href="${'licensedVehicle?name=' + vehicle.name}" th:text="${vehicle.name}"></a></td>
+					      	<td th:text="${vehicle.brand}"></td>
+					      	<td th:text="${vehicle.acquisitionDate}"></td>
+					      	<td><button type="button" class="btn btn-danger" th:onclick="'prepareVehicleRemove(\'' + ${vehicle.name} + '\');'" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
+					      </tr>
+					    </tbody>
+	  				</table>
+	  				
+	  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal">Criar Veículo</button>
+	  				
+	  				<!-- ================== All the Modals/Alerts ====================== -->
+	  				<!-- Modal vehicles -->
+					<div id="vehicleModal" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+						<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Criar Veículo</h4>
+								</div>
+								<div class="modal-body">
+									<form id="createVehicleForm"  role="form">
+										<div class="form-group">
+											<label for="name">Nome:</label>
+											<input id="name" class="form-control" type="text" placeholder="Nome do Veículo" maxlength="15" ></input>
+										</div>
+										<div class="form-group">
+											<label for="brand">Marca:</label>
+											<input id="brand" class="form-control" type="text" placeholder="Ford,Kubota..." />
+										</div>
+										<div class="form-group">
+											<label>Data de Aquisição:</label>
+											<input id="acquisitionDate" class="form-control" type="date"></input>
+										</div>
+										<div class="form-group">
+											<label for="license">Matrícula (Opcional):</label>
+											<input id="license" class="form-control" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.."/>
+											<div class="help-block with-errors"></div>
+											<label for="licenseDate">Data da Matrícula (Opcional):</label>
+											<input id="licenseDate" class="form-control" type="date"/>
+										</div>
+										<div class="form-group">
+											<button id="submitVehicle" type="submit" class="btn btn-primary">Submeter</button>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+								</div>
 							</div>
 						</div>
 					</div>
+	  				
+	  				<!-- Confirm Vehicle Delete Modal -->
+	  				<div id="confirmModal" class="modal fade" role="dialog">
+	  					<div class="modal-dialog">
+	  						<div class="modal-content">
+		  						<div class="modal-header">
+		  							<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Remover Veículo</h4>
+		  						</div>
+		  						<div class="modal-body">
+		 							<h5>Deseja mesmo apagar o veículo?</h5>
+		  						</div>
+		  						<div class="modal-footer">
+		 							<button id="confirm" type="button" class="btn btn-danger">Confirmar</button>
+		 							<button id="cancel" type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button> 						
+		  						</div>
+		  					</div>
+	  					</div>
+	  				</div>
+	  				
+	  				<!-- Vehicle Creation Modal -->
+	  				<div id="creationModal" class="modal fade" role="dialog">
+	  					<div class="modal-dialog">
+	  						<div class="modal-content">
+		  						<div class="modal-header">
+		  							<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Criação de Veículo</h4>
+		  						</div>
+		  						<div class="modal-body">
+		 							<h5 id="createResponse"></h5>
+		  						</div>
+		  						<div class="modal-footer">
+		 							<button id="ok" type="button" class="btn btn-primary" data-dismiss="modal">Okay</button> 						
+		  						</div>
+		  					</div>
+	  					</div>
+	  				</div>
+	  				
 				</div>
-  				
 			</div>
 		</div>
 	</body>

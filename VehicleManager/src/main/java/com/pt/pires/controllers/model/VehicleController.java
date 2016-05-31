@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.pt.pires.domain.Vehicle;
+import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
 import com.pt.pires.services.VehicleService;
 
 @Controller
@@ -25,9 +28,15 @@ public class VehicleController {
 		return "vehicles";
 	}
 	
-	@RequestMapping(value = "/licensedVehicle")
-	public String licensedVehicle(Model model){
-		model.addAttribute("vehicle",vehicleService.getLicensedVehicle("a"));
+	@RequestMapping(value = "/licensedVehicle",params={ "name" })
+	public String licensedVehicle(Model model,@RequestParam("name") String name){
+		try {
+			Vehicle v = vehicleService.getLicensedVehicle(name);
+			model.addAttribute("vehicle",v);
+			System.out.println("Acquisition Years: " + v.getAcquisitionYears());
+		} catch (VehicleDoesntExistException e) {
+			return "error";
+		}
 		return "licensedVehicle";
 	}
 }

@@ -1,12 +1,18 @@
 package com.pt.pires.domain;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Type;
 
 /**
  * Abstract class Vehicle 
@@ -22,18 +28,47 @@ public abstract class Vehicle {
 	@Column
 	private String brand;
 	
-	@Transient
+	@Column
+	@Type(type="date")
+	private Date acquisitionDate; 
+	
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Registration> registries = new ArrayList<>();
 	
-	public Vehicle(String name,String brand){
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Note> notes = new ArrayList<>();
+	
+	public Vehicle(String name,String brand,Date acquisitionDate){
 		setName(name);
 		setBrand(brand);
+		setAcquisitionDate(acquisitionDate);
 	}
 	
-	public Vehicle() {}
+	public Vehicle() { }	//Needed for JPA/JSON	
 	
 	public void addRegistration(Registration reg){
 		registries.add(reg);
+	}
+	
+	public void addNote(Note note){
+		notes.add(note);
+	}
+	
+	public int getAcquisitionYears(){
+		Calendar a = getCalendar(acquisitionDate);
+	    Calendar b = getCalendar(new Date());
+	    int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
+	    if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || 
+	        (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
+	        diff--;
+	    }
+	    return diff;
+	}
+
+	private static Calendar getCalendar(Date date) {
+	    Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+	    cal.setTime(date);
+	    return cal;
 	}
 	
 	/* === Getters and Setters === */
@@ -52,6 +87,22 @@ public abstract class Vehicle {
 	
 	public void setBrand(String brand){
 		this.brand = brand;
+	}
+	
+	public Date getAcquisitionDate(){
+		return this.acquisitionDate;
+	}
+	
+	public void setAcquisitionDate(Date date){
+		this.acquisitionDate = date;
+	}
+	
+	public List<Registration> getRegistries(){
+		return registries;
+	}
+	
+	public List<Note> getNotes(){
+		return notes;
 	}
 	
 }

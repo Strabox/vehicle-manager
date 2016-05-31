@@ -11,21 +11,145 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<!-- Latest compiled JavaScript -->
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
+		<!-- Needed for Table Awesomeness :) -->
+		<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
+		<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+		
+		<script src="/javascript/showVehicle.js"></script>
 	</head>
 	<body>
-		<div class="row">
-			<div class="col-sm-2">
-				<div class="container-fluid">
-					<h2>Menu</h2>                
-					<ul class="nav nav-pills nav-stacked" role="tablist">
-						<li><a href="#">Inicio</a></li>
-						<li><a href="vehicles">Veículos</a></li>
-						<li><a href="#">Sair</a></li>        
-					</ul>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-2">
+					<div class="container-fluid">
+						<h2>Menu</h2>                
+						<ul class="nav nav-pills nav-stacked">
+							<li class="active"><a data-toggle="pill" href="#registos">Registos</a></li>
+							<li><a data-toggle="pill" href="#notes">Notas</a></li>
+							<li><a href="vehicles">Voltar</a></li>
+							<li><a href="#">Sair</a></li>        
+						</ul>
+					</div>
 				</div>
-			</div>
-			<div class="col-sm-10">
-			    
+				<div class="col-sm-10">
+					<h1 id="vehicleName" th:text="${vehicle.name}"></h1>
+					<div class="row">
+						<div class="col-sm-1">
+				    		<p><b>Marca:</b></p>
+				    		<p><b>Matrícula:</b></p>
+						</div>
+						<div class="col-sm-2">
+							<p th:text="${vehicle.brand}"></p>
+							<p th:text="${vehicle.license.license}"></p>
+						</div>
+						<div class="col-sm-2">
+							<p><b>Data de Aquisição:</b></p>
+				    		<p><b>Data da Matrícula:</b></p>
+						</div>
+						<div class="col-sm-2">
+							<p th:text="${vehicle.acquisitionDate + ' há ' + vehicle.getAcquisitionYears() + ' anos'}"></p>
+							<p th:text="${vehicle.license.date}"></p>
+						</div>
+						<div class="col-sm-5"></div>
+					</div>
+				    
+				    <div class="tab-content">
+					    <div id="registos" class="tab-pane fade in active">
+						    <table id="registrationsTable" class="table table-hover">
+						    	<thead>
+						    		<tr>
+						    			<th>NºHoras/Km</th>
+						    			<th>Descrição</th>
+						    			<th>Data</th>
+						    			<th><!-- Needed for DataTable Plugin --></th>
+						    		</tr>
+						    	</thead>
+						    	<tbody>
+						    		<tr th:each="registration : ${vehicle.registries}" th:id="${registration.id}">
+						    			<td th:text="${registration.time}"></td>
+						    			<td th:text="${registration.description}"></td>
+						    			<td th:text="${registration.date}"></td>
+						    			<td><button type="button" class="btn btn-danger">Apagar</button></td>
+						    		</tr>
+						    	</tbody>
+						    </table>
+						    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registrationModal">Adicionar Registo</button>
+						    
+						    <div id="registrationModal" class="modal fade" role="dialog">
+						    	<div class="modal-dialog">
+						    		<div class="modal-content">
+						    			<div class="modal-header">
+						    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title">Adicionar Registo</h4>
+						    			</div>
+						    			<div class="modal-body">
+						    				<form id="registrationForm" role="form">
+						    					<div class="form-group">
+						    						<label for="time">NºHoras/Km</label>
+						    						<input id="time" class="form-control" type="number" placeholder="61500,100..."/>
+						    					</div>
+						    					<div class="form-group">
+						    						<label for="description">Descrição</label>
+						    						<input id="description" class="form-control" type="text" placeholder="Mudar o óleo..."/>
+						    					</div>
+						    					<div class="form-group">
+						    						<label for="date">Data</label>
+						    						<input id="date" class="form-control" type="date"/>
+						    					</div>
+						    				</form>
+						    			</div>
+						    			<div class="modal-footer">
+						    				<button id="addRegistration" type="button" class="btn btn-success">Adicionar</button>
+						    				<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+						    			</div>
+						    		</div>
+						    	</div>
+						    </div>
+						    
+					    </div>
+					    
+					    <div id="notes" class="tab-pane fade">
+						    <table id="notesTable" class="table table-hover">
+						    	<thead>
+						    		<tr>
+							    		<th>Nota</th>
+							    		<th><!-- Needed for DataTable Plugin --></th>
+							    	</tr>
+						    	</thead>
+						    	<tbody>
+						    		<tr th:each="note : ${vehicle.notes}" th:id="${note.id}">
+						    			<td th:text="${note.description}"></td>
+						    			<td><button type="button" class="btn btn-danger">Apagar</button></td>
+						    		</tr>
+						    	</tbody>
+						    </table>
+						    
+						    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notesModal">Adicionar Nota</button>
+						    
+						    <div id="notesModal" class="modal fade" role="dialog">
+						    	<div class="modal-dialog">
+						    		<div class="modal-content">
+						    			<div class="modal-header">
+						    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title">Adicionar Nota</h4>
+						    			</div>
+						    			<div class="modal-body">
+						    				<label for="note">Descrição</label>
+				    						<input id="note" class="form-control" type="text" placeholder="Referência do filtro..."/>
+						    			</div>
+						    			<div class="modal-footer">
+						    				<button id="addNote" type="button" class="btn btn-success">Adicionar</button>
+						    				<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+						    			</div>
+						    		</div>
+						    	</div>
+						    </div>
+						    
+					    </div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

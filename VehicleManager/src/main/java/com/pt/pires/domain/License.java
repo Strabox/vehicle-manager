@@ -14,10 +14,10 @@ import com.pt.pires.domain.exceptions.InvalidLicenseException;
 public class License {
 
 	/* Should not be persisted. */
-    private static final String license1 = "(^[A-Z]{2}-[A-Z]{2}-[0-9]{2}$)";
-    private static final String license2 = "(^[A-Z]{2}-[0-9]{2}-[A-Z]{2}$)";
-    private static final String license3 = "(^[0-9]{2}-[0-9]{2}-[A-Z]{2}$)";
-    private static final String license_pattern = license1 + "|" + license2 + "|" + license3;
+    private static final String LICENSE_1 = "(^[0-9]{2}-[A-Z]{2}-[0-9]{2}$)";
+    private static final String LICENSE_2 = "(^[A-Z]{2}-[0-9]{2}-[0-9]{2}$)";
+    private static final String LICENSE_3 = "(^[0-9]{2}-[0-9]{2}-[A-Z]{2}$)";
+    private static final String LICENSE_PATTERN = LICENSE_1 + "|" + LICENSE_2 + "|" + LICENSE_3;
 	
     @Id
 	private String license;
@@ -28,10 +28,16 @@ public class License {
 	
 	public License(String license,Date date) throws InvalidLicenseException{
 		setLicense(license);
-		this.date = date;
+		setDate(date);
 	}
 	
-	public License() { }
+	public License() { }	// Needed for JPA/JSON
+	
+	public static boolean validateLicense(String license){
+		return license.matches(LICENSE_PATTERN);
+	}
+	
+	/* === Getters and Setters === */
 	
 	public String getLicense(){
 		return license;
@@ -46,7 +52,7 @@ public class License {
 	}
 	
 	public void setLicense(String license) throws InvalidLicenseException{
-		if(!license.matches(license_pattern)){
+		if(!validateLicense(license)){
 			throw new InvalidLicenseException();
 		}
 		this.license = license;

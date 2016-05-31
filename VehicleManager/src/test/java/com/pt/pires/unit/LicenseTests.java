@@ -17,12 +17,12 @@ import com.pt.pires.domain.exceptions.InvalidLicenseException;
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 public class LicenseTests {
 
-	private final static String VALID_LICENSE_1 = "GG-11-HH";
-	private final static String VALID_LICENSE_2 = "11-GG-UI";
-	private final static String VALID_LICENSE_3 = "KI-JU-45";
+	private final static String VALID_LICENSE_1 = "44-11-HH";
+	private final static String VALID_LICENSE_2 = "11-GG-19";
+	private final static String VALID_LICENSE_3 = "KI-02-45";
 	
-	private final static String INVALID_LICENSE_1 = "11-GG-21";
-	private final static String INVALID_LICENSE_2 = "AV-22-21";
+	private final static String INVALID_LICENSE_1 = "AG-GG-21";
+	private final static String INVALID_LICENSE_2 = "AV-22-TY";
 	
 	@Test
 	public void validLicense1() throws InvalidLicenseException{
