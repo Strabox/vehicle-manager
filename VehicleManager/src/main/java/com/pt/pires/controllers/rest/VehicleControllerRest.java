@@ -1,6 +1,7 @@
 package com.pt.pires.controllers.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,17 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.UnlicensedVehicle;
-import com.pt.pires.domain.exceptions.InvalidVehicleBrandException;
-import com.pt.pires.domain.exceptions.InvalidVehicleNameException;
-import com.pt.pires.domain.exceptions.VehicleAlreadyExistException;
 import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
-import com.pt.pires.services.VehicleService;
+import com.pt.pires.domain.exceptions.VehicleManagerException;
+import com.pt.pires.services.IVehicleService;
 
 @RestController
 public class VehicleControllerRest {
 	
 	@Autowired
-	private VehicleService vehicleService;
+	@Qualifier("vehicleService") 
+	private IVehicleService vehicleService;
 
 	
 	/* ================== REST Endpoints ==================== */
@@ -32,9 +32,7 @@ public class VehicleControllerRest {
 		System.out.println("[Creating Unlicensed]");
 		try {
 			vehicleService.createUnlicensedVehicle(v.getName(), v.getBrand(), v.getAcquisitionDate());
-		} catch (VehicleAlreadyExistException | 
-				 InvalidVehicleBrandException | 
-				 InvalidVehicleNameException e) {
+		} catch (VehicleManagerException e) {
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
@@ -55,6 +53,8 @@ public class VehicleControllerRest {
 			vehicleService.addRegistrationToVehicle(name, reg.getTime(), reg.getDescription(), reg.getDate());
 		} catch (VehicleDoesntExistException e) {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		} catch (VehicleManagerException e) {
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		System.out.println("hmmmmmmmmmmmmmm");
 		return new ResponseEntity<String>(HttpStatus.OK);
@@ -68,6 +68,8 @@ public class VehicleControllerRest {
 			vehicleService.addNoteToVehicle(name, note.getDescription());
 		}catch (VehicleDoesntExistException e){
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		} catch (VehicleManagerException e) {
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}

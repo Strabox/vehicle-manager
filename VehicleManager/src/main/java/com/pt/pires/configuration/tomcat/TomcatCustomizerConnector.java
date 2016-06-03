@@ -1,15 +1,15 @@
-package com.pt.pires.configuration;
+package com.pt.pires.configuration.tomcat;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 
 public class TomcatCustomizerConnector implements TomcatConnectorCustomizer{
 
-	private static final int SECURE_SERVER_PORT = 443;
 	private static final String SCHEME = "https";
 	private static final String SSL_PROTOCOL = "TLS";
 	private static final String PROTOCOL = "org.apache.coyote.http11.Http11Protocol";
-			
+	private int SECURE_SERVER_PORT = 443;
+	
 	private String absoluteKeystoreFile;
 	private String keystorePassword;
 	private String keystoreType;

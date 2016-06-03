@@ -1,6 +1,7 @@
 package com.pt.pires.controllers.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,13 +9,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
-import com.pt.pires.services.VehicleService;
+import com.pt.pires.domain.exceptions.VehicleManagerException;
+import com.pt.pires.services.IVehicleService;
 
 @Controller
 public class VehicleController {
 
 	@Autowired
-	private VehicleService vehicleService;
+	@Qualifier("vehicleService") 
+	private IVehicleService vehicleService;
 	
 	@RequestMapping(value = "/home")
 	public String homeVehicle(Model model){
@@ -22,7 +25,7 @@ public class VehicleController {
 	}
 	
 	@RequestMapping(value = "/vehicles")
-	public String listVehicles(Model model){
+	public String listVehicles(Model model) throws VehicleManagerException{
 		model.addAttribute("listLicensed",vehicleService.getLicensedVehicles());
 		model.addAttribute("listUnlicensed",vehicleService.getUnlicensedVehicles());
 		return "vehicles";
@@ -33,9 +36,11 @@ public class VehicleController {
 		try {
 			Vehicle v = vehicleService.getLicensedVehicle(name);
 			model.addAttribute("vehicle",v);
-			System.out.println("Acquisition Years: " + v.getAcquisitionYears());
+			System.out.println("Acquisition Years: " + v.calculateAcquisitionYears());
 		} catch (VehicleDoesntExistException e) {
 			return "error";
+		} catch (VehicleManagerException e) {
+			e.printStackTrace();
 		}
 		return "licensedVehicle";
 	}

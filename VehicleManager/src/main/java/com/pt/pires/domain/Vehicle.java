@@ -2,8 +2,8 @@ package com.pt.pires.domain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.persistence.CascadeType;
@@ -33,10 +33,14 @@ public abstract class Vehicle {
 	private Date acquisitionDate; 
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-	private List<Registration> registries = new ArrayList<>();
+	private Collection<Registration> registries = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-	private List<Note> notes = new ArrayList<>();
+	private Collection<Note> notes = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	private Collection<Notification> notifications = new ArrayList<>();
+	
 	
 	public Vehicle(String name,String brand,Date acquisitionDate){
 		setName(name);
@@ -52,6 +56,10 @@ public abstract class Vehicle {
 	
 	public void addNote(Note note){
 		notes.add(note);
+	}
+	
+	public void addNotification(Notification notification){
+		notifications.add(notification);
 	}
 	
 	public void removeRegistration(long id){
@@ -72,7 +80,7 @@ public abstract class Vehicle {
 		}
 	}
 	
-	public int getAcquisitionYears(){
+	public int calculateAcquisitionYears(){
 		Calendar a = getCalendar(acquisitionDate);
 	    Calendar b = getCalendar(new Date());
 	    int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
@@ -115,12 +123,16 @@ public abstract class Vehicle {
 		this.acquisitionDate = date;
 	}
 	
-	public List<Registration> getRegistries(){
-		return registries;
+	public Collection<Registration> getRegistries(){
+		return this.registries;
 	}
 	
-	public List<Note> getNotes(){
-		return notes;
+	public Collection<Note> getNotes(){
+		return this.notes;
+	}
+	
+	public Collection<Notification> getNotifications(){
+		return this.notifications;
 	}
 	
 }

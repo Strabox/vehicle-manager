@@ -2,8 +2,6 @@ package com.pt.pires.services;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,7 @@ import com.pt.pires.persistence.UnlicensedVehicleRepository;
 import com.pt.pires.persistence.VehicleRepository;
 
 @Service
-public class VehicleService {
+public class VehicleService implements IVehicleService{
 
 	@Autowired
 	private UnlicensedVehicleRepository unlicensedRepository;
@@ -34,14 +32,21 @@ public class VehicleService {
 	@Autowired
 	private VehicleRepository vehicleRepository;
 	
-	public Collection<UnlicensedVehicle> getUnlicensedVehicles(){
-		return (List<UnlicensedVehicle>) unlicensedRepository.findAll();
+	
+	@Override
+	@Transactional
+	public Collection<LicensedVehicle> getLicensedVehicles() {
+		return (Collection<LicensedVehicle>) licensedRepository.findAll();
 	}
 	
-	public Collection<LicensedVehicle> getLicensedVehicles(){
-		return (List<LicensedVehicle>) licensedRepository.findAll();
+	@Override
+	@Transactional
+	public Collection<UnlicensedVehicle> getUnlicensedVehicles() {
+		return (Collection<UnlicensedVehicle>) unlicensedRepository.findAll();
 	}
 	
+	@Override
+	@Transactional
 	public LicensedVehicle getLicensedVehicle(String name) throws VehicleDoesntExistException{
 		LicensedVehicle v = licensedRepository.findOne(name);
 		if(v == null)
@@ -49,6 +54,8 @@ public class VehicleService {
 		return v;
 	}
 	
+	@Override
+	@Transactional
 	public UnlicensedVehicle getUnlicensedVehicle(String name) throws VehicleDoesntExistException{
 		UnlicensedVehicle v = unlicensedRepository.findOne(name);
 		if(v == null){
@@ -57,10 +64,13 @@ public class VehicleService {
 		return v;
 	}
 	
+	@Override
+	@Transactional
 	public void removeVehicle(String vehicleName){
 		vehicleRepository.delete(vehicleName);
 	}
 	
+	@Override
 	@Transactional
 	public void createUnlicensedVehicle(String name,String brand,Date acquisitionDate) 
 			throws VehicleAlreadyExistException, InvalidVehicleNameException, 
@@ -78,6 +88,7 @@ public class VehicleService {
 		vehicleRepository.save(v);
 	}
 	
+	@Override
 	@Transactional
 	public void addRegistrationToVehicle(String name,long time,String description,Date date) 
 			throws VehicleDoesntExistException{
@@ -86,6 +97,7 @@ public class VehicleService {
 		vehicleRepository.save(v);
 	}
 	
+	@Override
 	@Transactional
 	public void addNoteToVehicle(String name,String note) throws VehicleDoesntExistException{
 		Vehicle v = getVehicle(name);
