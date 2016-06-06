@@ -1,0 +1,66 @@
+package com.pt.pires.util;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import org.apache.tika.Tika;
+import org.springframework.util.FileCopyUtils;
+
+import com.pt.pires.domain.exceptions.ImpossibleSaveFileException;
+
+public abstract class FileUtil {
+
+	public static final String ROOT = "files-dir";
+	
+	public static final String PORTRAIT = "portrait";
+	
+	public static boolean makeDir(String dirPath){
+		File dir = new File(dirPath);
+		if((dir.exists() && !dir.isDirectory()) || !dir.exists()){
+			return dir.mkdir();
+		}
+		return true;
+	}
+	
+	public static void  writeFile(String filePath,byte[] fileBytes) throws ImpossibleSaveFileException{
+		try{
+			File file = new File(filePath);
+			FileOutputStream fileOs = new FileOutputStream(file);
+			BufferedOutputStream oStream = new BufferedOutputStream(fileOs);
+			FileCopyUtils.copy(fileBytes, oStream);
+			oStream.close();
+		}catch(FileNotFoundException e){
+			throw new ImpossibleSaveFileException();
+		} catch (IOException e) {
+			try {
+				Files.deleteIfExists(Paths.get(filePath));
+			} catch (IOException e1) {
+				throw new ImpossibleSaveFileException();
+			}
+			throw new ImpossibleSaveFileException();
+		}
+	}
+	
+	public static byte[] readFile(String filePath){
+		try {
+			return Files.readAllBytes(Paths.get(filePath));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static String isImage(byte[] file){
+		Tika tika = new Tika();
+		String mediaType =  tika.detect(file);
+		String[] res = mediaType.split("/");
+		if(res[0].equals("image")){
+			return res[1];
+		}
+		return null;
+	}
+}

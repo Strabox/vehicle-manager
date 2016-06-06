@@ -24,6 +24,7 @@
 	</properties>
 
 	<dependencies>
+	
 		<!-- Only need if we dont have MysqlDB
 		 <dependency>
 			<groupId>com.h2database</groupId>
@@ -32,6 +33,14 @@
 		</dependency>
 		--> 
 		
+		<!-- http://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+		<dependency>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
+		    <version>1.13</version>
+		</dependency>
+		
+			
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>

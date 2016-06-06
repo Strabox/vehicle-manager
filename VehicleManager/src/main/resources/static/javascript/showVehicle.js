@@ -24,6 +24,9 @@ $(document).ready(function(){
 			contentType: "application/json; charset=utf-8",
 			success: function(result) {
 				$("#registrationModal").modal("toggle");
+				setTimeout(function() {
+					$("#registrationResponse").modal("toggle");
+				}, 1000);
 				registriesTable.row.add([registration.time,
 				                         registration.description,
 				                         registration.date,

@@ -1,4 +1,4 @@
-package com.pt.pires.services;
+package com.pt.pires.services.local;
 
 import java.util.Date;
 

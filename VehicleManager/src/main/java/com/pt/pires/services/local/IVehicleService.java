@@ -1,4 +1,4 @@
-package com.pt.pires.services;
+package com.pt.pires.services.local;
 
 import java.util.Collection;
 import java.util.Date;
@@ -20,6 +20,9 @@ public interface IVehicleService {
 	void removeVehicle(String name);
 	
 	void createUnlicensedVehicle(String name,String brand,Date acquisitionDate) throws VehicleManagerException;
+	
+	void createLicensedVehicle(String name,String brand,Date acquisitionDate,
+			String license ,Date licenseDate) throws VehicleManagerException;
 	
 	void addRegistrationToVehicle(String name,long time,String description,Date date) throws VehicleManagerException;
 	

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.services.IVehicleService;
+import com.pt.pires.services.local.IVehicleService;
 
 @Controller
 public class VehicleController {

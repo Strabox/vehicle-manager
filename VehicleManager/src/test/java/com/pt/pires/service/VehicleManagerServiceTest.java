@@ -1,6 +1,8 @@
 package com.pt.pires.service;
 
 import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 
 import org.junit.runner.RunWith;
@@ -11,6 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.pt.pires.VehicleManagerApplication;
 import com.pt.pires.domain.License;
 import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.Note;
+import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.UnlicensedVehicle;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
@@ -19,8 +23,6 @@ import com.pt.pires.persistence.UnlicensedVehicleRepository;
 import com.pt.pires.persistence.VehicleRepository;
 
 /**
- * Note: The @Test methods are automatic Rollbacked by the 
- * @RunWith(SpringJUnit4ClassRunner.class) annotation in the test class.
  * 
  * @author André
  */
@@ -44,7 +46,8 @@ public abstract class VehicleManagerServiceTest {
 	@Before
 	public void beforeTest() throws VehicleManagerException {
 		populate();
-	};
+	}
+	
 	
 	public abstract void populate() throws VehicleManagerException;
 	
@@ -70,6 +73,41 @@ public abstract class VehicleManagerServiceTest {
 	
 	protected LicensedVehicle obtainLicensedVehicle(String name){
 		return licensedRepository.findOne(name);
+	}
+	
+	protected void deleteVehicle(String name){
+		if(vehicleRepository.exists(name))
+			vehicleRepository.delete(name);
+	}
+	
+	protected void newRegistration(String vehicleName,long time,String description,Date date){
+		if(vehicleRepository.exists(vehicleName)){
+			Vehicle v = vehicleRepository.findOne(vehicleName);
+			v.addRegistration(new Registration(time,description,date));
+			vehicleRepository.save(v);
+		}
+	}
+	
+	protected void newNote(String vehicleName,String noteDescription){
+		if(vehicleRepository.exists(vehicleName)){
+			Vehicle v = vehicleRepository.findOne(vehicleName);
+			v.addNote(new Note(noteDescription));
+			vehicleRepository.save(v);
+		}
+	}
+	
+	protected List<Registration> obtainRegistrations(String vehicleName){
+		if(vehicleRepository.exists(vehicleName)){
+			return (List<Registration>) vehicleRepository.findOne(vehicleName).getRegistries();
+		}
+		return null;
+	}
+	
+	protected List<Note> obtainNotes(String vehicleName){
+		if(vehicleRepository.exists(vehicleName)){
+			return (List<Note>) vehicleRepository.findOne(vehicleName).getNotes();
+		}
+		return null;
 	}
 	
 }

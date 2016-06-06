@@ -3,8 +3,6 @@ package com.pt.pires.initialization;
 import java.util.Calendar;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.pt.pires.domain.License;
@@ -31,11 +29,6 @@ public class Initializer {
 	
 	@Autowired
 	private UserRepository ur;
-	
-	@EventListener({ContextRefreshedEvent.class})
-    void contextRefreshedEvent() throws Exception {
-        initialize();
-    }
 	
 	public void initialize() throws Exception{
 		//Initializations...

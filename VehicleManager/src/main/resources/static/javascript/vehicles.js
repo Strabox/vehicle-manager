@@ -28,20 +28,24 @@ $(document).ready(function(){
 			  alert("crap;")
 		  } else {						//OK
 			  alert("nice");
-			  var unlicensedVehicle = new Object();
-			  unlicensedVehicle.name = $("#name").val();
-			  unlicensedVehicle.brand = $("#brand").val();
-			  unlicensedVehicle.acquisitionDate = $("#acquisitionDate").val();
-			  var data = JSON.stringify(unlicensedVehicle);
+			  var formData = new FormData();
+			  var vehicle = new Object();
+			  vehicle.name = $("#name").val();
+			  vehicle.brand = $("#brand").val();
+			  vehicle.acquisitionDate = $("#acquisitionDate").val();
+			  formData.append("file",document.getElementById("file").files[0]);
+			  formData.append("vehicle",new Blob([JSON.stringify(vehicle)],{ type: "application/json" } ));
 			  $.ajax({
 				  url: "/vehicle/unlicensed",
 				  type: "POST",
-				  data: data,
-				  contentType: "application/json; charset=utf-8",
+				  data: formData,
+				  // Options to tell jQuery not to process data or worry about content-type.
+				  contentType: false,
+				  processData: false,
 				  success: function(response) {
-					  location.reload();
+					  alert("OK");
 					  $("#createResponse").text("Veículo criado com sucesso");
-					  $("#creationModal").modal("toggle");
+					  $("#creationModal").delay(500).modal("toggle");
 				  },
 				  failure: function(errMsg) {
 					  $("#createResponse").text("Problema ao criar veículo");
