@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.License;
 import com.pt.pires.domain.LicensedVehicle;
@@ -24,7 +23,11 @@ import com.pt.pires.domain.exceptions.InvalidVehicleBrandException;
 import com.pt.pires.domain.exceptions.InvalidVehicleNameException;
 import com.pt.pires.domain.exceptions.VehicleAlreadyExistException;
 import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
+import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.LicensedVehicleRepository;
+import com.pt.pires.persistence.NoteRepository;
+import com.pt.pires.persistence.NotificationRepository;
+import com.pt.pires.persistence.RegistrationRepository;
 import com.pt.pires.persistence.UnlicensedVehicleRepository;
 import com.pt.pires.persistence.VehicleRepository;
 
@@ -40,9 +43,18 @@ public class VehicleService implements IVehicleService{
 	@Autowired
 	private VehicleRepository vehicleRepository;
 	
+	@Autowired
+	private RegistrationRepository registrationRepository;
+	
+	@Autowired
+	private NoteRepository noteRepository;
+	
+	@Autowired
+	private NotificationRepository notiRepository;
+	
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Collection<LicensedVehicle> getLicensedVehicles() {
 		Collection<LicensedVehicle> vs = (Collection<LicensedVehicle>) licensedRepository.findAll();
 		if(vs == null)
@@ -51,7 +63,7 @@ public class VehicleService implements IVehicleService{
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Collection<UnlicensedVehicle> getUnlicensedVehicles() {
 		Collection<UnlicensedVehicle> vs =(Collection<UnlicensedVehicle>) unlicensedRepository.findAll();
 		if(vs == null)
@@ -60,7 +72,13 @@ public class VehicleService implements IVehicleService{
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
+	public Vehicle getVehicle(String vehicleName) throws VehicleDoesntExistException{
+		return obtainVehicle(vehicleName);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	public LicensedVehicle getLicensedVehicle(String name) throws VehicleDoesntExistException{
 		LicensedVehicle v = licensedRepository.findOne(name);
 		if(v == null)
@@ -69,7 +87,7 @@ public class VehicleService implements IVehicleService{
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public UnlicensedVehicle getUnlicensedVehicle(String name) throws VehicleDoesntExistException{
 		UnlicensedVehicle v = unlicensedRepository.findOne(name);
 		if(v == null){
@@ -79,14 +97,14 @@ public class VehicleService implements IVehicleService{
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = false)
 	public void removeVehicle(String vehicleName){
 		if(vehicleRepository.exists(vehicleName))
 			vehicleRepository.delete(vehicleName);
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = false)
 	public void createLicensedVehicle(String vehicleName, String brand, Date acquisitionDate,
 			String license, Date licenseDate) throws VehicleAlreadyExistException,
 			InvalidVehicleNameException, InvalidVehicleBrandException, InvalidLicenseException {
@@ -104,7 +122,7 @@ public class VehicleService implements IVehicleService{
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = false)
 	public void createUnlicensedVehicle(String vehicleName,String brand,Date acquisitionDate) 
 			throws VehicleAlreadyExistException, InvalidVehicleNameException, 
 			InvalidVehicleBrandException{
@@ -122,49 +140,94 @@ public class VehicleService implements IVehicleService{
 	}
 	
 	@Override
-	@Transactional
-	public void addRegistrationToVehicle(String name,long time,String description,Date date) 
+	@Transactional(readOnly = true)
+	public boolean vehicleExist(String vehicleName) {
+		return vehicleRepository.exists(vehicleName);
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public Long addRegistrationToVehicle(String name,long time,String description,Date date) 
 			throws VehicleDoesntExistException, InvalidRegistrationException{
 		if(description.isEmpty()){
 			throw new InvalidRegistrationException();
 		}
-		Vehicle v = getVehicle(name);
-		v.addRegistration(new Registration(time,description,date));
-		vehicleRepository.save(v);
+		Vehicle v = obtainVehicle(name);
+		Registration reg = registrationRepository.save(new Registration(time,description,date)); 
+		v.addRegistration(reg);
+		return reg.getId();
 	}
 	
 	@Override
-	@Transactional
-	public void addNoteToVehicle(String vehicleName,String note) 
+	@Transactional(readOnly = true)
+	public Collection<Note> getVehicleNotes(String vehicleName) throws VehicleManagerException {
+		Vehicle v = obtainVehicle(vehicleName);
+		return v.getNotes();
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Registration> getVehicleRegistrations(String vehicleName) throws VehicleManagerException {
+		Vehicle v = obtainVehicle(vehicleName);
+		return v.getRegistries();
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public Long addNoteToVehicle(String vehicleName,String note) 
 			throws VehicleDoesntExistException, InvalidNoteException{
 		if(note.isEmpty()){
 			throw new InvalidNoteException();
 		}
-		Vehicle v = getVehicle(vehicleName);
-		v.addNote(new Note(note));
-		vehicleRepository.save(v);
+		Vehicle v = obtainVehicle(vehicleName);
+		Note noteObj = noteRepository.save(new Note(note));
+		v.addNote(noteObj);
+		return noteObj.getId();
 	}
 	
-	@Transactional
-	public void addYearNotification(String vehicleName,String notiDescription,Date initDate)
+	@Override
+	@Transactional(readOnly = false)
+	public void removeRegistrationFromVehicle(String vehicleName, long regId) 
 			throws VehicleDoesntExistException{
-		Vehicle v = getVehicle(vehicleName);
-		v.addNotification(new NotificationYear(initDate,notiDescription));
+		Vehicle v = obtainVehicle(vehicleName);
+		v.removeRegistration(regId);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void removeNoteFromVehicle(String vehicleName, long noteId)
+			throws VehicleDoesntExistException{
+		Vehicle v = obtainVehicle(vehicleName);
+		v.removeNote(noteId);
 	}
 	
-	@Transactional
-	public void addHalfYearNotification(String vehicleName,String notiDescription,Date initDate)
+	@Override
+	@Transactional(readOnly = false)
+	public Long addYearNotification(String vehicleName,String notiDescription,Date initDate)
 			throws VehicleDoesntExistException{
-		Vehicle v = getVehicle(vehicleName);
-		v.addNotification(new NotificationHalfYear(initDate, notiDescription));
+		Vehicle v = obtainVehicle(vehicleName);
+		NotificationYear noti = notiRepository.save(new NotificationYear(initDate,notiDescription));
+		v.addNotification(noti);
+		return noti.getId();
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public Long addHalfYearNotification(String vehicleName,String notiDescription,Date initDate)
+			throws VehicleDoesntExistException{
+		Vehicle v = obtainVehicle(vehicleName);
+		NotificationHalfYear noti = notiRepository.save(new NotificationHalfYear(initDate,notiDescription));
+		v.addNotification(noti);
+		return noti.getId();
 	}
 	
 	/* ============================ Private Methods ========================== */
 	
-	private Vehicle getVehicle(String name) throws VehicleDoesntExistException{
+	private Vehicle obtainVehicle(String name) throws VehicleDoesntExistException{
 		Vehicle v = vehicleRepository.findOne(name);
 		if(v == null)
 			throw new VehicleDoesntExistException();
 		return v;
 	}
+	
 }

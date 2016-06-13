@@ -3,6 +3,9 @@ package com.pt.pires.domain;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Entity;
+
+@Entity
 public class NotificationHalfYear extends Notification{
 
 	public NotificationHalfYear(Date initDate, String description) {
@@ -16,11 +19,11 @@ public class NotificationHalfYear extends Notification{
 		Calendar initCalendar = Calendar.getInstance();
 		Calendar currentCalendar = Calendar.getInstance();
 		currentCalendar.setTime(currentDate);
-		initCalendar.setTime(getInitDate());
+		initCalendar.setTime(getNotiDate());
 		initCalendar.add(Calendar.MONTH, 6);
 		boolean res = initCalendar.before(currentCalendar);
 		if(res){	//Update init date
-			setInitDate(initCalendar.getTime());
+			setNotiDate(initCalendar.getTime());
 		}
 		return res;
 	}

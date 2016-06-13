@@ -34,4 +34,26 @@ public class VehicleIntegratorService implements IVehicleIntegratorService{
 		}
 	}
 
+	@Override
+	public void createLicensedVehicle(String vehicleName, String brand, Date acquisitionDate,
+			String license, Date licenseDate, byte[] image) throws VehicleManagerException {
+		localVehicleService.createLicensedVehicle(vehicleName, brand, acquisitionDate, license, licenseDate);
+		try{
+			fileService.addPortraitImage(vehicleName, image);
+		}catch(VehicleManagerException e){
+			localVehicleService.removeVehicle(vehicleName);
+			throw new ImpossibleSaveFileException();
+		}
+	}
+	
+	@Override
+	public void removeVehicle(String vehicleName) {
+		localVehicleService.removeVehicle(vehicleName);
+		try {
+			fileService.removeVehicleFiles(vehicleName);
+		} catch (VehicleManagerException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

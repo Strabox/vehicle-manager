@@ -19,20 +19,21 @@ public abstract class Notification {
 	
 	@Column
 	@Type(type="date")
-	private Date initDate;
+	private Date notiDate;
 	
 	@Column
 	private String description;
 	
 	
 	public Notification(Date initDate,String description){
-		setInitDate(initDate);
+		setNotiDate(initDate);
 		setDescription(description);
 	}
 	
 	public Notification() { }
 	
 	public abstract boolean notifyDay(Date currentDate);
+	
 	
 	/* === Getters and Setters === */
 	
@@ -48,12 +49,12 @@ public abstract class Notification {
 		this.description = description;
 	}
 
-	public Date getInitDate() {
-		return initDate;
+	public Date getNotiDate() {
+		return notiDate;
 	}
 
-	public void setInitDate(Date initDate) {
-		this.initDate = initDate;
+	public void setNotiDate(Date initDate) {
+		this.notiDate = initDate;
 	}
 	
 }

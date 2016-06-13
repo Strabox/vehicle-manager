@@ -1,4 +1,4 @@
-package com.pt.pires.service;
+package com.pt.pires.service.local;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +18,7 @@ import com.pt.pires.domain.LicensedVehicle;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.InvalidLicenseException;
 import com.pt.pires.domain.exceptions.InvalidNoteException;
 import com.pt.pires.domain.exceptions.InvalidRegistrationException;
@@ -51,8 +52,13 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	private final static String INVALID_LICENSE = "II-11-GH";
 	
 	private final static String VALID_DESCRIPTION = "Mudar o óleo do Motor!!";
+	private final static String VALID_DESCRIPTION_2 = "Mudar a vareta do óleo :)?";
 	
-	private final static long VALID_TIME = 1000;
+	private final static Long VALID_TIME = (long) 1000;
+	
+	private static Long EXISTING_REG_ID_1;
+	private static Long EXISTING_REG_ID_2;
+	private static Long EXISTING_NOTE_ID_1;
 	
 	@Autowired
 	@Qualifier("vehicleService")
@@ -61,6 +67,9 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	@Override
 	public void populate() throws VehicleManagerException {
 		newUnlicensedVehicle(VEHICLE_NAME_EXIST_1,VEHICLE_BRAND_1,VEHICLE_DATE);
+		EXISTING_NOTE_ID_1 = newNote(VEHICLE_NAME_EXIST_1, VALID_DESCRIPTION);
+		EXISTING_REG_ID_1 = newRegistration(VEHICLE_NAME_EXIST_1, VALID_TIME, VALID_DESCRIPTION, VEHICLE_DATE);
+		EXISTING_REG_ID_2 = newRegistration(VEHICLE_NAME_EXIST_1, VALID_TIME, VALID_DESCRIPTION_2, VEHICLE_DATE);
 		newLicensedVehicle(VEHICLE_NAME_EXIST_2, VEHICLE_BRAND_1, VEHICLE_DATE, VALID_LICENSE, VEHICLE_DATE);
 	}
 	
@@ -82,7 +91,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		Assert.assertTrue(c.size() == 0);
 	}
 	
-	/* ========= GetLicensedVehicles Service ================ */
+	/* ========= GetLicensedVehiclesService ================ */
 
 	@Test
 	public void getLicensedVehicles(){
@@ -100,7 +109,24 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		List<LicensedVehicle> c = (List<LicensedVehicle>) vehicleService.getLicensedVehicles();
 		Assert.assertTrue(c.size() == 0);
 	}
-	/* ========= CreateLicensedVehicle Service ================ */
+	
+	/* ================== GetVehicleService ================== */
+	
+	@Test
+	public void getVehicle() throws VehicleManagerException{
+		Vehicle v = vehicleService.getVehicle(VEHICLE_NAME_EXIST_1);
+		Assert.assertNotNull(v);
+		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_EXIST_1));
+		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND_1));
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void getVehicleNoVehicle() throws VehicleManagerException{
+		deleteVehicle(VEHICLE_NAME_EXIST_1);
+		vehicleService.getVehicle(VEHICLE_NAME_EXIST_1);
+	}
+	
+	/* ========= CreateLicensedVehicleService ================ */
 	
 	@Test
 	public void createLicensedVehicle() throws VehicleManagerException{
@@ -137,7 +163,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 				VALID_LICENSE, VEHICLE_DATE);
 	}
 	
-	/* ========= CreateUnlicensedVehicle Service ================ */
+	/* ========= CreateUnlicensedVehicleService ================ */
 
 	@Test
 	public void createUnlicensedVehicle() throws VehicleManagerException {
@@ -163,7 +189,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.createUnlicensedVehicle(VEHICLE_NAME,EMPTY_STRING,VEHICLE_DATE);		
 	}
 	
-	/* ========= GetUnlicensedVehicle Service ================ */
+	/* ========= GetUnlicensedVehicleService ================ */
 
 	@Test
 	public void getUnlicensedVehicle() throws VehicleManagerException{
@@ -178,7 +204,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.getLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST);
 	}
 	
-	/* ========= CreateLicensedVehicle Service ================ */
+	/* ========= CreateLicensedVehicleService ================ */
 
 	@Test
 	public void getLicensedVehicle() throws VehicleManagerException{
@@ -193,7 +219,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.getLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST);
 	}
 	
-	/* ================= RemoveVehicle Service ================== */
+	/* ================= RemoveVehicleService ================== */
 
 	@Test
 	public void removeVehicle(){
@@ -206,17 +232,16 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.removeVehicle(VEHICLE_NAME_DOESNT_EXIST);
 	}
 	
-	/* ============== AddRegistrationToVehicle Service =========== */
+	/* ============== AddRegistrationToVehicleService =========== */
 	
 	@Test
 	public void addRegistrationToVehicle() throws VehicleManagerException{
-		vehicleService.addRegistrationToVehicle(VEHICLE_NAME_EXIST_1, VALID_TIME
+		Long regId = vehicleService.addRegistrationToVehicle(VEHICLE_NAME_EXIST_1, VALID_TIME
 				, VALID_DESCRIPTION, VEHICLE_DATE);
 		List<Registration> regs = obtainRegistrations(VEHICLE_NAME_EXIST_1);
 		Assert.assertNotNull(regs);
-		Assert.assertTrue(regs.size() == 1);
-		Assert.assertTrue(regs.get(0).getTime() == VALID_TIME);
-		Assert.assertTrue(regs.get(0).getDescription().equals(VALID_DESCRIPTION));
+		Assert.assertTrue(obtainRegistration(VEHICLE_NAME_EXIST_1, regId).getTime() == VALID_TIME);
+		Assert.assertTrue(obtainRegistration(VEHICLE_NAME_EXIST_1, regId).getDescription().equals(VALID_DESCRIPTION));
 	}
 	
 	@Test(expected = VehicleDoesntExistException.class)
@@ -231,15 +256,38 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 				, EMPTY_STRING, VEHICLE_DATE);
 	}
 	
-	/* =================== AddNoteToVehicle Service ============== */
+	/* =========== RemoveRegistrationFromVehicleService ============== */
+	
+	@Test
+	public void removeRegistrationFromVehicleExist() throws VehicleManagerException{
+		vehicleService.removeRegistrationFromVehicle(VEHICLE_NAME_EXIST_1, EXISTING_REG_ID_1);
+		Assert.assertNotNull(obtainRegistrations(VEHICLE_NAME_EXIST_1));
+		Assert.assertNull(obtainRegistration(VEHICLE_NAME_EXIST_1, EXISTING_REG_ID_1));
+	}
+	
+	public void removeAllRegistrationFromVehicleExist() throws VehicleManagerException{
+		vehicleService.removeRegistrationFromVehicle(VEHICLE_NAME_EXIST_1, EXISTING_REG_ID_1);
+		vehicleService.removeRegistrationFromVehicle(VEHICLE_NAME_EXIST_1, EXISTING_REG_ID_2);
+		Assert.assertNotNull(obtainRegistrations(VEHICLE_NAME_EXIST_1));
+		Assert.assertTrue(obtainRegistrations(VEHICLE_NAME_EXIST_1).isEmpty());
+		Assert.assertNull(obtainRegistration(VEHICLE_NAME_EXIST_1, EXISTING_REG_ID_1));
+		Assert.assertNull(obtainRegistration(VEHICLE_NAME_EXIST_2, EXISTING_REG_ID_2));
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void removeRegistrationFromVehicleDoesntExist() throws VehicleManagerException{
+		vehicleService.removeRegistrationFromVehicle(VEHICLE_NAME_DOESNT_EXIST, 1);
+	}
+	
+	
+	/* =================== AddNoteToVehicleService ============== */
 	
 	@Test
 	public void addNoteToVehicle() throws VehicleManagerException{
-		vehicleService.addNoteToVehicle(VEHICLE_NAME_EXIST_1, VALID_DESCRIPTION);
+		Long noteId = vehicleService.addNoteToVehicle(VEHICLE_NAME_EXIST_1, VALID_DESCRIPTION);
 		List<Note> notes = obtainNotes(VEHICLE_NAME_EXIST_1);
 		Assert.assertNotNull(notes);
-		Assert.assertTrue(notes.size() == 1);
-		Assert.assertTrue(notes.get(0).getDescription().equals(VALID_DESCRIPTION));
+		Assert.assertTrue(obtainNote(VEHICLE_NAME_EXIST_1, noteId).getDescription().equals(VALID_DESCRIPTION));
 	}
 	
 	@Test(expected = VehicleDoesntExistException.class)
@@ -252,4 +300,31 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.addNoteToVehicle(VEHICLE_NAME_EXIST_1, EMPTY_STRING);
 	}
 	
+	/* =================== RemoveNoteFromVehicleService ============== */
+	
+	@Test
+	public void removeNoteFromVehicleExist() throws VehicleManagerException{
+		vehicleService.removeNoteFromVehicle(VEHICLE_NAME_EXIST_1, EXISTING_NOTE_ID_1);
+		Assert.assertNotNull(obtainNotes(VEHICLE_NAME_EXIST_1));
+		Assert.assertTrue(obtainNotes(VEHICLE_NAME_EXIST_1).isEmpty());
+		Assert.assertNull(obtainNote(VEHICLE_NAME_EXIST_1, EXISTING_NOTE_ID_1));
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void removeNoteFromVehicleDoesntExist() throws VehicleManagerException{
+		vehicleService.removeNoteFromVehicle(VEHICLE_NAME_DOESNT_EXIST, 1);
+	}
+	
+	/* ====================== VehicleExistService ==================== */
+	
+	@Test
+	public void vehicleExistTrue(){
+		Assert.assertTrue(vehicleService.vehicleExist(VEHICLE_NAME_EXIST_1));
+		Assert.assertTrue(vehicleService.vehicleExist(VEHICLE_NAME_EXIST_2));
+	}
+	
+	@Test
+	public void vehicleExistFalse(){
+		Assert.assertTrue(!vehicleService.vehicleExist(VEHICLE_NAME_DOESNT_EXIST));
+	}
 }

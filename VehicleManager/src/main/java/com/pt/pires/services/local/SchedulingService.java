@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.pt.pires.domain.Notification;
 import com.pt.pires.persistence.NotificationRepository;
+import com.pt.pires.services.external.IEmailService;
 
 @Service
 public class SchedulingService implements ISchedulingService{
@@ -34,7 +35,6 @@ public class SchedulingService implements ISchedulingService{
 				//TODO
 			}
 		}
-	
 	}
 
 	private static final int ONE_DAY_MILLISECONDS = 86600000;
@@ -42,7 +42,7 @@ public class SchedulingService implements ISchedulingService{
 	private AtomicBoolean running = new AtomicBoolean(false);
 	
 	@Override
-	public void startMidinghScheduler(Date startTime) {
+	public void startMidnightScheduler(Date startTime) {
 		if(!running.get()){
 			Timer timer = new Timer();
 			timer.scheduleAtFixedRate(new ScheduleMidnight(), startTime, ONE_DAY_MILLISECONDS);

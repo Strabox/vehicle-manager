@@ -5,22 +5,17 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	    
-	    <!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-		<!-- jQuery library -->
+	   <!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-		<!-- Latest compiled JavaScript bootsrap -->
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+		<!-- Bootstrap JavaScript -->
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		
-		<!-- Needed for Table Awesomeness :) -->
+		<!-- Datatable- Needed for Table Awesomeness :) -->
 		<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
 		<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 		<script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-	
-		<!-- Jasny - Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css"/>
-		<!-- Jasny - Latest compiled and minified JavaScript -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 		
 		<!-- Form Validator for Bootstrap 3 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
@@ -31,12 +26,12 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-2">
-					<div class="container-fluid">
+					<div class="container-fluid" data-spy="affix">
 						<h2>Menu</h2>                
 						<ul class="nav nav-pills nav-stacked" role="tablist">
-							<li><a href="home">Inicio</a></li>
-							<li class="active"><a href="#">Veículos</a></li>
-							<li><a href="#">Sair</a></li>        
+							<li><a href="home">Inicio <span class="glyphicon glyphicon-home"></span></a></li>
+							<li class="active"><a href="#">Veículos <span class="glyphicon glyphicon-th-list"></span></a></li>
+							<li><a href="#">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
 						</ul>
 					</div>
 				</div>
@@ -44,7 +39,7 @@
 				
 					<h2>Veículos</h2>
 					
-				    <table id="vehicles" class="table table-hover">
+				    <table id="vehicles" class="table table-condensed table-hover table-striped table-bordered">
 					    <thead>
 					      <tr>
 					        <th>Nome</th>
@@ -54,25 +49,26 @@
 					      </tr>
 					    </thead>
 					    <tbody id="vehiclesBody">
-					      <tr th:id="${vehicle.name}" th:each="vehicle : ${listLicensed}">
-					      	<td><a th:href="${'licensedVehicle?name=' + vehicle.name}" th:text="${vehicle.name}"></a></td>
+					      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listLicensed}">
+					      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}" th:text="${vehicle.name}"></a></td>
 					      	<td th:text="${vehicle.brand}"></td>
 					      	<td th:text="${vehicle.acquisitionDate}"></td>
-					      	<td><button type="button" class="btn btn-danger" th:onclick="'prepareVehicleRemove(\'' + ${vehicle.name} + '\');'" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
+					      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
 					      </tr>
-					      <tr th:id="${vehicle.name}" th:each="vehicle : ${listUnlicensed}">
-					      	<td><a th:href="${'licensedVehicle?name=' + vehicle.name}" th:text="${vehicle.name}"></a></td>
+					      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listUnlicensed}">
+					      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}" th:text="${vehicle.name}"></a></td>
 					      	<td th:text="${vehicle.brand}"></td>
 					      	<td th:text="${vehicle.acquisitionDate}"></td>
-					      	<td><button type="button" class="btn btn-danger" th:onclick="'prepareVehicleRemove(\'' + ${vehicle.name} + '\');'" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
+					      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
 					      </tr>
 					    </tbody>
 	  				</table>
 	  				
-	  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal">Criar Veículo</button>
+	  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal">Criar Veículo <span class="glyphicon glyphicon-modal-window"></span></button>
 	  				
 	  				<!-- ================== All the Modals/Alerts ====================== -->
-	  				<!-- Modal vehicles -->
+	  				
+	  				<!-- Modal Add vehicles -->
 					<div id="vehicleModal" class="modal fade" role="dialog">
 						<div class="modal-dialog">
 						<!-- Modal content-->
@@ -82,32 +78,41 @@
 									<h4 class="modal-title">Criar Veículo</h4>
 								</div>
 								<div class="modal-body">
-									<form id="createVehicleForm"  role="form">
-										<div class="form-group">
-											<label for="name">Nome:</label>
-											<input id="name" class="form-control" type="text" placeholder="Nome do Veículo" maxlength="15" ></input>
+									<form id="createVehicleForm" role="form">
+										<div class="form-group has-feedback">
+											<label for="name" class="control-label">Nome:</label>
+											<input id="name" class="form-control" name="name" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+											<div class="help-block with-errors"></div>
+											<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+										</div>
+										<div class="form-group has-feedback">
+											<label for="brand" class="control-label">Marca:</label>
+											<input id="brand" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+											<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+										</div>
+										<div class="form-group has-feedback">
+											<label for="acquisitionDate" class="control-label">Data de Aquisição:</label>
+											<input id="acquisitionDate" class="form-control" type="date" required="required"></input>
+											<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 										</div>
 										<div class="form-group">
-											<label for="brand">Marca:</label>
-											<input id="brand" class="form-control" type="text" placeholder="Ford,Kubota..." />
-										</div>
-										<div class="form-group">
-											<label for="acquisitionDate">Data de Aquisição:</label>
-											<input id="acquisitionDate" class="form-control" type="date"></input>
-										</div>
-										<div class="form-group">
-											<label for="file">Fotografia do Veículo:</label>
+											<label for="file" class="control-label">Fotografia do Veículo (Opcional):</label>
 											<input id="file" name="file" type="file"></input>
 										</div>
-										<div class="form-group">
-											<label for="license">Matrícula (Opcional):</label>
-											<input id="license" class="form-control" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.."/>
+										<div class="form-group has-feedback">
+											<label for="license" class="control-label">Matrícula (Opcional):</label>
+											<input id="license" name="license" class="form-control" data-remote="/license" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.."/>
 											<div class="help-block with-errors"></div>
-											<label for="licenseDate">Data da Matrícula (Opcional):</label>
+											<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+											
+											<label for="licenseDate" class="control-label">Data da Matrícula (Opcional):</label>
 											<input id="licenseDate" class="form-control" type="date"/>
+											<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 										</div>
 										<div class="form-group">
-											<button id="submitVehicle" type="submit" class="btn btn-primary">Submeter</button>
+											<button type="submit" class="btn btn-success">Submeter</button>
+											<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+											<button type="reset" class="btn btn-primary">Reset</button>
 										</div>
 									</form>
 								</div>
@@ -134,25 +139,47 @@
 		  						</div>
 		  					</div>
 	  					</div>
-	  				</div>
+	  				</div>	  				
 	  				
-	  				<!-- Vehicle Creation Modal -->
-	  				<div id="creationModal" class="modal fade" role="dialog">
-	  					<div class="modal-dialog">
-	  						<div class="modal-content">
-		  						<div class="modal-header">
-		  							<button type="button" class="close" data-dismiss="modal">&times;</button>
-									<h4 class="modal-title">Criação de Veículo</h4>
-		  						</div>
-		  						<div class="modal-body">
-		 							<h5 id="createResponse"></h5>
-		  						</div>
-		  						<div class="modal-footer">
-		 							<button id="ok" type="button" class="btn btn-primary" data-dismiss="modal">Okay</button> 						
-		  						</div>
-		  					</div>
-	  					</div>
-	  				</div>
+	  				<!-- Alert FAIL modal to show the server response -->
+			     	<div id="responseAlertModalFail" class="modal fade" role="dialog">
+				    	<div class="modal-dialog">
+			    			<div class="modal-content">
+				    			<div class="modal-header">
+				    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				    				<h2 id="responseAlertFailHeader"></h2>
+				    			</div>
+				    			<div class="modal-body">
+				    				<div class="alert alert-danger">
+				    					<strong>Falhou! </strong><span id="responseAlertFailText"></span>
+				    				</div>
+				    			</div>
+				    			<div class="modal-footer">
+				    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+				    			</div>
+				    		</div>
+				    	</div>
+			    	</div>
+				    	
+			    	<!-- Alert SUCCESS modal to show the server response -->
+			     	<div id="responseAlertModalSuccess" class="modal fade" role="dialog">
+				    	<div class="modal-dialog">
+			    			<div class="modal-content">
+				    			<div class="modal-header">
+				    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				    				<h2 id="responseAlertSuccessHeader"></h2>
+				    			</div>
+				    			<div class="modal-body">
+				    				<div class="alert alert-success">
+				    					<strong>Sucesso! </strong><span id="responseAlertSuccessText"></span>
+				    				</div>
+				    			</div>
+				    			<div class="modal-footer">
+				    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+				    			</div>
+				    		</div>
+				    	</div>
+			    	</div>
 	  				
 				</div>
 			</div>

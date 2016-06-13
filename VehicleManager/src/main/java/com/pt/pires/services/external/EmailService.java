@@ -1,4 +1,4 @@
-package com.pt.pires.services.local;
+package com.pt.pires.services.external;
 
 import java.util.Properties;
 
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class EmailService implements IEmailService{
 
 	@Override
-	public boolean sendTLSGmailEmail(String gmailUsername, String gmailPassword,
+	public boolean sendEmail(String gmailUsername, String gmailPassword,
 			String from,String to,String subject,String body) {
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");

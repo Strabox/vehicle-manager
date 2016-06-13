@@ -1,4 +1,4 @@
-package com.pt.pires.service;
+package com.pt.pires.service.local;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +19,8 @@ import com.pt.pires.domain.UnlicensedVehicle;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.LicensedVehicleRepository;
+import com.pt.pires.persistence.NoteRepository;
+import com.pt.pires.persistence.RegistrationRepository;
 import com.pt.pires.persistence.UnlicensedVehicleRepository;
 import com.pt.pires.persistence.VehicleRepository;
 
@@ -38,6 +40,12 @@ public abstract class VehicleManagerServiceTest {
 	
 	@Autowired
 	private LicensedVehicleRepository licensedRepository;
+	
+	@Autowired
+	private RegistrationRepository regRepository;
+	
+	@Autowired
+	private NoteRepository noteRepository;
 	
 	/**
 	 * Executed before each test.
@@ -80,20 +88,47 @@ public abstract class VehicleManagerServiceTest {
 			vehicleRepository.delete(name);
 	}
 	
-	protected void newRegistration(String vehicleName,long time,String description,Date date){
+	protected Long newRegistration(String vehicleName,long time,String description,Date date){
 		if(vehicleRepository.exists(vehicleName)){
 			Vehicle v = vehicleRepository.findOne(vehicleName);
-			v.addRegistration(new Registration(time,description,date));
+			Registration reg = regRepository.save(new Registration(time,description,date));
+			v.addRegistration(reg);
 			vehicleRepository.save(v);
+			return reg.getId();
+			
 		}
+		return null;
 	}
 	
-	protected void newNote(String vehicleName,String noteDescription){
+	protected Long newNote(String vehicleName,String noteDescription){
 		if(vehicleRepository.exists(vehicleName)){
 			Vehicle v = vehicleRepository.findOne(vehicleName);
-			v.addNote(new Note(noteDescription));
+			Note note = noteRepository.save(new Note(noteDescription));
+			v.addNote(note);
 			vehicleRepository.save(v);
+			return note.getId();
 		}
+		return null;
+	}
+	
+	protected Registration obtainRegistration(String vehicleName,Long regId){
+		List<Registration> regs = (List<Registration>) vehicleRepository.findOne(vehicleName).getRegistries();
+		for(Registration reg : regs){
+			if(reg.getId() == regId){
+				return reg;
+			}
+		}
+		return null;
+	}
+	
+	protected Note obtainNote(String vehicleName,Long noteId){
+		List<Note> notes = (List<Note>) vehicleRepository.findOne(vehicleName).getNotes();
+		for(Note note : notes){
+			if(note.getId() == noteId){
+				return note;
+			}
+		}
+		return null;
 	}
 	
 	protected List<Registration> obtainRegistrations(String vehicleName){

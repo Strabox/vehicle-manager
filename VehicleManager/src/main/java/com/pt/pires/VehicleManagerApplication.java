@@ -17,7 +17,7 @@ public class VehicleManagerApplication{
 	@Bean
 	CommandLineRunner init(){
 		return (String[] args) -> {
-			FileUtil.makeDir(FileUtil.ROOT);
+			FileUtil.makeDir(FileUtil.getRootPath());
 		};
 	}
 	

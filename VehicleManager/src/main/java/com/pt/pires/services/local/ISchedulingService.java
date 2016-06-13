@@ -4,6 +4,6 @@ import java.util.Date;
 
 public interface ISchedulingService {
 
-	void startMidinghScheduler(Date first);
+	void startMidnightScheduler(Date first);
 	
 }

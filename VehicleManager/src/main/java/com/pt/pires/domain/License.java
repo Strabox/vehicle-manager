@@ -1,5 +1,6 @@
 package com.pt.pires.domain;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.Type;
 
 import com.pt.pires.domain.exceptions.InvalidLicenseException;
+import com.pt.pires.util.DateUtil;
 
 @Entity
 public class License {
@@ -35,6 +37,16 @@ public class License {
 	
 	public static boolean validateLicense(String license){
 		return license.matches(LICENSE_PATTERN);
+	}
+	
+	public int calculateLicenseYears(){
+		Calendar a = DateUtil.getCalendar(date);
+		Calendar b = DateUtil.getCalendar(new Date());
+		int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
+		if(a.get(Calendar.MONTH) > b.get(Calendar.MONTH)){
+			diff--;
+		}
+		return diff;
 	}
 	
 	/* === Getters and Setters === */

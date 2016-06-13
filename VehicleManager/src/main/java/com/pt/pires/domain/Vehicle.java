@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Locale;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Type;
+
+import com.pt.pires.util.DateUtil;
 
 /**
  * Abstract class Vehicle 
@@ -81,20 +81,14 @@ public abstract class Vehicle {
 	}
 	
 	public int calculateAcquisitionYears(){
-		Calendar a = getCalendar(acquisitionDate);
-	    Calendar b = getCalendar(new Date());
+		Calendar a = DateUtil.getCalendar(acquisitionDate);
+	    Calendar b = DateUtil.getCalendar(new Date());
 	    int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
 	    if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || 
 	        (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
 	        diff--;
 	    }
 	    return diff;
-	}
-
-	private static Calendar getCalendar(Date date) {
-	    Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-	    cal.setTime(date);
-	    return cal;
 	}
 	
 	/* === Getters and Setters === */
