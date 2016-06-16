@@ -12,10 +12,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pt.pires.VehicleManagerApplication;
 import com.pt.pires.domain.License;
-import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.LicensedVehicleRepository;
@@ -62,24 +62,24 @@ public abstract class VehicleManagerServiceTest {
 	/* ================= Auxiliary test methods =============== */
 	
 	protected void newUnlicensedVehicle(String name,String brand,Date acquisitionDate){
-		unlicensedRepository.save(new UnlicensedVehicle(name, brand, acquisitionDate));
+		unlicensedRepository.save(new VehicleUnlicensed(name, brand, acquisitionDate));
 	}
 	
 	protected void newLicensedVehicle(String name,String brand,Date acquisitionDate,
 			String license,Date licenseDate) throws VehicleManagerException {
 		License licenseO = new License(license,licenseDate);
-		licensedRepository.save(new LicensedVehicle(name, brand, acquisitionDate, licenseO));
+		licensedRepository.save(new VehicleLicensed(name, brand, acquisitionDate, licenseO));
 	}
 	
 	protected Vehicle obtainVehicle(String name){
 		return vehicleRepository.findOne(name);
 	}
 	
-	protected UnlicensedVehicle obtainUnlicensedVehicle(String name){
+	protected VehicleUnlicensed obtainUnlicensedVehicle(String name){
 		return unlicensedRepository.findOne(name);
 	}
 	
-	protected LicensedVehicle obtainLicensedVehicle(String name){
+	protected VehicleLicensed obtainLicensedVehicle(String name){
 		return licensedRepository.findOne(name);
 	}
 	

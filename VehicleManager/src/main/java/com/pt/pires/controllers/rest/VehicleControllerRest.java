@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pt.pires.controllers.ResponseError;
-import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.NotificationYear;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.exceptions.ImpossibleDeleteDirectoryException;
 import com.pt.pires.domain.exceptions.ImpossibleSaveFileException;
 import com.pt.pires.domain.exceptions.InvalidLicenseException;
@@ -59,7 +59,7 @@ public class VehicleControllerRest {
 	
 	@RequestMapping(value="/vehicle/unlicensed",method=RequestMethod.POST,consumes={"multipart/form-data"})
 	@ResponseBody
-	public ResponseEntity<String> createUnlicensedVehicle(@RequestPart("vehicle")UnlicensedVehicle v,
+	public ResponseEntity<String> createUnlicensedVehicle(@RequestPart("vehicle")VehicleUnlicensed v,
 			@RequestPart("file") MultipartFile file) throws VehicleManagerException {
 		System.out.println("[Creating Unlicensed]");
 		try{
@@ -73,7 +73,7 @@ public class VehicleControllerRest {
 	
 	@RequestMapping(value="/vehicle/licensed",method=RequestMethod.POST,consumes={"multipart/form-data"})
 	@ResponseBody
-	public ResponseEntity<String> createLicensedVehicle(@RequestBody LicensedVehicle v,
+	public ResponseEntity<String> createLicensedVehicle(@RequestBody VehicleLicensed v,
 			@RequestParam("file") MultipartFile file) throws VehicleManagerException{
 		System.out.println("[Creating Licensed");
 		try {
@@ -86,18 +86,27 @@ public class VehicleControllerRest {
 	}
 	
 	
-	@RequestMapping(value="/vehicle/{name}",method=RequestMethod.DELETE)
-	public ResponseEntity<String> removeVehicle(@PathVariable String name){
-		System.out.println("[Removing Vehicle] Vehicle: " + name);
-		vehicleIntegratorService.removeVehicle(name);
+	@RequestMapping(value="/vehicle/{vehicleName}",method=RequestMethod.DELETE)
+	public ResponseEntity<String> removeVehicle(@PathVariable String vehicleName) throws VehicleManagerException{
+		System.out.println("[Removing Vehicle] Vehicle: " + vehicleName);
+		vehicleIntegratorService.removeVehicle(vehicleName);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/vehicle/{name}/registration",method=RequestMethod.POST)
-	public ResponseEntity<Long> addRegistrationToVehicle(@PathVariable String name
+	@RequestMapping(value="/vehicle",method=RequestMethod.GET,params = {"name"})
+	public ResponseEntity<String> vehicleExist(@RequestParam("name")String vehicleName) throws VehicleManagerException{
+		if(vehicleService.vehicleExist(vehicleName)){
+			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+		}else{
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+	}
+	
+	@RequestMapping(value="/vehicle/{vehicleName}/registration",method=RequestMethod.POST)
+	public ResponseEntity<Long> addRegistrationToVehicle(@PathVariable String vehicleName
 			,@RequestBody Registration reg) throws VehicleManagerException{
-		System.out.println("[Adding Registration] Vehicle: " + name);
-		Long res = vehicleService.addRegistrationToVehicle(name, reg.getTime(), reg.getDescription(), reg.getDate());
+		System.out.println("[Adding Registration] Vehicle: " + vehicleName);
+		Long res = vehicleService.addRegistrationToVehicle(vehicleName, reg.getTime(), reg.getDescription(), reg.getDate());
 		return new ResponseEntity<Long>(res,HttpStatus.OK);
 	}
 	
@@ -109,15 +118,6 @@ public class VehicleControllerRest {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/vehicle",method=RequestMethod.GET,params = {"name"})
-	public ResponseEntity<String> vehicleExist(@RequestParam("name")String vehicleName){
-		if(vehicleService.vehicleExist(vehicleName)){
-			return new ResponseEntity<String>(HttpStatus.CONFLICT);
-		}else{
-			return new ResponseEntity<String>(HttpStatus.OK);
-		}
-	}
-	
 	@RequestMapping(value="/vehicle/{vehicleName}/note",method=RequestMethod.POST)
 	public ResponseEntity<Long> addNoteToVehicle(@PathVariable String vehicleName,
 			@RequestBody Note note) throws VehicleManagerException{
@@ -126,39 +126,48 @@ public class VehicleControllerRest {
 		return new ResponseEntity<Long>(res,HttpStatus.OK);
 	}
 	
-	/**
-	 * 
-	 * @param vehicleName
-	 * @param notification
-	 * @param type Http param expected { Year, HalfYear }
-	 * @return
-	 * @throws VehicleManagerException 
-	 */
-	@RequestMapping(value="/vehicle/{vehicleName}/notification",method=RequestMethod.POST,
-			params = {"type"})
-	public ResponseEntity<String> addNotification(@PathVariable String vehicleName,
-			@RequestBody NotificationYear notification,@RequestParam("type")String type)
-					throws VehicleManagerException{
-		System.out.println("[Add notification year]");
-		if(type.equals("Year")){
-			vehicleService.addYearNotification(vehicleName, notification.getDescription(),
-					notification.getNotiDate());
-		}else if(type.equals("HalfYear")){
-			vehicleService.addHalfYearNotification(vehicleName, notification.getDescription(),
-					notification.getNotiDate());
-		}
-		else{
-			return new ResponseEntity<String>(HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<String>(HttpStatus.OK);
-	}
-	
 	
 	@RequestMapping(value="/vehicle/{vehicleName}/note/{noteId}",method=RequestMethod.DELETE)
 	public ResponseEntity<String> removeNoteFromVehicle(@PathVariable String vehicleName,
 			@PathVariable long noteId) throws VehicleManagerException{
 		System.out.println("[Remove Note] Vehicle: " + vehicleName);
 		vehicleService.removeNoteFromVehicle(vehicleName, noteId);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	/**
+	 * 
+	 * @param vehicleName Target vehicle to add the notification
+	 * @param notification Notification to add
+	 * @param type Http param expected { Year, HalfYear }
+	 * @return Id of the added notification 
+	 * @throws VehicleManagerException 
+	 */
+	@RequestMapping(value="/vehicle/{vehicleName}/notification",method=RequestMethod.POST,
+			params = {"type"})
+	public ResponseEntity<Long> addNotification(@PathVariable String vehicleName,
+			@RequestBody NotificationYear notification,@RequestParam("type")String type)
+					throws VehicleManagerException{
+		System.out.println("[Add notification year]");
+		Long res;
+		if(type.equals("Year")){
+			res = vehicleService.addYearNotification(vehicleName, notification.getDescription(),
+					notification.getNotiDate());
+		}else if(type.equals("HalfYear")){
+			res = vehicleService.addHalfYearNotification(vehicleName, notification.getDescription(),
+					notification.getNotiDate());
+		}
+		else{
+			return new ResponseEntity<Long>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Long>(res,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/vehicle/{vehicleName}/alert/{alertId}",method=RequestMethod.DELETE)
+	public ResponseEntity<String> removeAlertFromVehicle(@PathVariable String vehicleName,
+			@PathVariable long alertId) throws VehicleManagerException{
+		System.out.println("[Remove Alert] Vehicle: " + vehicleName);
+		vehicleService.removeAlertFromVehicle(vehicleName, alertId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
@@ -180,11 +189,10 @@ public class VehicleControllerRest {
     }
 
 	/* =========== Response Exceptions Handlers ============= */
-	/* This handlers catch the respective exceptions thrown in controllers */
+	/* This handlers catch the respective exceptions that arrive in controllers */
 	
 	@ExceptionHandler(VehicleDoesntExistException.class)
 	private ResponseEntity<ResponseError> handler1(VehicleDoesntExistException ex,HttpServletRequest request){
-		System.out.print(" [Doesnt Exist Exception Handler Called]");
 		ResponseError response = new ResponseError(404,ex.getLocalizedMessage());
 		return new ResponseEntity<ResponseError>(response,HttpStatus.NOT_FOUND);
 	}

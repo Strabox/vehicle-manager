@@ -1,5 +1,7 @@
 package com.pt.pires.controllers.model;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -8,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.services.local.IVehicleService;
 
@@ -19,8 +20,10 @@ public class VehicleController {
 	@Qualifier("vehicleService") 
 	private IVehicleService vehicleService;
 	
+	
 	@RequestMapping(value = "/home")
-	public String homeVehicle(Model model){
+	public String homeVehicle(Model model,HttpServletRequest request){
+		System.out.println("[Home]");
 		return "home";
 	}
 	
@@ -46,8 +49,6 @@ public class VehicleController {
 			}
 			model.addAttribute("vehicle",vehicleService.getVehicle(name));
 			return "vehicle";
-		} catch (VehicleDoesntExistException e) {
-			return "error";
 		} catch (VehicleManagerException e) {
 			return "error";
 		}

@@ -80,6 +80,15 @@ public abstract class Vehicle {
 		}
 	}
 	
+	public void removeNotification(long id){
+		for(Notification noti : notifications){
+			if(noti.getId() == id){
+				notifications.remove(noti);
+				break;
+			}
+		}
+	}
+	
 	public int calculateAcquisitionYears(){
 		Calendar a = DateUtil.getCalendar(acquisitionDate);
 	    Calendar b = DateUtil.getCalendar(new Date());

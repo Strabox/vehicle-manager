@@ -4,6 +4,10 @@
 	    <title>Inicio</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+	     <!-- CSRF Header and Token -->
+		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	    <meta name="_csrf" th:content="${_csrf.token}"/>
 	    
 	    <!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
@@ -14,26 +18,30 @@
 		
 		<!-- Form Validator for Bootstrap 3 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
+		
+		<script src="/javascript/common.js"></script>
 	</head>
 	<body>
-		<div class="row">
-			<div class="col-sm-2">
-				<div class="container-fluid" data-spy="affix">
-					<h2>Menu</h2>                
-					<ul class="nav nav-pills nav-stacked" role="tablist">
-						<li class="active"><a href="#">Inicio <span class="glyphicon glyphicon-home"></span></a></li>
-						<li><a href="vehicles">Veículos <span class="glyphicon glyphicon-th-list"></span></a></li>
-						<li><a href="#">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
-					</ul>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-2">
+					<div class="container-fluid" data-spy="affix">
+						<h2>Menu</h2>                
+						<ul class="nav nav-pills nav-stacked" role="tablist">
+							<li class="active"><a href="#">Inicio <span class="glyphicon glyphicon-home"></span></a></li>
+							<li><a href="vehicles">Veículos <span class="glyphicon glyphicon-th-list"></span></a></li>
+							<li><a href="#" id="logout">Sair <span class="glyphicon glyphicon-off"></span></a></li>    
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-10">
+				    <div class="container-fluid">
+						<h1>Sistema de Auxilio à Manutenção</h1>
+						<p>Note:</p> 
+						
+					</div>
 				</div>
 			</div>
-			<div class="col-sm-10">
-			    <div class="container-fluid">
-					<h1>Sistema de Auxilio à Manutenção</h1>
-					<p>Note:</p> 
-					
-				</div>
-			</div>
-		</div>
+		</div> 
 	</body>
 </html>

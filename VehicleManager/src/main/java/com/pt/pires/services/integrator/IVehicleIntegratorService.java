@@ -12,6 +12,6 @@ public interface IVehicleIntegratorService {
 	void createLicensedVehicle(String name,String brand,Date acquisitionDate,
 			String license,Date licenseDate,byte[] file) throws VehicleManagerException;
 	
-	void removeVehicle(String vehicleName);
+	void removeVehicle(String vehicleName) throws VehicleManagerException;
 	
 }

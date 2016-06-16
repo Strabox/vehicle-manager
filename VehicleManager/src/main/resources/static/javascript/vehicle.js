@@ -2,9 +2,11 @@ $(document).ready(function(){
 	var vehicleName = $("#vehicleName").text();
 	var noteIdToDelete;
 	var registrationIdToDelete;
+	var alertIdToDelete;
 	//Awesome Tables initializations
 	var registriesTable = $("#registrationsTable").DataTable({"order": [[ 0, "desc" ]]});
 	var notesTable = $("#notesTable").DataTable();
+	var alertsTable = $("#alertsTable").DataTable();
 	
 	function getDeleteRegButtonHtml(id){
 		return "<button id=\"" + id + "\" " +
@@ -22,12 +24,23 @@ $(document).ready(function(){
 				"data-target=\"#confirmNoteDeleteModal\">Apagar</button>";
 	}
 	
+	function getDeleteAlertButtonHtml(id){
+		return "<button id=\"" + id + "\" " +
+				"type=\"button\" " +
+				"class=\"btn btn-danger delete-alert\" " +
+				"data-toggle=\"modal\" " +
+				"data-target=\"#confirmAlertDeleteModal\">Apagar</button>";
+	}
+	
 	function bindDeleteButtons(){
 		$(".delete-reg").click(function(){
 			registrationIdToDelete = $(this).attr("id");
 		});
 		$(".delete-note").click(function(){
 			noteIdToDelete = $(this).attr("id");
+		});
+		$(".delete-alert").click(function(){
+			alertIdToDelete = $(this).attr("id");
 		});
 	}
 	
@@ -37,8 +50,8 @@ $(document).ready(function(){
 
 	
 	$("#deleteRegistration").click(function(){
-		alert("Removing: "+ registrationIdToDelete);
 		$.ajax({
+			beforeSend: addCsrfHeader,
 			url: "/vehicle/" + vehicleName + "/registration/" + registrationIdToDelete,
 			type: "DELETE",
 			success: function(result) {
@@ -56,6 +69,7 @@ $(document).ready(function(){
 	/* Remove Note - Note confirmation */
 	$("#deleteNote").click(function(){
 		$.ajax({
+			beforeSend: addCsrfHeader,
 			url: "/vehicle/" + vehicleName + "/note/" + noteIdToDelete,
 			type: "DELETE",
 			success: function(result) {
@@ -64,6 +78,24 @@ $(document).ready(function(){
 			},
 			failure: function(errMsg) {
 				$("#confirmNoteDeleteModal").modal("toggle");
+			},
+		});
+	});
+	
+	/* ####################### Delete Alerts ###################### */
+	
+	/* Remove Note - Note confirmation */
+	$("#deleteAlert").click(function(){
+		$.ajax({
+			beforeSend: addCsrfHeader,
+			url: "/vehicle/" + vehicleName + "/alert/" + alertIdToDelete,
+			type: "DELETE",
+			success: function(result) {
+				$("#confirmAlertDeleteModal").modal("toggle");
+				alertsTable.row(document.getElementById(alertIdToDelete+"alert")).remove().draw(true);
+			},
+			failure: function(errMsg) {
+				$("#confirmAlertDeleteModal").modal("toggle");
 			},
 		});
 	});
@@ -81,12 +113,12 @@ $(document).ready(function(){
 					registration.description = $("#description").val(); 
 					registration.date = $("#date").val();
 					$.ajax({
+						beforeSend: addCsrfHeader,
 						url: "/vehicle/" + vehicleName + "/registration",
 						type: "POST",
 						data: JSON.stringify(registration),
 						contentType: "application/json; charset=utf-8",
 						success: function(data, textStatus, request) {
-							alert(data);
 							$("#registrationModal").modal("toggle");
 							$("#responseAlertSuccessHeader").text("Registo")
 							$("#responseAlertSuccessText").text("Registo adicionado com sucesso");
@@ -122,9 +154,12 @@ $(document).ready(function(){
 		.on("shown.bs.modal", function (e) {
 			$("#noteForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
+					var token = $("meta[name='_csrf']").attr("content");
+					var header = $("meta[name='_csrf_header']").attr("content");
 					var note = new Object();
 					note.description = $("#note").val();
 					$.ajax({
+						beforeSend: addCsrfHeader,
 						url: "/vehicle/" + vehicleName + "/note",
 						type: "POST",
 						data: JSON.stringify(note),
@@ -174,6 +209,7 @@ $(document).ready(function(){
 						url = "/vehicle/" + vehicleName + "/notification?type=HalfYear";
 					}
 					$.ajax({
+						beforeSend: addCsrfHeader,
 						url: url,
 						type: "POST",
 						data: JSON.stringify(alert),
@@ -183,9 +219,13 @@ $(document).ready(function(){
 							$("#responseAlertSuccessHeader").text("Alertas")
 							$("#responseAlertSuccessText").text("Alerta adicionado com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
+							var row = alertsTable.row.add([alert.description,alert.notiDate,
+										                     getDeleteAlertButtonHtml(data)]).draw(true).node();
+							$(row).attr("id",data+"alert");
+							bindDeleteButtons();
 						},
 						failure: function(errMsg) {
-							$("#notesModal").modal("toggle");
+							$("#alertsModal").modal("toggle");
 							$("#responseAlertFailHeader").text("Alertas")
 							$("#responseAlertFailText").text("Falha ao adicionar alerta");
 							$("#responseAlertModalFail").modal("toggle");

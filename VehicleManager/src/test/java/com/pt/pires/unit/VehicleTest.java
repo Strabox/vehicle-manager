@@ -10,7 +10,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pt.pires.VehicleManagerApplication;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
@@ -29,7 +29,7 @@ public class VehicleTest {
 		c2.setTime(new Date());
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,(currentMonth - 1) % 11);
-		UnlicensedVehicle v = new UnlicensedVehicle(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
 		Assert.assertTrue(v.calculateAcquisitionYears() == 10);
 	}
 	
@@ -43,7 +43,7 @@ public class VehicleTest {
 		c2.setTime(new Date());
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,(currentMonth + 1) % 11);
-		UnlicensedVehicle v = new UnlicensedVehicle(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
 		Assert.assertTrue(v.calculateAcquisitionYears() == 9);
 	}
 	
@@ -59,7 +59,7 @@ public class VehicleTest {
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,currentMonth);
 		c2.set(Calendar.DATE, (currentDay + 1) % 31);
-		UnlicensedVehicle v = new UnlicensedVehicle(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
 		Assert.assertTrue(v.calculateAcquisitionYears() == 9);
 	}
 	
@@ -75,7 +75,7 @@ public class VehicleTest {
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,currentMonth);
 		c2.set(Calendar.DATE, (currentDay - 1) % 31);
-		UnlicensedVehicle v = new UnlicensedVehicle(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
 		Assert.assertTrue(v.calculateAcquisitionYears() == 10);
 	}
 	

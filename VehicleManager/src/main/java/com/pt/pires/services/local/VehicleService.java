@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.License;
-import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.NotificationHalfYear;
 import com.pt.pires.domain.NotificationYear;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.InvalidLicenseException;
 import com.pt.pires.domain.exceptions.InvalidNoteException;
@@ -55,19 +55,19 @@ public class VehicleService implements IVehicleService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Collection<LicensedVehicle> getLicensedVehicles() {
-		Collection<LicensedVehicle> vs = (Collection<LicensedVehicle>) licensedRepository.findAll();
+	public Collection<VehicleLicensed> getLicensedVehicles() {
+		Collection<VehicleLicensed> vs = (Collection<VehicleLicensed>) licensedRepository.findAll();
 		if(vs == null)
-			vs = new ArrayList<LicensedVehicle>();
+			vs = new ArrayList<VehicleLicensed>();
 		return vs;
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Collection<UnlicensedVehicle> getUnlicensedVehicles() {
-		Collection<UnlicensedVehicle> vs =(Collection<UnlicensedVehicle>) unlicensedRepository.findAll();
+	public Collection<VehicleUnlicensed> getUnlicensedVehicles() {
+		Collection<VehicleUnlicensed> vs =(Collection<VehicleUnlicensed>) unlicensedRepository.findAll();
 		if(vs == null)
-			vs = new ArrayList<UnlicensedVehicle>();
+			vs = new ArrayList<VehicleUnlicensed>();
 		return vs;
 	}
 	
@@ -79,8 +79,8 @@ public class VehicleService implements IVehicleService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public LicensedVehicle getLicensedVehicle(String name) throws VehicleDoesntExistException{
-		LicensedVehicle v = licensedRepository.findOne(name);
+	public VehicleLicensed getLicensedVehicle(String name) throws VehicleDoesntExistException{
+		VehicleLicensed v = licensedRepository.findOne(name);
 		if(v == null)
 			throw new VehicleDoesntExistException();
 		return v;
@@ -88,8 +88,8 @@ public class VehicleService implements IVehicleService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public UnlicensedVehicle getUnlicensedVehicle(String name) throws VehicleDoesntExistException{
-		UnlicensedVehicle v = unlicensedRepository.findOne(name);
+	public VehicleUnlicensed getUnlicensedVehicle(String name) throws VehicleDoesntExistException{
+		VehicleUnlicensed v = unlicensedRepository.findOne(name);
 		if(v == null){
 			throw new VehicleDoesntExistException();
 		}
@@ -117,7 +117,7 @@ public class VehicleService implements IVehicleService{
 			throw new InvalidVehicleBrandException();
 		}
 		License licenseo = new License(license, licenseDate);
-		LicensedVehicle v = new LicensedVehicle(vehicleName, brand, acquisitionDate, licenseo);
+		VehicleLicensed v = new VehicleLicensed(vehicleName, brand, acquisitionDate, licenseo);
 		vehicleRepository.save(v);
 	}
 	
@@ -135,7 +135,7 @@ public class VehicleService implements IVehicleService{
 		else if(brand.isEmpty()){
 			throw new InvalidVehicleBrandException();
 		}
-		UnlicensedVehicle v = new UnlicensedVehicle(vehicleName, brand, acquisitionDate);
+		VehicleUnlicensed v = new VehicleUnlicensed(vehicleName, brand, acquisitionDate);
 		vehicleRepository.save(v);
 	}
 	
@@ -219,6 +219,13 @@ public class VehicleService implements IVehicleService{
 		NotificationHalfYear noti = notiRepository.save(new NotificationHalfYear(initDate,notiDescription));
 		v.addNotification(noti);
 		return noti.getId();
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public void removeAlertFromVehicle(String vehicleName, long alertId) throws VehicleManagerException {
+		Vehicle v = obtainVehicle(vehicleName);
+		v.removeNotification(alertId);
 	}
 	
 	/* ============================ Private Methods ========================== */

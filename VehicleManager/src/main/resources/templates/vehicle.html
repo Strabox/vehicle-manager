@@ -4,7 +4,11 @@
 	    <title th:text="${vehicle.name}"></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
-	    
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+   		<!-- CSRF Header and Token -->
+		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	    <meta name="_csrf" th:content="${_csrf.token}"/>
+	
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<!-- Bootstrap CSS -->
@@ -20,6 +24,7 @@
 		<!-- Form Validator for Bootstrap 3 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
 		
+		<script src="/javascript/common.js"></script>
 		<script src="/javascript/vehicle.js"></script>
 	</head>
 	<body>
@@ -34,7 +39,7 @@
 							<li><a data-toggle="pill" href="#alertsTab">Alertas <span class="glyphicon glyphicon-time"></span></a></li>
 							<li><a data-toggle="pill" href="#filesTab">Ficheiros <span class="glyphicon glyphicon-file"></span></a></li>
 							<li><a href="/vehicles">Voltar <span class="glyphicon glyphicon-arrow-left"></span></a></li>
-							<li><a href="#">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
+							<li><a href="#" id="logout">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
 						</ul>
 					</div>
 				</div>
@@ -62,7 +67,7 @@
 								<div class="col-sm-5">
 									<p><span th:text="${vehicle.acquisitionDate}"></span><span><b th:text="${' há ' + vehicle.calculateAcquisitionYears() + ' anos'}"></b></span></p>
 									<hr></hr>
-									<p th:if="${type.equals('licensed')}" th:text="${vehicle.license.date}"></p>
+									<p th:if="${type.equals('licensed')}"><span th:text="${vehicle.license.date}"></span><span ><b th:text="${' têm ' + vehicle.license.calculateLicenseYears() + ' anos'}"></b></span></p>
 								</div>
 							</div>
 						</div>
@@ -86,7 +91,7 @@
 						    		</tr>
 						    	</thead>
 						    	<tbody>
-						    		<tr th:each="registration : ${vehicle.registries}" th:id="${registration.id + 'row'}" >
+						    		<tr th:each="registration : ${vehicle.registries}" th:id="${registration.id + 'reg'}" >
 						    			<td th:text="${registration.time}"></td>
 						    			<td th:text="${registration.description}"></td>
 						    			<td th:text="${registration.date}"></td>
@@ -165,7 +170,7 @@
 							    	</tr>
 						    	</thead>
 						    	<tbody>
-						    		<tr th:each="note : ${vehicle.notes}" th:id="${note.id + 'row'}" >
+						    		<tr th:each="note : ${vehicle.notes}" th:id="${note.id + 'note'}" >
 						    			<td th:text="${note.description}"></td>
 						    			<td><button th:id="${note.id}" type="button" class="btn btn-danger delete-note" data-toggle="modal" data-target="#confirmNoteDeleteModal">Apagar</button></td>
 						    		</tr>
@@ -232,10 +237,10 @@
 						    		</tr>
 						    	</thead>
 						    	<tbody>
-						    		<tr th:each="alert : ${vehicle.notifications}">
+						    		<tr th:each="alert : ${vehicle.notifications}" th:id="${alert.id + 'alert'}">
 						    			<td th:text="${alert.description}"></td>
 						    			<td th:text="${alert.notiDate}"></td>
-						    			<td><button type="button"  class="btn btn-danger delete-reg">Apagar</button></td>
+						    			<td><button th:id="${alert.id}" type="button" class="btn btn-danger delete-alert" data-toggle="modal" data-target="#confirmAlertDeleteModal">Apagar</button></td>
 						    		</tr>
 						    	</tbody>
 						    </table>
@@ -281,6 +286,24 @@
 					    			</div>
 					    		</div>
 					    	</div>
+					    	
+					    	<div id="confirmAlertDeleteModal" class="modal fade" role="dialog">
+						    	<div class="modal-dialog">
+						    		<div class="modal-content">
+						    			<div class="modal-header">
+						    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+						    				<h4>Apagar Alerta</h4>
+						 				</div>
+						    			<div class="modal-body">
+						    			<h3>Deseja apagar o alerta?</h3>
+						    			</div>
+						    			<div class="modal-footer">
+						    				<button id="deleteAlert" type="button" class="btn btn-danger">Confirmar</button>
+				    						<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+						    			</div>
+						    		</div>
+						    	</div>
+					    	</div> 
 					    	
 					    </div>
 					    

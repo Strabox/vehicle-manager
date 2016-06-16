@@ -47,7 +47,7 @@ public class VehicleIntegratorService implements IVehicleIntegratorService{
 	}
 	
 	@Override
-	public void removeVehicle(String vehicleName) {
+	public void removeVehicle(String vehicleName) throws VehicleManagerException {
 		localVehicleService.removeVehicle(vehicleName);
 		try {
 			fileService.removeVehicleFiles(vehicleName);

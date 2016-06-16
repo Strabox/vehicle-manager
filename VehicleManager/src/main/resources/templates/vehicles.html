@@ -4,8 +4,12 @@
 	    <title>Veículos</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+	    <!-- CSRF Header and Token -->
+		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	    <meta name="_csrf" th:content="${_csrf.token}"/>
 	    
-	   <!-- jQuery library -->
+	   	<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
@@ -20,6 +24,7 @@
 		<!-- Form Validator for Bootstrap 3 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
 		
+		<script src="/javascript/common.js"></script>
 		<script src="/javascript/vehicles.js"></script>
 	</head>
 	<body>
@@ -31,7 +36,7 @@
 						<ul class="nav nav-pills nav-stacked" role="tablist">
 							<li><a href="home">Inicio <span class="glyphicon glyphicon-home"></span></a></li>
 							<li class="active"><a href="#">Veículos <span class="glyphicon glyphicon-th-list"></span></a></li>
-							<li><a href="#">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
+							<li><a href="#" id="logout">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
 						</ul>
 					</div>
 				</div>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pt.pires.initialization.Initializer;
 
 @RestController
-public class DebugController {
+public class DebugControllerRest {
 
 	@Autowired
 	private Initializer init;

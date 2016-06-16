@@ -1,12 +1,7 @@
 package com.pt.pires.services.local;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,7 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.pt.pires.domain.UserRole;
 import com.pt.pires.persistence.UserRepository;
 
 @Service("userDetailsService")
@@ -24,11 +21,13 @@ public class MyUserDetailsService implements UserDetailsService{
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Transactional
 	@Override
+	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		com.pt.pires.domain.User user = userRepository.findOne(username);
-		return buildUser(user, buildUserAuthority());
+		if(user == null)
+			throw new UsernameNotFoundException("Inexistent Username");
+		return buildUser(user, buildUserAuthority(user.getRole()));
 	}
 	
 	/* ======================== Private methods ====================== */
@@ -38,12 +37,10 @@ public class MyUserDetailsService implements UserDetailsService{
 				true, true, true, authorities);
 	}
 	
-	private List<GrantedAuthority> buildUserAuthority() {
-		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-
-		setAuths.add(new SimpleGrantedAuthority("USER"));
-
-		return new ArrayList<GrantedAuthority>(setAuths);
+	private List<GrantedAuthority> buildUserAuthority(UserRole role) {
+		ArrayList<GrantedAuthority> res = new ArrayList<>();
+		res.add(new SimpleGrantedAuthority(role.name()));
+		return new ArrayList<GrantedAuthority>(res);
 	}
 	
 }

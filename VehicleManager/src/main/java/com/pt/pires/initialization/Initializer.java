@@ -6,14 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.pt.pires.domain.License;
-import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.User;
+import com.pt.pires.domain.UserRole;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.UserRepository;
 import com.pt.pires.persistence.VehicleRepository;
+import com.pt.pires.security.SecurityUtil;
 
 
 /**
@@ -34,16 +36,17 @@ public class Initializer {
 		//Initializations...
 		System.out.println("===== Initializing Database ======");
 		try{
-			User user = new User("jose","pires");
+			User user = new User("jose",SecurityUtil.passwordEncoder().encode("pires"));
+			user.setRole(UserRole.ROLE_USER);
 			ur.save(user);
 			Calendar c = Calendar.getInstance();
 			c.set(Calendar.YEAR,2000);
 			Date d = c.getTime();
-			LicensedVehicle l = new LicensedVehicle("Carrinha Mitsubishi", "lol",d,
+			VehicleLicensed l = new VehicleLicensed("Carrinha Mitsubishi", "lol",d,
 					new License("89-30-OZ", new Date()));
 			c.set(Calendar.YEAR,2006);
 			d = c.getTime();
-			UnlicensedVehicle u = new UnlicensedVehicle("Tractor Verde Fergunson", "Fergunson",d);
+			VehicleUnlicensed u = new VehicleUnlicensed("Tractor Verde Fergunson", "Fergunson",d);
 			l.addRegistration(new Registration(100, "Mudança de óleo", new Date()));
 			l.addRegistration(new Registration(400, "Mudança de óleo", new Date()));
 			l.addRegistration(new Registration(550, "Mudança de filtro", new Date()));

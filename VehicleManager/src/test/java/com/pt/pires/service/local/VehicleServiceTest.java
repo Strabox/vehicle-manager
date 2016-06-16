@@ -14,10 +14,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.VehicleManagerApplication;
-import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.InvalidLicenseException;
 import com.pt.pires.domain.exceptions.InvalidNoteException;
@@ -77,9 +77,9 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test
 	public void getUnlicensedVehicles(){
-		List<UnlicensedVehicle> c = (List<UnlicensedVehicle>) vehicleService.getUnlicensedVehicles();
+		List<VehicleUnlicensed> c = (List<VehicleUnlicensed>) vehicleService.getUnlicensedVehicles();
 		Assert.assertTrue(c.size() == 1);
-		UnlicensedVehicle v = c.get(0);
+		VehicleUnlicensed v = c.get(0);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_EXIST_1));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND_1));
 	}
@@ -87,7 +87,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	@Test
 	public void getUnlicensedVehiclesNoVehicles(){
 		deleteVehicle(VEHICLE_NAME_EXIST_1);
-		List<UnlicensedVehicle> c = (List<UnlicensedVehicle>) vehicleService.getUnlicensedVehicles();
+		List<VehicleUnlicensed> c = (List<VehicleUnlicensed>) vehicleService.getUnlicensedVehicles();
 		Assert.assertTrue(c.size() == 0);
 	}
 	
@@ -95,9 +95,9 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test
 	public void getLicensedVehicles(){
-		List<LicensedVehicle> c = (List<LicensedVehicle>) vehicleService.getLicensedVehicles();
+		List<VehicleLicensed> c = (List<VehicleLicensed>) vehicleService.getLicensedVehicles();
 		Assert.assertTrue(c.size() == 1);
-		LicensedVehicle v = c.get(0);
+		VehicleLicensed v = c.get(0);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_EXIST_2));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND_1));
 		Assert.assertTrue(v.getLicense().getLicense().equals(VALID_LICENSE));
@@ -106,7 +106,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	@Test
 	public void getLicensedVehiclesNoVehicles(){
 		deleteVehicle(VEHICLE_NAME_EXIST_2);
-		List<LicensedVehicle> c = (List<LicensedVehicle>) vehicleService.getLicensedVehicles();
+		List<VehicleLicensed> c = (List<VehicleLicensed>) vehicleService.getLicensedVehicles();
 		Assert.assertTrue(c.size() == 0);
 	}
 	
@@ -132,7 +132,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	public void createLicensedVehicle() throws VehicleManagerException{
 		vehicleService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
 				VALID_LICENSE, VEHICLE_DATE);
-		LicensedVehicle v = obtainLicensedVehicle(VEHICLE_NAME);
+		VehicleLicensed v = obtainLicensedVehicle(VEHICLE_NAME);
 		Assert.assertNotNull(v);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND));
@@ -168,7 +168,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	@Test
 	public void createUnlicensedVehicle() throws VehicleManagerException {
 		vehicleService.createUnlicensedVehicle(VEHICLE_NAME,VEHICLE_BRAND,VEHICLE_DATE);		
-		UnlicensedVehicle v = obtainUnlicensedVehicle(VEHICLE_NAME);
+		VehicleUnlicensed v = obtainUnlicensedVehicle(VEHICLE_NAME);
 		Assert.assertNotNull(v);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND));
@@ -193,7 +193,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test
 	public void getUnlicensedVehicle() throws VehicleManagerException{
-		UnlicensedVehicle v = vehicleService.getUnlicensedVehicle(VEHICLE_NAME_EXIST_1);
+		VehicleUnlicensed v = vehicleService.getUnlicensedVehicle(VEHICLE_NAME_EXIST_1);
 		Assert.assertNotNull(v);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_EXIST_1));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND_1));
@@ -208,7 +208,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test
 	public void getLicensedVehicle() throws VehicleManagerException{
-		LicensedVehicle v = vehicleService.getLicensedVehicle(VEHICLE_NAME_EXIST_2);
+		VehicleLicensed v = vehicleService.getLicensedVehicle(VEHICLE_NAME_EXIST_2);
 		Assert.assertNotNull(v);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_EXIST_2));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND_1));
@@ -222,13 +222,13 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	/* ================= RemoveVehicleService ================== */
 
 	@Test
-	public void removeVehicle(){
+	public void removeVehicle() throws VehicleManagerException{
 		vehicleService.removeVehicle(VEHICLE_NAME_EXIST_1);
 		Assert.assertNull(obtainVehicle(VEHICLE_NAME_EXIST_1));
 	}
 
 	@Test
-	public void removeVehicleDoesntExist(){
+	public void removeVehicleDoesntExist() throws VehicleManagerException{
 		vehicleService.removeVehicle(VEHICLE_NAME_DOESNT_EXIST);
 	}
 	
@@ -318,13 +318,13 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	/* ====================== VehicleExistService ==================== */
 	
 	@Test
-	public void vehicleExistTrue(){
+	public void vehicleExistTrue() throws VehicleManagerException{
 		Assert.assertTrue(vehicleService.vehicleExist(VEHICLE_NAME_EXIST_1));
 		Assert.assertTrue(vehicleService.vehicleExist(VEHICLE_NAME_EXIST_2));
 	}
 	
 	@Test
-	public void vehicleExistFalse(){
+	public void vehicleExistFalse() throws VehicleManagerException{
 		Assert.assertTrue(!vehicleService.vehicleExist(VEHICLE_NAME_DOESNT_EXIST));
 	}
 }

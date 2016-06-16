@@ -3,28 +3,28 @@ package com.pt.pires.services.local;
 import java.util.Collection;
 import java.util.Date;
 
-import com.pt.pires.domain.LicensedVehicle;
+import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.UnlicensedVehicle;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 
 public interface IVehicleService {
 
-	Collection<LicensedVehicle> getLicensedVehicles();
+	Collection<VehicleLicensed> getLicensedVehicles();
 	
-	Collection<UnlicensedVehicle> getUnlicensedVehicles();
+	Collection<VehicleUnlicensed> getUnlicensedVehicles();
 	
 	Vehicle getVehicle(String vehicleName) throws VehicleManagerException;
 	
-	LicensedVehicle getLicensedVehicle(String vehicleName) throws VehicleManagerException;
+	VehicleLicensed getLicensedVehicle(String vehicleName) throws VehicleManagerException;
 	
-	UnlicensedVehicle getUnlicensedVehicle(String vehicleName) throws VehicleManagerException;
+	VehicleUnlicensed getUnlicensedVehicle(String vehicleName) throws VehicleManagerException;
 	
-	void removeVehicle(String vehicleName);
+	void removeVehicle(String vehicleName) throws VehicleManagerException;;
 	
-	boolean vehicleExist(String vehicleName);
+	boolean vehicleExist(String vehicleName) throws VehicleManagerException;;
 	
 	void createUnlicensedVehicle(String vehicleName,String brand,Date acquisitionDate) throws VehicleManagerException;
 	
@@ -46,5 +46,7 @@ public interface IVehicleService {
 	Long addYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
 	
 	Long addHalfYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
+	
+	void removeAlertFromVehicle(String vehicleName,long alertId) throws VehicleManagerException;
 	
 }

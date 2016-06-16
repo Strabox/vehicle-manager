@@ -17,7 +17,7 @@ public class LicenseControllerRest {
 	@Autowired
 	private LicenseService licenseService;
 	
-	@RequestMapping(value="/license",method = RequestMethod.GET,params = {"license"})
+	@RequestMapping(value = "/license",method = RequestMethod.GET,params = {"license"})
 	public ResponseEntity<String> validateLicense(@PathParam("license") String license){
 		if(!licenseService.validateLicense(license))
 			return new ResponseEntity<String>(HttpStatus.CONFLICT);
