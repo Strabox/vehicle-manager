@@ -10,6 +10,11 @@ import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 
+/**
+ * Service related to vehicles
+ * @author André
+ *
+ */
 public interface IVehicleService {
 
 	Collection<VehicleLicensed> getLicensedVehicles();
@@ -47,6 +52,8 @@ public interface IVehicleService {
 	
 	Long addHalfYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
 	
-	void removeAlertFromVehicle(String vehicleName,long alertId) throws VehicleManagerException;
+	Long addOneTimeNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
+	
+	void removeNotificationFromVehicle(String vehicleName,long alertId) throws VehicleManagerException;
 	
 }

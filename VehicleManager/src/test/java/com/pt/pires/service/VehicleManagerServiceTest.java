@@ -1,10 +1,9 @@
-package com.pt.pires.service.local;
+package com.pt.pires.service;
 
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
-
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -12,25 +11,28 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pt.pires.VehicleManagerApplication;
 import com.pt.pires.domain.License;
-import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
+import com.pt.pires.domain.NotificationTask;
 import com.pt.pires.domain.Registration;
-import com.pt.pires.domain.VehicleUnlicensed;
+import com.pt.pires.domain.User;
+import com.pt.pires.domain.UserRole;
 import com.pt.pires.domain.Vehicle;
+import com.pt.pires.domain.VehicleLicensed;
+import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.LicensedVehicleRepository;
 import com.pt.pires.persistence.NoteRepository;
+import com.pt.pires.persistence.NotificationRepository;
 import com.pt.pires.persistence.RegistrationRepository;
 import com.pt.pires.persistence.UnlicensedVehicleRepository;
+import com.pt.pires.persistence.UserRepository;
 import com.pt.pires.persistence.VehicleRepository;
 
-/**
- * 
- * @author André
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 public abstract class VehicleManagerServiceTest {
+
+	protected static final String EMPTY_STRING = "";
 	
 	@Autowired
 	private VehicleRepository vehicleRepository; 
@@ -45,10 +47,17 @@ public abstract class VehicleManagerServiceTest {
 	private RegistrationRepository regRepository;
 	
 	@Autowired
+	private NotificationRepository notiRepository;
+	
+	@Autowired
 	private NoteRepository noteRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+	
 	
 	/**
-	 * Executed before each test.
+	 * Populate the database before each test.
 	 * @throws VehicleManagerException
 	 */
 	@Before
@@ -59,9 +68,27 @@ public abstract class VehicleManagerServiceTest {
 	
 	public abstract void populate() throws VehicleManagerException;
 	
-	/* ================= Auxiliary test methods =============== */
+	/* ================= Auxiliary User test methods =============== */
 	
-	protected void newUnlicensedVehicle(String name,String brand,Date acquisitionDate){
+	protected void newUser(String username,String password,String email,UserRole role) throws VehicleManagerException{
+		User user = new User(username,password,email,role);
+		userRepository.save(user);
+	}
+	
+	protected void removeUser(String username) {
+		if(vehicleRepository.exists(username)) {
+			userRepository.delete(username);
+		}
+	}
+	
+	protected User obtainUser(String username) {
+		return userRepository.findOne(username);
+	}
+	
+	/* ================= Auxiliary Vehicle test methods =============== */
+	
+	protected void newUnlicensedVehicle(String name,String brand,Date acquisitionDate) 
+		throws VehicleManagerException {
 		unlicensedRepository.save(new VehicleUnlicensed(name, brand, acquisitionDate));
 	}
 	
@@ -71,15 +98,15 @@ public abstract class VehicleManagerServiceTest {
 		licensedRepository.save(new VehicleLicensed(name, brand, acquisitionDate, licenseO));
 	}
 	
-	protected Vehicle obtainVehicle(String name){
+	protected Vehicle obtainVehicle(String name) {
 		return vehicleRepository.findOne(name);
 	}
 	
-	protected VehicleUnlicensed obtainUnlicensedVehicle(String name){
+	protected VehicleUnlicensed obtainUnlicensedVehicle(String name) {
 		return unlicensedRepository.findOne(name);
 	}
 	
-	protected VehicleLicensed obtainLicensedVehicle(String name){
+	protected VehicleLicensed obtainLicensedVehicle(String name) {
 		return licensedRepository.findOne(name);
 	}
 	
@@ -88,7 +115,7 @@ public abstract class VehicleManagerServiceTest {
 			vehicleRepository.delete(name);
 	}
 	
-	protected Long newRegistration(String vehicleName,long time,String description,Date date){
+	protected Long newRegistration(String vehicleName,long time,String description,Date date) throws VehicleManagerException {
 		if(vehicleRepository.exists(vehicleName)){
 			Vehicle v = vehicleRepository.findOne(vehicleName);
 			Registration reg = regRepository.save(new Registration(time,description,date));
@@ -100,7 +127,7 @@ public abstract class VehicleManagerServiceTest {
 		return null;
 	}
 	
-	protected Long newNote(String vehicleName,String noteDescription){
+	protected Long newNote(String vehicleName,String noteDescription) throws VehicleManagerException {
 		if(vehicleRepository.exists(vehicleName)){
 			Vehicle v = vehicleRepository.findOne(vehicleName);
 			Note note = noteRepository.save(new Note(noteDescription));
@@ -109,6 +136,24 @@ public abstract class VehicleManagerServiceTest {
 			return note.getId();
 		}
 		return null;
+	}
+	
+	
+	protected Long newNotification(String vehicleName,NotificationTask notification){
+		if(vehicleRepository.exists(vehicleName)){
+			Vehicle v = vehicleRepository.findOne(vehicleName);
+			NotificationTask note = notiRepository.save(notification);
+			v.addNotification(notification);
+			vehicleRepository.save(v);
+			return note.getId();
+		}
+		return null;
+	}
+	
+	protected void deleteNotification(Long id){
+		if(notiRepository.exists(id)){
+			notiRepository.delete(id);
+		}
 	}
 	
 	protected Registration obtainRegistration(String vehicleName,Long regId){
@@ -131,6 +176,16 @@ public abstract class VehicleManagerServiceTest {
 		return null;
 	}
 	
+	protected NotificationTask obtainNotification(String vehicleName,Long notiId){
+		List<NotificationTask> notis = (List<NotificationTask>) vehicleRepository.findOne(vehicleName).getNotifications();
+		for(NotificationTask noti : notis){
+			if(noti.getId() == notiId){
+				return noti;
+			}
+		}
+		return null;
+	}
+	
 	protected List<Registration> obtainRegistrations(String vehicleName){
 		if(vehicleRepository.exists(vehicleName)){
 			return (List<Registration>) vehicleRepository.findOne(vehicleName).getRegistries();
@@ -144,5 +199,14 @@ public abstract class VehicleManagerServiceTest {
 		}
 		return null;
 	}
+	
+	protected List<NotificationTask> obtainNotifications(String vehicleName){
+		if(vehicleRepository.exists(vehicleName)){
+			return (List<NotificationTask>) vehicleRepository.findOne(vehicleName).getNotifications();
+		}
+		return null;
+	}
+	
+	/* ================= Auxiliary Notification test methods =============== */
 	
 }

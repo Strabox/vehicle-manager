@@ -1,9 +1,10 @@
 $(document).ready(function(){
 	var vehicleName = $("#vehicleName").text();
+	var vehicleType = $("#vehicleType").attr("name");
 	var noteIdToDelete;
 	var registrationIdToDelete;
 	var alertIdToDelete;
-	//Awesome Tables initializations
+	// Awesome Tables initializations (Datatable plugin)
 	var registriesTable = $("#registrationsTable").DataTable({"order": [[ 0, "desc" ]]});
 	var notesTable = $("#notesTable").DataTable();
 	var alertsTable = $("#alertsTable").DataTable();
@@ -32,23 +33,23 @@ $(document).ready(function(){
 				"data-target=\"#confirmAlertDeleteModal\">Apagar</button>";
 	}
 	
-	function bindDeleteButtons(){
-		$(".delete-reg").click(function(){
-			registrationIdToDelete = $(this).attr("id");
-		});
-		$(".delete-note").click(function(){
-			noteIdToDelete = $(this).attr("id");
-		});
-		$(".delete-alert").click(function(){
-			alertIdToDelete = $(this).attr("id");
-		});
-	}
+	/* ########################## Printing #############################*/
 	
-	bindDeleteButtons();	//Bind all the delete buttons to the event.
+	/* Bind print function to print buttons */
+	$(".printButton").click(function(){
+		var printType = $(this).attr("id");
+		var printUrl = "/vehicle/" + vehicleName + "/print?type=" + vehicleType +"&print=" + printType;
+		var myWindow = window.open(printUrl,"","width = 800,height = 550");
+		myWindow.print();
+	});
 	
 	/* ##################### Delete Registrations ######################## */
 
+	$(document).on("click", ".delete-reg", function(){
+		registrationIdToDelete = $(this).attr("id");
+	});
 	
+	/* Bind delete registration function to modal button */
 	$("#deleteRegistration").click(function(){
 		$.ajax({
 			beforeSend: addCsrfHeader,
@@ -58,13 +59,17 @@ $(document).ready(function(){
 				$("#confirmRegDeleteModal").modal("toggle");
 				registriesTable.row(document.getElementById(registrationIdToDelete+"reg")).remove().draw(true);
 			},
-			failure: function(errMsg) {
+			error: function(errMsg) {
 				$("#confirmRegDeleteModal").modal("toggle");
 			},
 		});
 	});
 	
 	/* ####################### Delete Notes ######################## */
+	
+	$(document).on("click", ".delete-note", function(){
+		noteIdToDelete = $(this).attr("id");
+	});
 	
 	/* Remove Note - Note confirmation */
 	$("#deleteNote").click(function(){
@@ -76,13 +81,17 @@ $(document).ready(function(){
 				$("#confirmNoteDeleteModal").modal("toggle");
 				notesTable.row(document.getElementById(noteIdToDelete+"note")).remove().draw(true);
 			},
-			failure: function(errMsg) {
+			error: function(errMsg) {
 				$("#confirmNoteDeleteModal").modal("toggle");
 			},
 		});
 	});
 	
 	/* ####################### Delete Alerts ###################### */
+	
+	$(document).on("click", ".delete-alert", function(){
+		alertIdToDelete = $(this).attr("id");
+	});
 	
 	/* Remove Note - Note confirmation */
 	$("#deleteAlert").click(function(){
@@ -94,7 +103,7 @@ $(document).ready(function(){
 				$("#confirmAlertDeleteModal").modal("toggle");
 				alertsTable.row(document.getElementById(alertIdToDelete+"alert")).remove().draw(true);
 			},
-			failure: function(errMsg) {
+			error: function(errMsg) {
 				$("#confirmAlertDeleteModal").modal("toggle");
 			},
 		});
@@ -106,6 +115,7 @@ $(document).ready(function(){
 	 * validator in hide/show of the modal. */
 	$("#registrationModal")
 		.on("shown.bs.modal", function (e) {
+			$("#time").focus();					//Focus the first input field.
 			$("#registrationForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
 					var registration = new Object();
@@ -128,9 +138,8 @@ $(document).ready(function(){
 		                         registration.date,
 		                         getDeleteRegButtonHtml(data)]).draw(true).node();
 							$(row).attr("id",data+"reg");
-							bindDeleteButtons();
 						},
-						failure: function(errMsg) {
+						error: function(errMsg) {
 							$("#registrationModal").modal("toggle");
 							$("#responseAlertFailHeader").text("Registo")
 							$("#responseAlertFailText").text("Falha ao adicionar registo");
@@ -152,6 +161,7 @@ $(document).ready(function(){
 	 * validator in hide/show of the modal. */
 	$("#notesModal")
 		.on("shown.bs.modal", function (e) {
+			$("#note").focus();
 			$("#noteForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
 					var token = $("meta[name='_csrf']").attr("content");
@@ -172,9 +182,8 @@ $(document).ready(function(){
 							var row = notesTable.row.add([note.description,
 			                     getDeleteNoteButtonHtml(data)]).draw(true).node();
 							$(row).attr("id",data+"note");
-							bindDeleteButtons();
 						},
-						failure: function(errMsg) {
+						error: function(errMsg) {
 							$("#notesModal").modal("toggle");
 							$("#responseAlertFailHeader").text("Notas")
 							$("#responseAlertFailText").text("Falha ao adicionar nota");
@@ -196,6 +205,7 @@ $(document).ready(function(){
 	 * validator in hide/show of the modal. */
 	$("#alertsModal")
 		.on("shown.bs.modal", function (e) {
+			$("#alertDescription").focus();
 			$("#alertForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
 					var alert = new Object();
@@ -204,9 +214,10 @@ $(document).ready(function(){
 					alert.notiDate = $("#notiDate").val();
 					if($("#periodicity").val() == "Ano a ano"){
 						url = "/vehicle/" + vehicleName + "/notification?type=Year";
-					}
-					else if($("#periodicity").val() == "De meio em meio ano"){
+					} else if($("#periodicity").val() == "De meio em meio ano"){
 						url = "/vehicle/" + vehicleName + "/notification?type=HalfYear";
+					} else if($("#periodicity").val() == "Só uma vez"){
+						url = "/vehicle/" + vehicleName + "/notification?type=OneTime";
 					}
 					$.ajax({
 						beforeSend: addCsrfHeader,
@@ -222,9 +233,8 @@ $(document).ready(function(){
 							var row = alertsTable.row.add([alert.description,alert.notiDate,
 										                     getDeleteAlertButtonHtml(data)]).draw(true).node();
 							$(row).attr("id",data+"alert");
-							bindDeleteButtons();
 						},
-						failure: function(errMsg) {
+						error: function(errMsg) {
 							$("#alertsModal").modal("toggle");
 							$("#responseAlertFailHeader").text("Alertas")
 							$("#responseAlertFailText").text("Falha ao adicionar alerta");
@@ -239,5 +249,41 @@ $(document).ready(function(){
 			$("#alertForm").validator().off("submit");
 			$("#alertForm").validator("destroy")
 	});
+	
+	/* ################### Edit Form ########################## */
+	
+	$("#editTabPill")
+		.on("shown.bs.tab", function (e) {
+			$("#editForm").validator().on("submit", function (e) {
+				if (!e.isDefaultPrevented()) {	//Valid Form
+					var formData = new FormData(this);
+					$.ajax({
+						beforeSend: addCsrfHeader,
+						url: "/vehicle/" + vehicleName + "/portrait",
+						type: "POST",
+						data: formData,
+						cache: false,
+			            contentType: false,
+			            processData: false,
+						success: function(data, textStatus, request) {
+							// Reload the image
+							$("#portraitImage").attr("src", $("#portraitImage").attr("src"));
+						},
+						error: function(errMsg) {
+							$("#responseAlertFailHeader").text("Editar")
+							$("#responseAlertFailText").text("Falha ao editar imagem");
+							$("#responseAlertModalFail").modal("toggle");
+						},
+					});
+			  	}
+				return false;	//Prevent submit action from reloading the page
+			});
+		})
+		.on("hidden.bs.tab", function (e) {
+			$("#editForm").validator().off("submit");
+			$("#editForm").validator("destroy");
+	});
+
+	/* ##################################################### */
 	
 });

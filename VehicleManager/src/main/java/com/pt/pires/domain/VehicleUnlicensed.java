@@ -4,10 +4,14 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 
-@Entity
-public class VehicleUnlicensed extends Vehicle{
+import com.pt.pires.domain.exceptions.InvalidVehicleBrandException;
+import com.pt.pires.domain.exceptions.InvalidVehicleNameException;
 
-	public VehicleUnlicensed(String name, String brand,Date acquisitionDate) {
+@Entity
+public class VehicleUnlicensed extends Vehicle {
+
+	public VehicleUnlicensed(String name, String brand,Date acquisitionDate) 
+			throws InvalidVehicleNameException, InvalidVehicleBrandException {
 		super(name, brand, acquisitionDate);
 	}
 	

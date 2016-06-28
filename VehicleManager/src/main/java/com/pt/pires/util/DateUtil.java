@@ -16,6 +16,15 @@ public abstract class DateUtil {
 		return cal.getTime();
 	}
 	
+	public static Date getSimplifyDate(int day,int month,int year){
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.DATE, day);
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.YEAR, year);
+		return cal.getTime();
+	}
+	
 	public static Calendar getCalendar(Date date){
 		Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 		cal.setTime(date);

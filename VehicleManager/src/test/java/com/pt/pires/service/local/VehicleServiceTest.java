@@ -16,17 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pt.pires.VehicleManagerApplication;
 import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.Note;
+import com.pt.pires.domain.NotificationTask;
+import com.pt.pires.domain.NotificationTaskYear;
 import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.InvalidLicenseException;
 import com.pt.pires.domain.exceptions.InvalidNoteException;
+import com.pt.pires.domain.exceptions.InvalidNotificationException;
 import com.pt.pires.domain.exceptions.InvalidRegistrationException;
 import com.pt.pires.domain.exceptions.InvalidVehicleBrandException;
 import com.pt.pires.domain.exceptions.InvalidVehicleNameException;
+import com.pt.pires.domain.exceptions.LicenseAlreadyExistException;
 import com.pt.pires.domain.exceptions.VehicleAlreadyExistException;
 import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
+import com.pt.pires.service.VehicleManagerServiceTest;
 import com.pt.pires.services.local.IVehicleService;
 import com.pt.pires.util.DateUtil;
 
@@ -38,8 +43,8 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	private final static String EMPTY_STRING = "";
 	
-	private final static String VEHICLE_NAME_DOESNT_EXIST = "Automóvel";
-	private final static String VEHICLE_NAME = "Carrinha Cinza";
+	private final static String VEHICLE_NAME_DOESNT_EXIST = "Carrinha Cinza";
+	private final static String VEHICLE_NAME_DOESNT_EXIST_2 = "Automóvel";
 	private final static String VEHICLE_NAME_EXIST_1 = "Popó amarelo";
 	private final static String VEHICLE_NAME_EXIST_2 = "Carro Azul";
 	
@@ -48,7 +53,8 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	
 	private final static Date VEHICLE_DATE = DateUtil.getSimplifyDate(new Date());
 	
-	private final static String VALID_LICENSE = "55-11-KI"; 
+	private final static String VALID_LICENSE = "55-11-KI";
+	private final static String VALID_LICENSE_2 = "55-26-AI";
 	private final static String INVALID_LICENSE = "II-11-GH";
 	
 	private final static String VALID_DESCRIPTION = "Mudar o óleo do Motor!!";
@@ -59,6 +65,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	private static Long EXISTING_REG_ID_1;
 	private static Long EXISTING_REG_ID_2;
 	private static Long EXISTING_NOTE_ID_1;
+	private static Long EXISTING_NOTI_ID_1;
 	
 	@Autowired
 	@Qualifier("vehicleService")
@@ -70,6 +77,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		EXISTING_NOTE_ID_1 = newNote(VEHICLE_NAME_EXIST_1, VALID_DESCRIPTION);
 		EXISTING_REG_ID_1 = newRegistration(VEHICLE_NAME_EXIST_1, VALID_TIME, VALID_DESCRIPTION, VEHICLE_DATE);
 		EXISTING_REG_ID_2 = newRegistration(VEHICLE_NAME_EXIST_1, VALID_TIME, VALID_DESCRIPTION_2, VEHICLE_DATE);
+		EXISTING_NOTI_ID_1 = newNotification(VEHICLE_NAME_EXIST_1, new NotificationTaskYear(VEHICLE_DATE, VALID_DESCRIPTION));
 		newLicensedVehicle(VEHICLE_NAME_EXIST_2, VEHICLE_BRAND_1, VEHICLE_DATE, VALID_LICENSE, VEHICLE_DATE);
 	}
 	
@@ -126,51 +134,92 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.getVehicle(VEHICLE_NAME_EXIST_1);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void getVehicleNullVehicleName() throws VehicleManagerException {
+		vehicleService.getVehicle(null);
+	}
+	
 	/* ========= CreateLicensedVehicleService ================ */
 	
 	@Test
 	public void createLicensedVehicle() throws VehicleManagerException{
-		vehicleService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
-				VALID_LICENSE, VEHICLE_DATE);
-		VehicleLicensed v = obtainLicensedVehicle(VEHICLE_NAME);
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST, VEHICLE_BRAND, VEHICLE_DATE,
+				VALID_LICENSE_2, VEHICLE_DATE);
+		VehicleLicensed v = obtainLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST);
 		Assert.assertNotNull(v);
-		Assert.assertTrue(v.getName().equals(VEHICLE_NAME));
+		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_DOESNT_EXIST));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND));
-		Assert.assertTrue(v.getLicense().getLicense().equals(VALID_LICENSE));
+		Assert.assertTrue(v.getLicense().getLicense().equals(VALID_LICENSE_2));
 	}
 	
 	@Test(expected = InvalidLicenseException.class)
 	public void createLicensedVehicleInvalidLicense() throws VehicleManagerException{
-		vehicleService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST, VEHICLE_BRAND, VEHICLE_DATE,
 				INVALID_LICENSE, VEHICLE_DATE);
 	}
 	
 	@Test(expected = VehicleAlreadyExistException.class)
 	public void createLicensedVehicleAlreadyExist() throws VehicleManagerException{
 		vehicleService.createLicensedVehicle(VEHICLE_NAME_EXIST_2, VEHICLE_BRAND, VEHICLE_DATE,
-				VALID_LICENSE, VEHICLE_DATE);
+				VALID_LICENSE_2, VEHICLE_DATE);
 	}
 	
 	@Test(expected = InvalidVehicleNameException.class)
 	public void createLicensedVehicleInvalidName() throws VehicleManagerException{
 		vehicleService.createLicensedVehicle(EMPTY_STRING, VEHICLE_BRAND, VEHICLE_DATE,
-				VALID_LICENSE, VEHICLE_DATE);
+				VALID_LICENSE_2, VEHICLE_DATE);
 	}
 	
 	@Test(expected = InvalidVehicleBrandException.class)
 	public void createLicensedVehicleDontExist() throws VehicleManagerException{
-		vehicleService.createLicensedVehicle(VEHICLE_NAME, EMPTY_STRING, VEHICLE_DATE,
-				VALID_LICENSE, VEHICLE_DATE);
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST, EMPTY_STRING, VEHICLE_DATE,
+				VALID_LICENSE_2, VEHICLE_DATE);
+	}
+	
+	@Test(expected = LicenseAlreadyExistException.class)
+	public void createLicensedVehicleLicenseAlreadyExist() throws VehicleManagerException{
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST, VEHICLE_BRAND,
+				VEHICLE_DATE, VALID_LICENSE, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createLicensedVehicleNullVehicleName() throws VehicleManagerException{
+		vehicleService.createLicensedVehicle(null, VEHICLE_BRAND,
+				VEHICLE_DATE, VALID_LICENSE, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createLicensedVehicleNullBrand() throws VehicleManagerException{
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST_2, null,
+				VEHICLE_DATE, VALID_LICENSE, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createLicensedVehicleNullVehicleDate() throws VehicleManagerException{
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST_2, VEHICLE_BRAND,
+				null, VALID_LICENSE, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createLicensedVehicleNullLicense() throws VehicleManagerException{
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST_2, VEHICLE_BRAND,
+				VEHICLE_DATE, null, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createLicensedVehicleNullLicenseDate() throws VehicleManagerException{
+		vehicleService.createLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST_2, VEHICLE_BRAND,
+				VEHICLE_DATE, VALID_LICENSE, null);
 	}
 	
 	/* ========= CreateUnlicensedVehicleService ================ */
 
 	@Test
 	public void createUnlicensedVehicle() throws VehicleManagerException {
-		vehicleService.createUnlicensedVehicle(VEHICLE_NAME,VEHICLE_BRAND,VEHICLE_DATE);		
-		VehicleUnlicensed v = obtainUnlicensedVehicle(VEHICLE_NAME);
+		vehicleService.createUnlicensedVehicle(VEHICLE_NAME_DOESNT_EXIST,VEHICLE_BRAND,VEHICLE_DATE);		
+		VehicleUnlicensed v = obtainUnlicensedVehicle(VEHICLE_NAME_DOESNT_EXIST);
 		Assert.assertNotNull(v);
-		Assert.assertTrue(v.getName().equals(VEHICLE_NAME));
+		Assert.assertTrue(v.getName().equals(VEHICLE_NAME_DOESNT_EXIST));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND));
 	}
 
@@ -186,10 +235,25 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test(expected = InvalidVehicleBrandException.class)
 	public void createUnlicensedVehicleEmptyBrand() throws VehicleManagerException {
-		vehicleService.createUnlicensedVehicle(VEHICLE_NAME,EMPTY_STRING,VEHICLE_DATE);		
+		vehicleService.createUnlicensedVehicle(VEHICLE_NAME_DOESNT_EXIST,EMPTY_STRING,VEHICLE_DATE);		
 	}
 	
-	/* ========= GetUnlicensedVehicleService ================ */
+	@Test(expected = IllegalArgumentException.class)
+	public void createUnlicensedVehicleNullName() throws VehicleManagerException {
+		vehicleService.createUnlicensedVehicle(null,VEHICLE_BRAND,VEHICLE_DATE);		
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createUnlicensedVehicleNullBrand() throws VehicleManagerException {
+		vehicleService.createUnlicensedVehicle(VEHICLE_NAME_DOESNT_EXIST,null,VEHICLE_DATE);		
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createUnlicensedVehicleNullDate() throws VehicleManagerException {
+		vehicleService.createUnlicensedVehicle(VEHICLE_NAME_DOESNT_EXIST,VEHICLE_BRAND,null);		
+	}
+	
+	/* ============ GetUnlicensedVehicleService ================ */
 
 	@Test
 	public void getUnlicensedVehicle() throws VehicleManagerException{
@@ -201,10 +265,15 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test(expected = VehicleDoesntExistException.class)
 	public void getUnlicensedVehicleDontExist() throws VehicleManagerException{
-		vehicleService.getLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST);
+		vehicleService.getUnlicensedVehicle(VEHICLE_NAME_DOESNT_EXIST_2);
 	}
 	
-	/* ========= CreateLicensedVehicleService ================ */
+	@Test(expected = IllegalArgumentException.class)
+	public void getUnlicensedVehicleNullName() throws VehicleManagerException{
+		vehicleService.getUnlicensedVehicle(null);
+	}
+	
+	/* ============= GetLicensedVehicleService ================ */
 
 	@Test
 	public void getLicensedVehicle() throws VehicleManagerException{
@@ -216,7 +285,12 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test(expected = VehicleDoesntExistException.class)
 	public void getLicensedVehicleDontExist() throws VehicleManagerException{
-		vehicleService.getLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST);
+		vehicleService.getLicensedVehicle(VEHICLE_NAME_DOESNT_EXIST_2);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void getLicensedVehicleNullName() throws VehicleManagerException{
+		vehicleService.getLicensedVehicle(null);
 	}
 	
 	/* ================= RemoveVehicleService ================== */
@@ -229,7 +303,12 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 
 	@Test
 	public void removeVehicleDoesntExist() throws VehicleManagerException{
-		vehicleService.removeVehicle(VEHICLE_NAME_DOESNT_EXIST);
+		vehicleService.removeVehicle(VEHICLE_NAME_DOESNT_EXIST_2);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void removeVehicleNullName() throws VehicleManagerException{
+		vehicleService.removeVehicle(null);
 	}
 	
 	/* ============== AddRegistrationToVehicleService =========== */
@@ -246,7 +325,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	
 	@Test(expected = VehicleDoesntExistException.class)
 	public void addRegistrationToVehicleDontExist() throws VehicleManagerException{
-		vehicleService.addRegistrationToVehicle(VEHICLE_NAME_DOESNT_EXIST, VALID_TIME
+		vehicleService.addRegistrationToVehicle(VEHICLE_NAME_DOESNT_EXIST_2, VALID_TIME
 				, VALID_DESCRIPTION, VEHICLE_DATE);
 	}
 	
@@ -254,6 +333,24 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	public void addRegistrationToVehicleInvalidRegistration() throws VehicleManagerException{
 		vehicleService.addRegistrationToVehicle(VEHICLE_NAME_EXIST_1, VALID_TIME
 				, EMPTY_STRING, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addRegistrationToVehicleNullName() throws VehicleManagerException{
+		vehicleService.addRegistrationToVehicle(null, VALID_TIME
+				, VALID_DESCRIPTION, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addRegistrationToVehicleNullDescription() throws VehicleManagerException{
+		vehicleService.addRegistrationToVehicle(VEHICLE_NAME_EXIST_1, VALID_TIME
+				, null, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addRegistrationToVehicleNullDate() throws VehicleManagerException{
+		vehicleService.addRegistrationToVehicle(VEHICLE_NAME_EXIST_1, VALID_TIME
+				, VALID_DESCRIPTION, null);
 	}
 	
 	/* =========== RemoveRegistrationFromVehicleService ============== */
@@ -276,9 +373,13 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	
 	@Test(expected = VehicleDoesntExistException.class)
 	public void removeRegistrationFromVehicleDoesntExist() throws VehicleManagerException{
-		vehicleService.removeRegistrationFromVehicle(VEHICLE_NAME_DOESNT_EXIST, 1);
+		vehicleService.removeRegistrationFromVehicle(VEHICLE_NAME_DOESNT_EXIST_2, 1);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void removeRegistrationFromVehicleNullName() throws VehicleManagerException{
+		vehicleService.removeRegistrationFromVehicle(null, 1);
+	}
 	
 	/* =================== AddNoteToVehicleService ============== */
 	
@@ -292,7 +393,7 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	
 	@Test(expected = VehicleDoesntExistException.class)
 	public void addNoteToVehicleDontExist() throws VehicleManagerException{
-		vehicleService.addNoteToVehicle(VEHICLE_NAME_DOESNT_EXIST, VALID_DESCRIPTION);
+		vehicleService.addNoteToVehicle(VEHICLE_NAME_DOESNT_EXIST_2, VALID_DESCRIPTION);
 	}
 	
 	@Test(expected = InvalidNoteException.class)
@@ -300,7 +401,17 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 		vehicleService.addNoteToVehicle(VEHICLE_NAME_EXIST_1, EMPTY_STRING);
 	}
 	
-	/* =================== RemoveNoteFromVehicleService ============== */
+	@Test(expected = IllegalArgumentException.class)
+	public void addNoteToVehicleNullName() throws VehicleManagerException{
+		vehicleService.addNoteToVehicle(null, EMPTY_STRING);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addNoteToVehicleNullNote() throws VehicleManagerException{
+		vehicleService.addNoteToVehicle(VEHICLE_NAME_EXIST_1, null);
+	}
+	
+	/* =================== RemoveNoteFromVehicleService ================= */
 	
 	@Test
 	public void removeNoteFromVehicleExist() throws VehicleManagerException{
@@ -312,10 +423,70 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	
 	@Test(expected = VehicleDoesntExistException.class)
 	public void removeNoteFromVehicleDoesntExist() throws VehicleManagerException{
-		vehicleService.removeNoteFromVehicle(VEHICLE_NAME_DOESNT_EXIST, 1);
+		vehicleService.removeNoteFromVehicle(VEHICLE_NAME_DOESNT_EXIST_2, 1);
 	}
 	
-	/* ====================== VehicleExistService ==================== */
+	@Test(expected = IllegalArgumentException.class)
+	public void removeNoteFromVehicleNullName() throws VehicleManagerException{
+		vehicleService.removeNoteFromVehicle(null, 1);
+	}
+	
+	/* =================== AddNotificationToVehicleService ============== */
+	
+	@Test
+	public void addNotificationToVehicle() throws VehicleManagerException{
+		Long notiId = vehicleService.addYearNotification(VEHICLE_NAME_EXIST_1, VALID_DESCRIPTION, VEHICLE_DATE);
+		List<NotificationTask> notis = obtainNotifications(VEHICLE_NAME_EXIST_1);
+		Assert.assertNotNull(notis);
+		Assert.assertTrue(obtainNotification(VEHICLE_NAME_EXIST_1, notiId).getDescription().equals(VALID_DESCRIPTION));
+	}
+	
+	@Test(expected = InvalidNotificationException.class)
+	public void addNotificationToVehicleInvalidNotification() throws VehicleManagerException{
+		vehicleService.addYearNotification(VEHICLE_NAME_EXIST_1, EMPTY_STRING, VEHICLE_DATE);
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void addNotificationToVehicleInexistentVehicle() throws VehicleManagerException{
+		vehicleService.addYearNotification(VEHICLE_NAME_DOESNT_EXIST_2, VALID_DESCRIPTION, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addNotificationToVehicleNullName() throws VehicleManagerException{
+		vehicleService.addYearNotification(null, VALID_DESCRIPTION, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addNotificationToVehicleNullDescription() throws VehicleManagerException{
+		vehicleService.addYearNotification(VEHICLE_NAME_EXIST_1, null, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addNotificationToVehicleNullDate() throws VehicleManagerException{
+		vehicleService.addYearNotification(VEHICLE_NAME_EXIST_1, VALID_DESCRIPTION, null);
+	}
+	
+	/* ================ RemoveNotificationFromVehicleService ============ */
+	
+	@Test
+	public void removeNotificationFromVehicle()throws VehicleManagerException{
+		vehicleService.removeNotificationFromVehicle(VEHICLE_NAME_EXIST_1, EXISTING_NOTI_ID_1);
+		Assert.assertNotNull(obtainNotifications(VEHICLE_NAME_EXIST_1));
+		Assert.assertTrue(obtainNotifications(VEHICLE_NAME_EXIST_1).isEmpty());
+		Assert.assertNull(obtainNotification(VEHICLE_NAME_EXIST_1, EXISTING_NOTI_ID_1));
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void removeNotificationFromVehicleInexistentVehicle() throws VehicleManagerException{
+		vehicleService.removeNotificationFromVehicle(VEHICLE_NAME_DOESNT_EXIST_2, 2);	
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void removeNotificationFromVehicleNullName() throws VehicleManagerException{
+		vehicleService.removeNotificationFromVehicle(null, 2);	
+	}
+	
+	/* ====================== VehicleExistService ======================= */
 	
 	@Test
 	public void vehicleExistTrue() throws VehicleManagerException{
@@ -325,6 +496,11 @@ public class VehicleServiceTest extends VehicleManagerServiceTest {
 	
 	@Test
 	public void vehicleExistFalse() throws VehicleManagerException{
-		Assert.assertTrue(!vehicleService.vehicleExist(VEHICLE_NAME_DOESNT_EXIST));
+		Assert.assertTrue(!vehicleService.vehicleExist(VEHICLE_NAME_DOESNT_EXIST_2));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void vehicleExistNullName() throws VehicleManagerException{
+		vehicleService.vehicleExist(null);
 	}
 }

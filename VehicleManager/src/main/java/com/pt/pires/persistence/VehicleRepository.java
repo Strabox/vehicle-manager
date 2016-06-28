@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.pt.pires.domain.Vehicle;
 
-public interface VehicleRepository extends CrudRepository<Vehicle,String>{
+public interface VehicleRepository extends CrudRepository<Vehicle,String> {
 
 }

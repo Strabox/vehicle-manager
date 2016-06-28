@@ -1,4 +1,4 @@
-package com.pt.pires.unit;
+package com.pt.pires.service.external;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,10 +9,11 @@ import com.pt.pires.VehicleManagerApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
-public class NotificationTest {
+public class FileServiceTest {
 
 	@Test
 	public void test(){
 		
 	}
+	
 }

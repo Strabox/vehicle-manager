@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vehicleManager>
+	<users>
+		<user role="ROLE_ADMIN">
+			<username>admin</username>
+			<password>root</password>
+			<email>pardal.pires@gmail.com</email>
+		</user>
+		<user role="ROLE_USER">
+			<username>jose</username>
+			<password>pires</password>
+			<email>jmapires263@gmail.com</email>
+		</user>
+	</users>
+	<vehicles>
+		<vehicleUnlicensed name="Tractor Agria" brand="Agria" acquisitionDate="2015-04-25">
+			<registrations>
+				<registration time="0" date="2015-04-25">Comprei manga extriada e balader da fresa novo</registration>
+				<registration time="0" date="2015-07-05">Bateria nova</registration>
+				<registration time="0" date="2015-07-05">Substituir o óleo do motor (15W40 Paulo)</registration>
+				<registration time="0" date="2015-07-05">Substituir o filtro de óleo do motor</registration>
+				<registration time="0" date="2015-07-05">Substituir o óleo da caixa de velocidades</registration>
+				<registration time="0" date="2015-07-05">Substituir o óleo da fresa</registration>
+				<registration time="0" date="2015-07-05">Substituir as facas da fresa</registration>
+				<registration time="0" date="2015-07-05">Substituir a parte de acrílico do fltro de ar</registration>
+			</registrations>
+			<notes>
+				<note>Agria 7714 Nº723718</note>
+			</notes>
+			<notifications>
+			</notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Empilhador" brand="Desconhecida" acquisitionDate="2002-04-25">
+			<registrations>
+				<registration time="0" date="2006-05-10">Reparar motor de arranque</registration>
+				<registration time="0" date="2006-05-10">Montagem bomba de gasóleo</registration>
+				<registration time="0" date="2006-05-10">Substituição carreto inversor da caixa</registration>
+			</registrations>
+			<notes>
+			</notes>
+			<notifications>
+			</notifications>
+		</vehicleUnlicensed>
+		<vehicleLicensed name="Tractor Ford" brand="Ford" acquisitionDate="2014-04-25">
+			<license date="1969-01-01">XX-00-00</license>
+			<registrations>
+				<registration time="7300" date="2013-04-25">Substituir filtro de óleo do motor</registration>
+				<registration time="7300" date="2013-04-25">Substituir filtro de gasóleo = 2</registration>
+				<registration time="7300" date="2013-04-25">Substituir óleo do diferencial</registration>
+				<registration time="7300" date="2013-04-25">Substituir óleo da caixa de velocidades</registration>
+				<registration time="7300" date="2013-04-25">Substituir filtro de óleo do motor</registration>
+				<registration time="7300" date="2013-04-25">Substituir água do radiador</registration>
+				<registration time="7300" date="2013-04-25">Lubrificação geral</registration>
+				<registration time="7300" date="2013-04-25">Substituir correia da ventoinha Referência: QH QBB140</registration>
+				<registration time="7300" date="2013-04-25">Substituir óleo da bomba injectora</registration>
+				<registration time="7300" date="2013-04-25">Bateria nova</registration>
+				<registration time="7300" date="2013-04-25">Montagem de manómetro de temperatura</registration>
+				<registration time="7300" date="2013-04-25">Chapa de matrícula a frente nova</registration>
+				<registration time="7300" date="2013-04-25">Montagem de puxo de reboque</registration>
+				<registration time="7300" date="2013-05-19">Montagem de torneira de gasóleo no depósito</registration>
+				<registration time="7300" date="2013-05-19">Montagem de direcção assistida</registration>
+				<registration time="7300" date="2013-05-19">Refazer instalação eléctrica</registration>
+				<registration time="7300" date="2013-05-19">Reparar dinamo 1 rolamento 6302</registration>
+				<registration time="7300" date="2013-05-19">Reparar bomba de água</registration>
+				<registration time="7300" date="2013-05-19">Retirar termostato</registration>
+				<registration time="7300" date="2013-05-19">Colar calços de travão (Maxilas de traz)</registration>
+				<registration time="7300" date="2013-05-19">Montagem de asselerador de pé</registration>				
+				<registration time="7338" date="2013-08-03">Substituir óleo da bomba injectora</registration>
+				<registration time="7338" date="2013-08-03">Montagem dos esticadores dos braços traseiros</registration>
+				<registration time="7338" date="2013-09-10">Forrar maxilas dos travões rodas traseiras</registration>
+				<registration time="7338" date="2013-09-10">Revisão dos cubos das rodas da frente</registration>
+				<registration time="7344" date="2013-09-22">Medição de horas</registration>
+				<registration time="7369" date="2014-07-30">Medição de horas</registration>
+				<registration time="7404" date="2016-01-12">Medição de horas</registration>
+				<registration time="7404" date="2016-03-20">Substituir óleo do motor 15w40 GALP</registration>
+				<registration time="7404" date="2016-03-20">Substitur o óleo da bomba injectora 15w40 GALP</registration>
+				<registration time="7404" date="2016-03-20">Substitur o filtro de óleo do motor</registration>
+			</registrations>
+			<notes>
+				<note>Correia da Ventoinha Referência: QH QBB140</note>
+			</notes>
+			<notifications>
+			</notifications>
+		</vehicleLicensed>
+		<vehicleLicensed name="Carrinha Mitsubishi" brand="Mitshubishi" acquisitionDate="2000-02-01">
+			<license date="2000-02-01">89-30-OZ</license>
+			<registrations>
+				<registration time="90019" date="2006-02-23">Correia bomba de água-alternador</registration>
+				<registration time="90019" date="2006-02-23">Correia bomba de direcção L=1060</registration>
+				<registration time="90019" date="2006-02-23">Tensor correia distribuição</registration>
+				<registration time="90019" date="2006-02-23">Correia distribuição</registration>
+				<registration time="90019" date="2006-02-23">Filtro óleo elemento</registration>
+				<registration time="90019" date="2006-02-23">Velas</registration>
+				<registration time="90019" date="2006-02-23">Jogo de pastilhas frente</registration>
+				<registration time="90019" date="2006-02-23">Bomba de água</registration>
+				<registration time="90019" date="2006-02-23">óleo motor 3,30L</registration>
+				<registration time="90019" date="2006-02-23">valvulina caixa 3L</registration>
+				<registration time="90019" date="2006-02-23">Anti-congelante 2L</registration>
+				<registration time="99142" date="2006-10-02">Sensor Electr.oxigenio</registration>
+				<registration time="104090" date="2007-01-21">Óleo motor 3,30L (REPSOL)</registration>
+				<registration time="104090" date="2007-01-21">Filtro óleo elemento</registration>
+				<registration time="115475" date="2007-09-10">Óleo motor 3,30L (REPSOL)</registration>
+				<registration time="115475" date="2007-09-10">Filtro óleo elemento</registration>
+				<registration time="115475" date="2007-12-22">Substituir bateria</registration>
+				<registration time="131324" date="2008-08-15">Óleo motor 3,30L (REPSOL)</registration>
+				<registration time="131324" date="2008-08-15">Filtro óleo elemento</registration>
+				<registration time="134792" date="2008-11-02">Medição kilómetros</registration>
+				<registration time="140630" date="2009-03-13">Medição kilómetros</registration>
+				<registration time="141147" date="2009-03-22">óleo motor 3,30L (REPSOL)</registration>
+				<registration time="141147" date="2009-03-22">Filtro óleo elemento</registration>
+				<registration time="177631" date="2011-06-11">óleo motor 3,30L (REPSOL)</registration>
+				<registration time="177631" date="2011-06-10">Filtro óleo elemento</registration>
+				<registration time="177631" date="2011-06-10">Pastilhas de travão da frente</registration>
+				<registration time="191470" date="2012-05-05">óleo motor 3,30L (SHEL HELIX  HX7 10W- 40) PAULO 30€</registration>
+				<registration time="191470" date="2012-05-05">Filtro óleo elemento</registration>
+				<registration time="199640" date="2013-02-04">Inspeção sem problemasmento</registration>
+				<registration time="200144" date="2013-03-25">Substituir bomba auxiliar da embraiagem</registration>
+				<registration time="200144" date="2013-08-31">Substituir amortecedores do porta bagagem</registration>
+				<registration time="207103" date="2013-09-22">Medição kilómetros</registration>
+				<registration time="207103" date="2014-05-25">Acidente com a Clara</registration>
+				<registration time="216736" date="2014-07-30">Substituir filtro de ar</registration>
+				<registration time="217074" date="2014-08-07">Substituir correia de distribuição (ALCIDES)</registration>
+				<registration time="217074" date="2014-08-07">Substituir correias auxiliares</registration>
+				<registration time="217074" date="2014-08-07">Substituir bomba de água</registration>
+				<registration time="217074" date="2014-08-07">Substituir velas (Originais)</registration>
+				<registration time="217074" date="2014-08-07">Substituir fol inferior alavanca das mudanças (Original)</registration>
+				<registration time="217074" date="2014-08-07">Substituir óleo caixa de velocidades</registration>
+				<registration time="220000" date="2014-11-08">óleo motor 3,30L (SHEL HELIX  HX7 10W- 40) PAULO 30€</registration>
+				<registration time="220000" date="2014-11-08">Filtro óleo elemento</registration>
+				<registration time="220432" date="2015-02-05">Inspeção sem problemas</registration>
+				<registration time="222316" date="2016-01-12">Medição kilómetros</registration>
+				<registration time="222512" date="2016-02-12">Inspeção sem problemas</registration>
+			</registrations>
+			<notes>
+				<note>Óleo motor: (SHEL HELIX  HX7 10W- 40) PAULO 30€</note>
+				<note>Filtro de Ar: LX 504  MR 127077</note>
+				<note>Chave do carter 17mm</note>
+			</notes>
+			<notifications>
+			</notifications>
+		</vehicleLicensed>
+		<vehicleLicensed name="Mazda 3" brand="Mazda" acquisitionDate="2014-11-10">
+			<license date="2007-02-01">76-DE-21</license>
+			<registrations>
+				<registration time="56200" date="2014-11-10">Compra do veículo</registration>
+				<registration time="56200" date="2014-11-10">Bateria de origem</registration>
+				<registration time="58574" date="2015-03-09">Inspeção LAMY</registration>
+				<registration time="58574" date="2015-03-09">Escova limpa vidros SS-F53 530mm</registration>
+				<registration time="58574" date="2015-03-09">Escova limpa vidros SS-F48 480mm</registration>
+				<registration time="58574" date="2015-03-09">Bateria da chave CR 1620</registration>
+				<registration time="58574" date="2015-03-09">Substituir óleo do motor Ref. MAZOO 5L DPF 5W30</registration>
+				<registration time="58574" date="2015-03-09">Substituir filtro de óleo Ref. Y40114302 9A</registration>
+				<registration time="58574" date="2015-03-09">Substituir filtro de gasóleo Y60213ZA5</registration>
+				<registration time="58574" date="2015-03-09">Substituir filtro de ar</registration>
+				<registration time="58574" date="2015-03-09">Substituir velas de encandessencia (Alencauto)</registration>
+				<registration time="58574" date="2015-03-09">Substituir o deposito do liquido do aditivo do gasóleo (Mazda)</registration>
+				<registration time="58574" date="2015-03-09">Atestar de liquido (Mazda)</registration>
+				<registration time="69854" date="2016-01-12">Medição kilómetros</registration>
+				<registration time="70146" date="2016-01-22">Peneus Novos a frente (Roady Carregado)</registration>
+				<registration time="71675" date="2016-03-15">Inspeção LAMY</registration>
+			</registrations>
+			<notes>
+			
+			</notes>
+			<notifications>
+			</notifications>
+		</vehicleLicensed>
+	</vehicles>
+</vehicleManager>

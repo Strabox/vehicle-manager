@@ -2,6 +2,7 @@
 <html lang="pt" xmlns:th="http://www.thymeleaf.org">
 	<head>
 	    <title th:text="${vehicle.name}"></title>
+   	    <meta id="vehicleType" th:name="${type}"></meta>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
@@ -9,7 +10,7 @@
 		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	    <meta name="_csrf" th:content="${_csrf.token}"/>
 	
-		<!-- jQuery library -->
+		<!-- JQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
@@ -34,12 +35,14 @@
 					<div class="container-fluid" data-spy="affix">
 						<h2>Menu</h2>                
 						<ul class="nav nav-pills nav-stacked">
-							<li class="active"><a data-toggle="pill" href="#registerTab">Registos <span class="glyphicon glyphicon-list-alt"></span></a></li>
-							<li><a data-toggle="pill" href="#notesTab">Notas <span class="glyphicon glyphicon-list-alt"></span></a></li>
-							<li><a data-toggle="pill" href="#alertsTab">Alertas <span class="glyphicon glyphicon-time"></span></a></li>
-							<li><a data-toggle="pill" href="#filesTab">Ficheiros <span class="glyphicon glyphicon-file"></span></a></li>
-							<li><a href="/vehicles">Voltar <span class="glyphicon glyphicon-arrow-left"></span></a></li>
-							<li><a href="#" id="logout">Sair <span class="glyphicon glyphicon-off"></span></a></li>        
+							<li class="active"><a data-toggle="pill" href="#registerTab"><span class="glyphicon glyphicon-list-alt"></span> Registos</a></li>
+							<li><a data-toggle="pill" href="#notesTab"><span class="glyphicon glyphicon-list-alt"></span> Notas</a></li>
+							<li><a data-toggle="pill" href="#alertsTab"><span class="glyphicon glyphicon-time"></span> Alertas</a></li>
+							<li><a data-toggle="pill" href="#filesTab"><span class="glyphicon glyphicon-file"></span> Ficheiros</a></li>
+							<li><a data-toggle="pill" href="#printTab"><span class="glyphicon glyphicon-print"></span> Imprimir</a></li>
+							<li><a data-toggle="pill" href="#editTab" id="editTabPill"><span class="glyphicon glyphicon-cog"></span> Editar</a></li>
+							<li><a href="/home"><span class="glyphicon glyphicon-arrow-left"></span> Voltar</a></li>
+							<li><a href="#" id="logout"><span class="glyphicon glyphicon-off"></span> Sair</a></li>        
 						</ul>
 					</div>
 				</div>
@@ -72,13 +75,15 @@
 							</div>
 						</div>
 						<div class="col-sm-4">
-							<img th:src="${'/image/' + vehicle.name}" width="210vw" height="165vh" class="img-thumbnail" alt="Foto do Veículo"/>
+							<img id="portraitImage" th:src="${'/image/' + vehicle.name}" width="210vw" height="165vh" class="img-thumbnail" alt="Foto do Veículo"/>
 						</div>
 					</div>
 					
 					<hr></hr>
 					
 				    <div class="tab-content">
+				    
+				    	<!-- Vehicle registrations tab -->
 					    <div id="registerTab" class="tab-pane fade in active">
 					    	<h2>Registos</h2>
 						    <table id="registrationsTable" class="table table-condensed table-hover table-striped table-bordered">
@@ -87,7 +92,7 @@
 						    			<th>NºHoras/Km</th>
 						    			<th>Descrição</th>
 						    			<th>Data</th>
-						    			<th><!-- Needed for DataTable Plugin --></th>
+						    			<th><!-- Needed for Datatable Plugin #th == #td --></th>
 						    		</tr>
 						    	</thead>
 						    	<tbody>
@@ -99,6 +104,7 @@
 						    		</tr>
 						    	</tbody>
 						    </table>
+						    
 						    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registrationModal">Adicionar Registo</button>
 						    
 						    <div id="registrationModal" class="modal fade" role="dialog">
@@ -160,13 +166,14 @@
 						    
 					    </div>
 					    
+					    <!-- Vehicle notes tab -->
 					    <div id="notesTab" class="tab-pane fade">
 					    	<h2>Notas</h2>
 						    <table id="notesTable" class="table table-condensed table-hover table-striped table-bordered">
 						    	<thead>
 						    		<tr>
 							    		<th>Nota</th>
-							    		<th><!-- Needed for DataTable Plugin --></th>
+							    		<th><!-- Needed for Datatable Plugin #th == #td --></th>
 							    	</tr>
 						    	</thead>
 						    	<tbody>
@@ -225,6 +232,7 @@
 						    
 					    </div>
 					    
+					    <!-- Vehicle alerts tab -->
 					    <div id="alertsTab" class="tab-pane fade">
 					    	<h2>Alertas</h2>
 					    	
@@ -233,7 +241,7 @@
 						    		<tr>
 						    			<th>Descrição</th>
 						    			<th>Próximo Aviso</th>
-						    			<th><!-- Needed for DataTable Plugin --></th>
+						    			<th><!-- Needed for Datatable Plugin #th == #td --></th>
 						    		</tr>
 						    	</thead>
 						    	<tbody>
@@ -273,6 +281,7 @@
 					    							<select id="periodicity" class="form-control" required="required">
 													    <option>Ano a ano</option>
 													    <option>De meio em meio ano</option>
+													    <option>Só uma vez</option>
 										 		 	</select>
 					    							<div class="help-block with-errors"></div>
 						    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
@@ -310,53 +319,90 @@
 					    <div id="filesTab" class="tab-pane fade">
 					    	<h2>Ficheiros</h2>
 					    	
-					    	<!-- TODO -->
+					    	<h3>Funcionalidade dísponivel brevemente..... stay tuned .....</h3>
 					    	
 					    </div>
-					 			    	
-				    	<!-- Alert FAIL modal to show the server response -->
-				     	<div id="responseAlertModalFail" class="modal fade" role="dialog">
-					    	<div class="modal-dialog">
-				    			<div class="modal-content">
-					    			<div class="modal-header">
-					    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-					    				<h2 id="responseAlertFailHeader"></h2>
-					    			</div>
-					    			<div class="modal-body">
-					    				<div class="alert alert-danger">
-					    					<strong>Falhou! </strong><span id="responseAlertFailText"></span>
-					    				</div>
-					    			</div>
-					    			<div class="modal-footer">
-					    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-					    			</div>
-					    		</div>
+					 	
+					 	<!-- Print vehicle records tab -->
+					 	<div id="printTab" class="tab-pane fade">
+					    	<h2>Imprimir</h2>
+					    	<br></br>
+					    	<button id="regNote" class="printButton btn btn-primary">Imprimir Registos + Notas</button>
+					    	<hr></hr>
+					    	<button id="reg" class="printButton btn btn-primary">Imprimir Registos</button>
+					    	<hr></hr>
+					    	<button id="note" class="printButton btn btn-primary">Imprimir Notas</button>
+					    </div>
+					    
+					    <!-- Edit vehicle stuff tab -->
+					    <div id="editTab" class="tab-pane fade">
+					    	<h2>Editar</h2>
+					    	<div class="row">
+					    		<div class="col-sm-5">
+							    	<form id="editForm" role="form">
+							    		<div class="form-group has-feedback">
+							    			<label for="editImage">Imagem:</label>
+							    			<input id="editImage" name="editImage" class="form-control" type="file" required="required" />
+							    			<div class="help-block with-errors"></div>
+				    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+							    		</div>
+							    		<div class="form-group">
+							    			<button class="btn btn-primary" type="submit">Submeter</button>
+							    		</div>
+							    	</form>
+							    </div>
 					    	</div>
-				    	</div>
-				    	
-				    	<!-- Alert SUCCESS modal to show the server response -->
-				     	<div id="responseAlertModalSuccess" class="modal fade" role="dialog">
-					    	<div class="modal-dialog">
-				    			<div class="modal-content">
-					    			<div class="modal-header">
-					    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-					    				<h2 id="responseAlertSuccessHeader"></h2>
-					    			</div>
-					    			<div class="modal-body">
-					    				<div class="alert alert-success">
-					    					<strong>Sucesso! </strong><span id="responseAlertSuccessText"></span>
-					    				</div>
-					    			</div>
-					    			<div class="modal-footer">
-					    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-					    			</div>
-					    		</div>
-					    	</div>
-				    	</div>
+					    </div>
 					    
 					</div>
+					
+					<!-- Modals to show server responses -->					 			    	
+			    	<!-- Alert FAIL modal to show the server response -->
+			     	<div id="responseAlertModalFail" class="modal fade" role="dialog">
+				    	<div class="modal-dialog">
+			    			<div class="modal-content">
+				    			<div class="modal-header">
+				    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				    				<h2 id="responseAlertFailHeader"></h2>
+				    			</div>
+				    			<div class="modal-body">
+				    				<div class="alert alert-danger">
+				    					<strong>Falhou! </strong><span id="responseAlertFailText"></span>
+				    				</div>
+				    			</div>
+				    			<div class="modal-footer">
+				    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+				    			</div>
+				    		</div>
+				    	</div>
+			    	</div>
+			    	
+			    	<!-- Alert SUCCESS modal to show the server response -->
+			     	<div id="responseAlertModalSuccess" class="modal fade" role="dialog">
+				    	<div class="modal-dialog">
+			    			<div class="modal-content">
+				    			<div class="modal-header">
+				    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				    				<h2 id="responseAlertSuccessHeader"></h2>
+				    			</div>
+				    			<div class="modal-body">
+				    				<div class="alert alert-success">
+				    					<strong>Sucesso! </strong><span id="responseAlertSuccessText"></span>
+				    				</div>
+				    			</div>
+				    			<div class="modal-footer">
+				    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+				    			</div>
+				    		</div>
+				    	</div>
+			    	</div>
+					
+					
 				</div>
 			</div>
 		</div>
+		<footer class="footer navbar-fixed-bottom">
+        	<p class="text-muted text-center">&copy; 2015 ANDRÉ PIRES TODOS OS DIREITOS RESERVADOS</p>
+    	</footer>
 	</body>
 </html>

@@ -32,20 +32,19 @@ public class WebSecurityAdapter extends WebSecurityConfigurerAdapter {
     }	
 	
 	/**
-	 * Method where all the authorization/access logic is written
+	 * Method where all the <b>authorization/access</b> logic is written
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
 				.antMatchers("/license").permitAll()
-				.antMatchers("/home","/vehicles","/vehicle/**").access("hasRole('ROLE_USER')")
-				.antMatchers("/images/**","/css/**","/javascript/**").access("hasRole('ROLE_USER')")
+				.antMatchers("/home","/vehicles","/vehicle/**").access("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
 				.and()
 					.formLogin()
 						.failureUrl("/login?error")
 						.loginPage("/login")
-						.defaultSuccessUrl("/home")
+						.defaultSuccessUrl("/home",true)
 						.usernameParameter("username")
 						.passwordParameter("password")
 				.and()

@@ -20,18 +20,15 @@ public class ServletContainerCustomizer implements EmbeddedServletContainerCusto
 	private final static String KEYSTORE_ALIAS = "keyAlias";
 	
 	private final static String KEYSTORE_PASSWORD = "keyPwd";
-	
-	private String absoluteKeystoreFile;
 
 	private TomcatCustomizerConnector customizer;
 
-	@Value("${application.https}")
+	@Value("${application.https:false}")
 	private boolean https;
 	
 	public ServletContainerCustomizer() throws IOException {
 		Resource resource = new ClassPathResource(KEYSTORE_RESOURCE_FILE_PATH);
-		absoluteKeystoreFile = resource.getFile().getAbsolutePath();
-		customizer = new TomcatCustomizerConnector(absoluteKeystoreFile, KEYSTORE_PASSWORD,
+		customizer = new TomcatCustomizerConnector(resource.getFile().getAbsolutePath(), KEYSTORE_PASSWORD,
 				KEYSTORE_TYPE, KEYSTORE_ALIAS);
 	}
 	

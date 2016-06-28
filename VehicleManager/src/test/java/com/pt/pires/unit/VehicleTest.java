@@ -11,16 +11,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.pt.pires.VehicleManagerApplication;
 import com.pt.pires.domain.VehicleUnlicensed;
+import com.pt.pires.domain.exceptions.VehicleManagerException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 public class VehicleTest {
 
-	private static final String VEHICLE_NAME = "Automovel Verfe";
+	private static final String VEHICLE_NAME = "Automovel Verfde";
 	private static final String VEHICLE_BRAND = "Citroen";
 	
 	@Test
-	public void vehicleYears(){
+	public void vehicleYears() throws VehicleManagerException {
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(new Date());
 		int currentYear = c1.get(Calendar.YEAR);
@@ -34,7 +35,7 @@ public class VehicleTest {
 	}
 	
 	@Test
-	public void vehicleYears2(){
+	public void vehicleYears2() throws VehicleManagerException {
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(new Date());
 		int currentYear = c1.get(Calendar.YEAR);
@@ -48,7 +49,7 @@ public class VehicleTest {
 	}
 	
 	@Test
-	public void vehicleYears3(){
+	public void vehicleYears3() throws VehicleManagerException {
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(new Date());
 		int currentYear = c1.get(Calendar.YEAR);
@@ -64,7 +65,7 @@ public class VehicleTest {
 	}
 	
 	@Test
-	public void vehicleYears4(){
+	public void vehicleYears4() throws VehicleManagerException {
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(new Date());
 		int currentYear = c1.get(Calendar.YEAR);

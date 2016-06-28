@@ -9,17 +9,23 @@
 		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	    <meta name="_csrf" th:content="${_csrf.token}"/>
 	    
-	    <!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-		<!-- Latest compiled JavaScript -->
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+		<!-- Bootstrap JavaScript -->
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
+		<!-- Datatable - Needed for Table Awesomeness :) -->
+		<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
+		<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 		
 		<!-- Form Validator for Bootstrap 3 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
 		
 		<script src="/javascript/common.js"></script>
+		<script src="/javascript/home.js"></script>
 	</head>
 	<body>
 		<div class="container-fluid">
@@ -28,20 +34,291 @@
 					<div class="container-fluid" data-spy="affix">
 						<h2>Menu</h2>                
 						<ul class="nav nav-pills nav-stacked" role="tablist">
-							<li class="active"><a href="#">Inicio <span class="glyphicon glyphicon-home"></span></a></li>
-							<li><a href="vehicles">Veículos <span class="glyphicon glyphicon-th-list"></span></a></li>
-							<li><a href="#" id="logout">Sair <span class="glyphicon glyphicon-off"></span></a></li>    
+							<li class="active"><a data-toggle="pill" href="#beginTab"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
+							<li><a data-toggle="pill" href="#tasksToDoTab"><span class="glyphicon glyphicon-inbox"></span> Tarefas para fazer</a></li>
+							<li><a data-toggle="pill" href="#vehiclesTab"><span class="glyphicon glyphicon-th-list"></span> Veículos</a></li>
+							<li><a href="#" id="logout"><span class="glyphicon glyphicon-off"></span> Sair</a></li>    
 						</ul>
 					</div>
 				</div>
 				<div class="col-sm-10">
-				    <div class="container-fluid">
-						<h1>Sistema de Auxilio à Manutenção</h1>
-						<p>Note:</p> 
+				
+					<div class="tab-content">
+				    
+				    	<!-- Begin tab -->
+					    <div id="beginTab" class="tab-pane fade in active">
+							<div class="col-sm-10">
+							    <div class="container-fluid">
+									<h1>Sistema de Auxilio à Manutenção</h1>
+									<p>Note:</p> 
+									
+								</div>
+							</div>
+						</div>
+						
+						<!-- Tasks to do tab -->
+						<div id="tasksToDoTab" class="tab-pane fade">
+							<h2>Tarefas por fazer</h2>
+							<br></br>
+							<table th:if="${activeNotifications.size() != 0}" id="activeNotificationsTable" class="table table-condensed table-hover table-striped table-bordered">
+						    	<thead>
+						    		<tr>
+						    			<th>Veículo</th>
+						    			<th>Tarefa a fazer</th>
+						    			<th>Data</th>
+						    			<th><!-- Needed for Datatable Plugin #th == #td  --></th>
+						    		</tr>
+						    	</thead>
+						    	<tbody>
+						    		<tr th:each="activeNotification : ${activeNotifications}" th:id="${activeNotification.id + 'rowNoti'}">
+						    			<td th:text="${activeNotification.vehicle.name}"></td>	
+						    			<td th:text="${activeNotification.description}"></td>
+						    			<td th:text="${activeNotification.notiDate}"></td>
+						    			<td><button th:id="${activeNotification.id}" class="btn btn-primary task-done" data-toggle="modal" data-target="#taskDoneModal">Feito</button></td>		
+						    		</tr>
+						    	</tbody>
+						    </table>
+						    
+						    <h4 th:if="${activeNotifications.size() == 0}">Não tem tarefas para realizar, o trabalho está todo bem orientado</h4>
+						    
+						    <div id="taskDoneModal" class="modal fade" role="dialog">
+						    	<div class="modal-dialog">
+						    		<div class="modal-content">
+						    			<div class="modal-header">
+						    				<h2>Tarefa realizada</h2>
+						    			</div>
+						    			<div class="modal-body">
+						    				<form id="taskDoneForm" role="form">
+						    					<div class="form-group has-feedback">
+						    						<label for="time">NºHoras/Km</label>
+						    						<input id="time" class="form-control" type="number" data-minlength="1" placeholder="61500,100..." required="required"/>
+						    						<div class="help-block with-errors"></div>
+						    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						    					</div>
+						    					<div class="form-group has-feedback">
+					    							<label for="doneDate">Data da realização:</label>
+					    							<input id="doneDate" class="form-control" type="date" required="required"/>
+					    							<div class="help-block with-errors"></div>
+						    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+					    						</div>
+					    						<div class="form-group">
+						    						<button  type="submit" class="btn btn-success">Confirmar</button>
+						    						<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+						    					</div>
+						    				</form>
+						    			</div>
+						    		</div>
+						    	</div>
+						    </div>
+						    
+						</div>
+						
+						<!-- Vehicles tab -->
+						<div id="vehiclesTab" class="tab-pane fade">
+							<h2>Veículos</h2>
+					
+						    <table id="vehicles" class="table table-condensed table-hover table-striped table-bordered">
+							    <thead>
+							      <tr>
+							        <th>Nome</th>
+							        <th>Marca</th>
+							        <th>Data Aquisição</th>
+							        <th><!-- Needed for Datatable Plugin #th == #td --></th>
+							      </tr>
+							    </thead>
+							    <tbody id="vehiclesBody">
+							      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listLicensed}">
+							      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}" th:text="${vehicle.name}"></a></td>
+							      	<td th:text="${vehicle.brand}"></td>
+							      	<td th:text="${vehicle.acquisitionDate}"></td>
+							      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
+							      </tr>
+							      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listUnlicensed}">
+							      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}" th:text="${vehicle.name}"></a></td>
+							      	<td th:text="${vehicle.brand}"></td>
+							      	<td th:text="${vehicle.acquisitionDate}"></td>
+							      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal">Apagar</button></td>
+							      </tr>
+							    </tbody>
+			  				</table>
+	  				
+			  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal">Criar Veículo <span class="glyphicon glyphicon-modal-window"></span></button>
+			  				
+			  				<!-- ================== All the Modals/Alerts ====================== -->
+			  				
+			  				<!-- Modal Add vehicles -->
+							<div id="vehicleModal" class="modal fade" role="dialog">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title">Criar Veículo</h4>
+										</div>
+										<div class="modal-body">
+										
+											<ul class="nav nav-tabs">
+											  <li class="active"><a id="unlicensedTab" href="#unlicensed" data-toggle="tab">Sem matrícula</a></li>
+											  <li><a id="licensedTab" href="#licensed" data-toggle="tab">Com matrícula</a></li>
+											</ul>
+											
+											<div class="tab-content">
+											
+		  										<div id="unlicensed" class="tab-pane fade in active">
+													<form id="createUnlicensedVehicleForm" role="form">
+														<div class="form-group has-feedback">
+															<label for="nameU" class="control-label">Nome:</label>
+															<input id="nameU" name="name" class="form-control" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">
+															<label for="brandU" class="control-label">Marca:</label>
+															<input id="brandU" name="brandU" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">
+															<label for="acquisitionDateU" class="control-label">Data de Aquisição:</label>
+															<input id="acquisitionDateU" name="acquisitionDateU" class="form-control" type="date" required="required"></input>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">
+															<label for="fileU" class="control-label">Fotografia do Veículo (Opcional):</label>
+															<input id="fileU" name="fileU" type="file"></input>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group">
+															<button type="submit" class="btn btn-success">Submeter</button>
+															<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+															<button type="reset" class="btn btn-primary">Reset</button>
+														</div>
+													</form>
+												</div>
+												
+												<div id="licensed" class="tab-pane fade">
+													<form id="createLicensedVehicleForm" role="form">
+														<div class="form-group has-feedback">
+															<label for="nameL" class="control-label">Nome:</label>
+															<input id="nameL" class="form-control" name="name" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">
+															<label for="brandL" class="control-label">Marca:</label>
+															<input id="brandL" name="brandL" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">
+															<label for="acquisitionDateL" class="control-label">Data de Aquisição:</label>
+															<input id="acquisitionDateL" name="acquisitionDateL" class="form-control" type="date" required="required"></input>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+						
+														<div class="form-group has-feedback">
+															<label for="licenseL" class="control-label">Matrícula:</label>
+															<input id="licenseL" name="license" class="form-control" data-remote="/license" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.." required="required"/>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">	
+															<label for="licenseDateL" class="control-label">Data da Matrícula:</label>
+															<input id="licenseDateL" name="licenseDate" class="form-control" type="date" required="required"/>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group has-feedback">
+															<label for="fileL" class="control-label">Fotografia do Veículo (Opcional):</label>
+															<input id="fileL" name="file" type="file"></input>
+															<div class="help-block with-errors"></div>
+															<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+														</div>
+														<div class="form-group">
+															<button type="submit" class="btn btn-success">Submeter</button>
+															<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+															<button type="reset" class="btn btn-primary">Reset</button>
+														</div>
+													</form>
+												</div>
+												
+											</div>
+										</div>
+										<div class="modal-footer">
+										</div>
+									</div>
+								</div>
+							</div>
+			  				
+			  				<!-- Confirm Vehicle Delete Modal -->
+			  				<div id="confirmModal" class="modal fade" role="dialog">
+			  					<div class="modal-dialog">
+			  						<div class="modal-content">
+				  						<div class="modal-header">
+				  							<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title">Remover Veículo</h4>
+				  						</div>
+				  						<div class="modal-body">
+				 							<h5>Deseja mesmo apagar o veículo?</h5>
+				  						</div>
+				  						<div class="modal-footer">
+				 							<button id="confirm" type="button" class="btn btn-danger">Confirmar</button>
+				 							<button id="cancel" type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button> 						
+				  						</div>
+				  					</div>
+			  					</div>
+			  				</div>	  				
 						
 					</div>
+					
+						<!-- Alert FAIL modal to show the server response -->
+				     	<div id="responseAlertModalFail" class="modal fade" role="dialog">
+					    	<div class="modal-dialog">
+				    			<div class="modal-content">
+					    			<div class="modal-header">
+					    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+					    				<h2 id="responseAlertFailHeader"></h2>
+					    			</div>
+					    			<div class="modal-body">
+					    				<div class="alert alert-danger">
+					    					<strong>Falhou! </strong><span id="responseAlertFailText"></span>
+					    				</div>
+					    			</div>
+					    			<div class="modal-footer">
+					    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+					    			</div>
+					    		</div>
+					    	</div>
+				    	</div>
+							    	
+				    	<!-- Alert SUCCESS modal to show the server response -->
+				     	<div id="responseAlertModalSuccess" class="modal fade" role="dialog">
+					    	<div class="modal-dialog">
+				    			<div class="modal-content">
+					    			<div class="modal-header">
+					    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+					    				<h2 id="responseAlertSuccessHeader"></h2>
+					    			</div>
+					    			<div class="modal-body">
+					    				<div class="alert alert-success">
+					    					<strong>Sucesso! </strong><span id="responseAlertSuccessText"></span>
+					    				</div>
+					    			</div>
+					    			<div class="modal-footer">
+					    				<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+					    			</div>
+					    		</div>
+					    	</div>
+				    	</div>
+					</div>					
+					
 				</div>
 			</div>
-		</div> 
+		</div>
+		<footer class="footer navbar-fixed-bottom">
+        	<p class="text-muted text-center">&copy; 2015 ANDRÉ PIRES TODOS OS DIREITOS RESERVADOS</p>
+    	</footer> 
 	</body>
 </html>

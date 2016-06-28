@@ -7,6 +7,8 @@ public class SecurityUtil {
 
 	/**
 	 * Return the password encoder used to "Hash"/Encode passwords.
+	 * Encode uses a 16-bit RANDOM salt so we can generate different 
+	 * encodes for the same input.
 	 * @return
 	 */
 	public static PasswordEncoder passwordEncoder(){

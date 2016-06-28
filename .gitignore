@@ -7,6 +7,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+application-production.properties
 
 /VehicleManager/.settings
 /VehicleManager/.classpath

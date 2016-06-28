@@ -114,9 +114,10 @@ public final class FileUtil {
 	
 	/**
 	 * Verify if file provided is a image (.JPG .PNG etc).
-	 * It uses org.apache.Tika libraby.
+	 * It uses org.apache.Tika library.
 	 * @param file
-	 * @return Image extension (JPEG , PNG etc) 
+	 * @return Image extension (JPEG , PNG etc) if not ant image
+	 * return null
 	 */
 	public static String isImage(byte[] file){
 		Tika tika = new Tika();

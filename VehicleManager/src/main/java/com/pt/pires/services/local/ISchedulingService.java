@@ -1,9 +1,12 @@
 package com.pt.pires.services.local;
 
-import java.util.Date;
-
+/**
+ * Service related to schedule some jobs
+ * @author André
+ *
+ */
 public interface ISchedulingService {
 
-	void startMidnightScheduler(Date first);
+	void sendNotificationsTaskScheduler();
 	
 }

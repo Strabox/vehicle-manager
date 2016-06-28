@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Types -->
+	<xs:include schemaLocation="TypesXSD.xml"/>
+	<!-- Document Structure -->
+	<xs:element name="vehicleManager">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="users">
+					 <xs:complexType>
+					 	<xs:sequence>
+							<xs:element name="user" type="user"  minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="vehicles">
+					<xs:complexType>
+					 	<xs:sequence>
+							<xs:element name="vehicleUnlicensed" type="vehicleUnlicensed" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="vehicleLicensed" type="vehicleLicensed" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

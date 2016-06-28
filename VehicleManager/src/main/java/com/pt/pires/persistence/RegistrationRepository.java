@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.pt.pires.domain.Registration;
 
-public interface RegistrationRepository extends CrudRepository<Registration, Long>{
+public interface RegistrationRepository extends CrudRepository<Registration, Long> {
 
 }

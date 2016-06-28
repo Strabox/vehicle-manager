@@ -37,8 +37,10 @@ public class LicenseTest {
 	private final static String INVALID_LICENSE_11 = "<<--22-TY";
 	private final static String INVALID_LICENSE_12 = "AA-22-111";
 	private final static String INVALID_LICENSE_13 = "11-HJ-451";
-	private final static String INVALID_LICENSE_14 = " 11-HJ-41";
-	private final static String INVALID_LICENSE_15 = "11-AHJ-45";
+	private final static String INVALID_LICENSE_14 = "11-AHJ-45";
+	private final static String INVALID_LICENSE_15 = " AA-11-41";
+	private final static String INVALID_LICENSE_16 = " 11-HJ-41";
+	private final static String INVALID_LICENSE_17 = " 11-32-RT";
 	
 	/* =============== License Validation =================== */
 	
@@ -143,6 +145,16 @@ public class LicenseTest {
 	
 	@Test(expected = InvalidLicenseException.class)
 	public void invalidLicense16() throws InvalidLicenseException{
+		new License(INVALID_LICENSE_16,new Date());
+	}
+	
+	@Test(expected = InvalidLicenseException.class)
+	public void invalidLicense17() throws InvalidLicenseException{
+		new License(INVALID_LICENSE_17,new Date());
+	}
+	
+	@Test(expected = InvalidLicenseException.class)
+	public void invalidLicense19() throws InvalidLicenseException{
 		new License("",new Date());
 	}
 	
@@ -170,7 +182,6 @@ public class LicenseTest {
 		int currentMonth = c1.get(Calendar.MONTH);
 		Calendar c2 = Calendar.getInstance();
 		c2.setTime(new Date());
-		System.out.println("###########"+currentMonth);
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,(currentMonth + 1) % 11);
 		License l = new License(VALID_LICENSE_1, c2.getTime());

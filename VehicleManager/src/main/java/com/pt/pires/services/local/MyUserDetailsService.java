@@ -15,8 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pt.pires.domain.UserRole;
 import com.pt.pires.persistence.UserRepository;
 
+/**
+ * Service used to spring's authentication 
+ * @author André
+ *
+ */
 @Service("userDetailsService")
-public class MyUserDetailsService implements UserDetailsService{
+public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -24,15 +29,19 @@ public class MyUserDetailsService implements UserDetailsService{
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+		if(username == null) {
+			throw new IllegalArgumentException();
+		}
 		com.pt.pires.domain.User user = userRepository.findOne(username);
-		if(user == null)
-			throw new UsernameNotFoundException("Inexistent Username");
+		if(user == null) {
+			throw new UsernameNotFoundException("User doesn't exist");
+		}
 		return buildUser(user, buildUserAuthority(user.getRole()));
 	}
 	
-	/* ======================== Private methods ====================== */
+	/* ======================== Private axiliary methods ====================== */
 
-	private User buildUser(com.pt.pires.domain.User myUser,List<GrantedAuthority> authorities){
+	private User buildUser(com.pt.pires.domain.User myUser,List<GrantedAuthority> authorities) {
 		return new User(myUser.getUsername(), myUser.getPassword(), true,
 				true, true, true, authorities);
 	}

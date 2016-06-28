@@ -30,7 +30,18 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		--> 		
+		-->
+		<!-- Used to email validation -->
+		<!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
+		<dependency>
+		    <groupId>commons-validator</groupId>
+		    <artifactId>commons-validator</artifactId>
+		    <version>1.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
+		</dependency> 		
 		<!-- http://mvnrepository.com/artifact/org.apache.tika/tika-core -->
 		<dependency>
 		    <groupId>org.apache.tika</groupId>

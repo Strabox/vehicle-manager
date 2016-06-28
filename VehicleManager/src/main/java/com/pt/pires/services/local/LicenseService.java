@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 
 import com.pt.pires.domain.License;
 
-@Service
-public class LicenseService implements ILicenseService{
+@Service("licenseService")
+public class LicenseService implements ILicenseService {
 
 	@Override
-	public boolean validateLicense(String license){
+	public boolean validateLicense(String license) {
+		if(license == null) {
+			throw new IllegalArgumentException();
+		}
 		return License.validateLicense(license);
 	}
 	

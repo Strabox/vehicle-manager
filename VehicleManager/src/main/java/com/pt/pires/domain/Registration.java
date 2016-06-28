@@ -9,6 +9,14 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.Type;
 
+import com.pt.pires.domain.exceptions.InvalidRegistrationException;
+import com.pt.pires.domain.exceptions.InvalidRegistrationTimeException;
+
+/**
+ * Represents a registration
+ * @author André
+ *
+ */
 @Entity
 public class Registration {
 
@@ -26,7 +34,8 @@ public class Registration {
 	@Type(type="date")
 	private Date date;
 	
-	public Registration(long time,String Description,Date date){
+	public Registration(long time,String Description,Date date) 
+			throws InvalidRegistrationException, InvalidRegistrationTimeException {
 		setTime(time);
 		setDescription(Description);
 		setDate(date);
@@ -36,31 +45,37 @@ public class Registration {
 	
 	/* === Getters and Setters === */
 	
-	public long getId(){
+	public long getId() {
 		return this.id;
 	}
 	
-	public long getTime(){
+	public long getTime() {
 		return this.time;
 	}
 	
-	public void setTime(long time){
+	public void setTime(long time) throws InvalidRegistrationTimeException {
+		if(time < 0) {
+			throw new InvalidRegistrationTimeException();
+		}
 		this.time = time;
 	}
 	
-	public String getDescription(){
+	public String getDescription() {
 		return this.description;
 	}
 	
-	public void setDescription(String description){
+	public void setDescription(String description) throws InvalidRegistrationException {
+		if(description.isEmpty()) {
+			throw new InvalidRegistrationException();
+		}
 		this.description = description;
 	}
 	
-	public Date getDate(){
+	public Date getDate() {
 		return this.date;
 	}
 	
-	public void setDate(Date date){
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	

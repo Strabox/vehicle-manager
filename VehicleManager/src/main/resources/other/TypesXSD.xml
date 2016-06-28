@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<xs:schema attributeFormDefault="unqualified" 
+	elementFormDefault="qualified" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- ####### All the types ###### -->
+	
+	<!-- User type -->
+	<xs:complexType name="user">
+		<xs:all>
+		    <xs:element name="username" type="xs:string"/>
+		    <xs:element name="password" type="xs:string"/>
+		    <xs:element name="email" type="xs:string"/>
+  		</xs:all>
+  		<xs:attribute name="role" use="required">
+  			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="ROLE_USER"/>
+					<xs:enumeration value="ROLE_ADMIN"/>
+				</xs:restriction>
+			</xs:simpleType>
+  		</xs:attribute>
+	</xs:complexType>
+	
+	<!-- ##################### Vehicle Types ######################## -->
+	
+	<!-- LicenseId Simple Type -->
+	<xs:simpleType name="licenseId">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([A-Z]{2}-[0-9]{2}-[0-9]{2})|([0-9]{2}-[A-Z]{2}-[0-9]{2})|([0-9]{2}-[0-9]{2}-[A-Z]{2})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- License Type -->
+	<xs:complexType name="license">
+		<xs:simpleContent>
+			<xs:extension base="licenseId">
+				<xs:attribute name="date" type="xs:date"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<!-- Content common to all type of vehicles -->
+	<xs:group name="vehicleCommonContent">
+		<xs:sequence>
+			<xs:element name="registrations">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="registration" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:string">
+										<xs:attribute name="time" type="xs:nonNegativeInteger" use="required"/>
+										<xs:attribute name="date" type="xs:date" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="notes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="notifications">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="notification" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:string">
+										<xs:attribute name="notiDate" type="xs:date" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+
+	<xs:attributeGroup name="vehicleCommonAtt">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="brand" type="xs:string" use="required"/>
+		<xs:attribute name="acquisitionDate" type="xs:date" use="required"/>
+	</xs:attributeGroup>
+	
+	<xs:complexType name="vehicleLicensed">
+		<xs:sequence>
+			<xs:element name="license" type="license" />
+			<xs:group ref="vehicleCommonContent"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="vehicleCommonAtt" />
+	</xs:complexType>
+
+	<xs:complexType name="vehicleUnlicensed">
+		<xs:group ref="vehicleCommonContent"/>
+		<xs:attributeGroup ref="vehicleCommonAtt" />
+	</xs:complexType>
+	
+</xs:schema>
