@@ -19,6 +19,13 @@ import com.pt.pires.services.local.IVehicleService;
 @Controller
 public class VehicleController {
 
+	private final static String VEHICLE_TYPE_LICENSED = "licensed";
+	private final static String VEHICLE_TYPE_UNLICENSED = "unlicensed";
+	
+	private final static String PRINT_OPTION_REGISTRATIONS = "reg";
+	private final static String PRINT_OPTION_NOTES = "note";
+	private final static String PRINT_OPTION_NOTES_AND_REGISTRATIONS = "regNote";
+	
 	@Autowired
 	@Qualifier("vehicleService") 
 	private IVehicleService vehicleService;
@@ -34,20 +41,18 @@ public class VehicleController {
 	@RequestMapping(value = "/vehicle/{vehicleName}",params = { "type" })
 	public String vehicle(Model model,@PathVariable("vehicleName") String vehicleName,
 			@RequestParam("type")String type) {
-		System.out.println("[Vehicle] " + vehicleName);
+		System.out.println("[Vehicle Page] Vehicle Name: " + vehicleName);
 		try {
-			if(type.equals("licensed")) {
-				model.addAttribute("type", "licensed");
+			if(type.equals(VEHICLE_TYPE_LICENSED)) {
+				model.addAttribute("type", VEHICLE_TYPE_LICENSED);
 			}
-			else if(type.equals("unlicensed")) {
-				model.addAttribute("type", "unlicensed");
-			}
-			else {
-				return "error";
+			else if(type.equals(VEHICLE_TYPE_UNLICENSED)) {
+				model.addAttribute("type", VEHICLE_TYPE_UNLICENSED);
 			}
 			model.addAttribute("vehicle",vehicleService.getVehicle(vehicleName));
 			return "vehicle";
 		} catch (VehicleManagerException e) {
+			e.printStackTrace();
 			return "error";
 		}
 	}
@@ -61,40 +66,51 @@ public class VehicleController {
 	 * @return HTML file
 	 */
 	@RequestMapping(value = "/vehicle/{vehicleName}/print",params = { "type", "print" })
-	public String printRegistrations(Model model,
+	public String printVehicleData(Model model,
 			@PathVariable("vehicleName") String vehicleName, 
 			@RequestParam(value = "type", required = true) String type,
 			@RequestParam(value = "print", required = true) String print) {
-		System.out.println("[Print] " + vehicleName + " " + type + " " + print);
+		System.out.println("[Print Vehicle Data] " + vehicleName + " " + type + " " + print);
 		try {
-			if(type.equals("licensed")) {
-				model.addAttribute("type", "licensed");
+			if(type.equals(VEHICLE_TYPE_LICENSED)) {
+				model.addAttribute("type", VEHICLE_TYPE_LICENSED);
 			}
-			else if(type.equals("unlicensed")) {
-				model.addAttribute("type", "unlicensed");
+			else if(type.equals(VEHICLE_TYPE_UNLICENSED)) {
+				model.addAttribute("type", VEHICLE_TYPE_UNLICENSED);
 			}
 			else {
 				return "error";
 			}
 			
-			if(print.equals("reg")) {
-				model.addAttribute("print", "reg");
+			if(print.equals(PRINT_OPTION_REGISTRATIONS)) {
+				model.addAttribute("print", PRINT_OPTION_REGISTRATIONS);
 			}
-			else if(print.equals("note")) {
-				model.addAttribute("print", "note");
+			else if(print.equals(PRINT_OPTION_NOTES)) {
+				model.addAttribute("print", PRINT_OPTION_NOTES);
 			}
-			else if(print.equals("regNote")) {
-				model.addAttribute("print", "regNote");
+			else if(print.equals(PRINT_OPTION_NOTES_AND_REGISTRATIONS)) {
+				model.addAttribute("print", PRINT_OPTION_NOTES_AND_REGISTRATIONS);
 			}
 			else {
 				return "error";
 			}			
 			model.addAttribute("vehicle",vehicleService.getVehicle(vehicleName));
-			System.out.println("[Print End]");
 			return "printVehicle";
 		} catch (VehicleManagerException e) {
 			return "error";
 		}
+	}
+	
+	/**
+	 * Print all vehicles data
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/vehicles/print")
+	public String printAllVehiclesData(Model model) {
+		System.out.println("[Print all vehicles data] " + vehicleService.getAllVehicles().size());
+		model.addAttribute("vehicles",vehicleService.getAllVehicles());
+		return "printVehicles";
 	}
 	
 }

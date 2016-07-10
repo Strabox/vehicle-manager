@@ -6,7 +6,7 @@ public class ResponseError {
 	
 	private String description;
 	
-	public ResponseError(int code,String description){
+	public ResponseError(int code,String description) {
 		setCode(code);
 		setDescription(description);
 	}

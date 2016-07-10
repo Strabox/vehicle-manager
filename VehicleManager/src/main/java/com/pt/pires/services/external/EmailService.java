@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class EmailService implements IEmailService{
 	
 	@Override
-	public boolean sendEmail(String gmailUsername, String gmailPassword,
+	public boolean sendEmail(String username, String password,
 			String from,String to,String subject,String body) {
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -26,7 +26,7 @@ public class EmailService implements IEmailService{
 		Session session = Session.getInstance(props,
 			new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(gmailUsername, gmailPassword);
+					return new PasswordAuthentication(username, password);
 			}
 		});
 		

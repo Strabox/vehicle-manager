@@ -27,6 +27,9 @@ import org.xml.sax.SAXException;
 import com.pt.pires.domain.UserRole;
 import com.pt.pires.domain.exceptions.InitializationFileCorruptedException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
+import com.pt.pires.services.local.INoteService;
+import com.pt.pires.services.local.INotificationTaskService;
+import com.pt.pires.services.local.IRegistrationService;
 import com.pt.pires.services.local.IUserService;
 import com.pt.pires.services.local.IVehicleService;
 
@@ -44,6 +47,18 @@ public class ImportIntegratorService implements IImportIntegratorService{
 	@Autowired
 	@Qualifier("userService")
 	private IUserService userService;
+	
+	@Autowired
+	@Qualifier("registrationService")
+	private IRegistrationService registrationService;
+	
+	@Autowired
+	@Qualifier("noteService")
+	private INoteService noteService;
+	
+	@Autowired
+	@Qualifier("notificationService")
+	private INotificationTaskService notificationTaskService;
 	
 	
 	@Override
@@ -73,11 +88,12 @@ public class ImportIntegratorService implements IImportIntegratorService{
 				String brand = vehicleElem.getAttributeValue("brand");
 				Date acquisitionDate = formatter.parse(vehicleElem.getAttributeValue("acquisitionDate"));
 				if(vehicleType.equals("vehicleUnlicensed")){
-					vehicleService.createUnlicensedVehicle(vehicleName, brand, acquisitionDate);
+					int fabricationYear = Integer.parseInt(vehicleElem.getAttributeValue("fabricationYear"));
+					vehicleService.createUnlicensedVehicle(vehicleName, brand, acquisitionDate, fabricationYear);
 				}
 				else if(vehicleType.equals("vehicleLicensed")){
 					Element licenseElem = vehicleElem.getChild("license");
-					String license= licenseElem.getText();
+					String license = licenseElem.getText();
 					Date licenseDate = formatter.parse(licenseElem.getAttributeValue("date"));
 					vehicleService.createLicensedVehicle(vehicleName, brand, acquisitionDate, license, licenseDate);
 				}
@@ -86,17 +102,17 @@ public class ImportIntegratorService implements IImportIntegratorService{
 					Long time = Long.parseLong(regElem.getAttributeValue("time"));
 					Date date = formatter.parse(regElem.getAttributeValue("date"));
 					String description = regElem.getText();
-					vehicleService.addRegistrationToVehicle(vehicleName, time, description, date);
+					registrationService.createRegistration(vehicleName, time, description, date);
 				}
 				Element notesElem = vehicleElem.getChild("notes");
 				for(Element noteElem : notesElem.getChildren()){
-					vehicleService.addNoteToVehicle(vehicleName, noteElem.getText());
+					noteService.createNote(vehicleName, noteElem.getText());
 				}
 				Element notisElem = vehicleElem.getChild("notifications");
 				for(Element notiElem : notisElem.getChildren()){
 					Date notiDate = formatter.parse(notiElem.getAttributeValue("notiDate"));
 					String description = notiElem.getText();
-					vehicleService.addYearNotification(vehicleName, description, notiDate);
+					notificationTaskService.createYearNotification(vehicleName, description, notiDate);
 				}
 			}
 		}catch(IOException|JDOMException|ParseException e) {

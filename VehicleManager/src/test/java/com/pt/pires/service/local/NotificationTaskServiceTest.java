@@ -18,7 +18,10 @@ import com.pt.pires.domain.NotificationTask;
 import com.pt.pires.domain.NotificationTaskHalfYear;
 import com.pt.pires.domain.NotificationTaskOneTime;
 import com.pt.pires.domain.NotificationTaskYear;
+import com.pt.pires.domain.Registration;
+import com.pt.pires.domain.exceptions.InvalidNotificationTaskException;
 import com.pt.pires.domain.exceptions.NotificationDoesntExistException;
+import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.service.VehicleManagerServiceTest;
 import com.pt.pires.services.local.INotificationTaskService;
@@ -28,10 +31,21 @@ import com.pt.pires.util.DateUtil;
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 @Transactional
 @Rollback
-public class NotificationServiceTest extends VehicleManagerServiceTest {
+public class NotificationTaskServiceTest extends VehicleManagerServiceTest {
 
+	
+	private final static String VEHICLE_BRAND = "Mitsubishi";
+	
+	private final static Date VEHICLE_DATE = DateUtil.getSimplifyDate(new Date());
+	
+	private final static int FABRICATION_YEAR = 1994;
+	
 	private static final String VEHICLE_NAME = "Grey car";
-	private static final String VEHICLE_BRAND = "Citroen";
+	private static final String VEHICLE_NAME_DOESNT_EXIST = "Inexistent car name";
+	
+	private static final Long TIME = new Long(1600);
+	
+	private static final Date DONE_DATE = DateUtil.getSimplifyDate(1,1,2016);
 	
 	private static final Date DATE_1 = DateUtil.getSimplifyDate(1,0,2016);
 	private static final Date DATE_2 = DateUtil.getSimplifyDate(31,11,2016);
@@ -57,12 +71,86 @@ public class NotificationServiceTest extends VehicleManagerServiceTest {
 	
 	@Override
 	public void populate() throws VehicleManagerException {
-		newUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, DATE_1);
-		EXISTING_ID_1 = newNotification(VEHICLE_NAME, new NotificationTaskYear(DATE_1, DESCRIPTION));
-		EXISTING_ID_2 = newNotification(VEHICLE_NAME, new NotificationTaskHalfYear(DATE_2, DESCRIPTION_1));
-		EXISTING_ID_3 = newNotification(VEHICLE_NAME, new NotificationTaskYear(DATE_3,DESCRIPTION_2));
-		EXISTING_ID_4 = newNotification(VEHICLE_NAME, new NotificationTaskHalfYear(DATE_4, DESCRIPTION_1));
-		EXISTING_ID_5 = newNotification(VEHICLE_NAME, new NotificationTaskOneTime(DATE_5, DESCRIPTION_1));
+		newUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, DATE_1, FABRICATION_YEAR);
+		NotificationTask n1 = new NotificationTaskYear(DATE_1, DESCRIPTION);
+		NotificationTask n2 = new NotificationTaskHalfYear(DATE_2, DESCRIPTION_1);
+		NotificationTask n3 = new NotificationTaskYear(DATE_3,DESCRIPTION_2);
+		NotificationTask n4 = new NotificationTaskHalfYear(DATE_4, DESCRIPTION_1);
+		NotificationTask n5 = new NotificationTaskOneTime(DATE_5, DESCRIPTION_1);
+		n1.setNotificationSent(true);
+		n2.setNotificationSent(true);
+		n3.setNotificationSent(true);
+		n4.setNotificationSent(true);
+		n5.setNotificationSent(true);
+		EXISTING_ID_1 = newNotification(VEHICLE_NAME, n1);
+		EXISTING_ID_2 = newNotification(VEHICLE_NAME, n2);
+		EXISTING_ID_3 = newNotification(VEHICLE_NAME, n3);
+		EXISTING_ID_4 = newNotification(VEHICLE_NAME, n4);
+		EXISTING_ID_5 = newNotification(VEHICLE_NAME, n5);
+	}
+	
+	
+	/* =================== AddNotificationToVehicleService ============== */
+	
+	@Test
+	public void createNotification() throws VehicleManagerException{
+		Long notiId = notificationTaskService.createYearNotification(VEHICLE_NAME, VALID_DESCRIPTION, VEHICLE_DATE);
+		List<NotificationTask> notis = obtainNotifications(VEHICLE_NAME);
+		Assert.assertNotNull(notis);
+		Assert.assertTrue(obtainNotification(VEHICLE_NAME, notiId).getDescription().equals(VALID_DESCRIPTION));
+	}
+	
+	@Test(expected = InvalidNotificationTaskException.class)
+	public void createNotificationInvalidNotification() throws VehicleManagerException{
+		notificationTaskService.createYearNotification(VEHICLE_NAME, EMPTY_STRING, VEHICLE_DATE);
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void createNotificationInexistentVehicle() throws VehicleManagerException{
+		notificationTaskService.createYearNotification(VEHICLE_NAME_DOESNT_EXIST, VALID_DESCRIPTION, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createNotificationNullName() throws VehicleManagerException{
+		notificationTaskService.createYearNotification(null, VALID_DESCRIPTION, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createNotificationNullDescription() throws VehicleManagerException{
+		notificationTaskService.createYearNotification(VEHICLE_NAME, null, VEHICLE_DATE);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createNotificationNullDate() throws VehicleManagerException{
+		notificationTaskService.createYearNotification(VEHICLE_NAME, VALID_DESCRIPTION, null);
+	}
+	
+	/* ================ RemoveNotificationFromVehicleService ============ */
+	
+	@Test
+	public void removeNotificationSuccess()throws VehicleManagerException{
+		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_1);
+		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_2);
+		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_3);
+		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_4);
+		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_5);
+		Assert.assertNotNull(obtainNotifications(VEHICLE_NAME));
+		Assert.assertTrue(obtainNotifications(VEHICLE_NAME).isEmpty());
+		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_1));
+		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_2));
+		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_3));
+		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_4));
+		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_5));
+	}
+	
+	@Test(expected = VehicleDoesntExistException.class)
+	public void removeNotificationInexistentVehicle() throws VehicleManagerException{
+		notificationTaskService.removeNotification(VEHICLE_NAME_DOESNT_EXIST, 2);	
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void removeNotificationeNullName() throws VehicleManagerException{
+		notificationTaskService.removeNotification(null, 2);	
 	}
 	
 	/* ========================= NotifyDay Service ======================= */
@@ -82,6 +170,31 @@ public class NotificationServiceTest extends VehicleManagerServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void notifyDayNotificationNullCurrentDate() throws VehicleManagerException {
 		notificationTaskService.notifyDay(EXISTING_ID_1, null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void notificationTaskCompletedNullId() throws VehicleManagerException{
+		notificationTaskService.notificationTaskDone(null, DATE_1, TIME, DESCRIPTION, DATE_1);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void notificationTaskCompletedNullCurrentDate() throws VehicleManagerException{
+		notificationTaskService.notificationTaskDone(new Long(99), null, TIME, DESCRIPTION, DATE_1);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void notificationTaskCompletedNullTime() throws VehicleManagerException{
+		notificationTaskService.notificationTaskDone(new Long(99), DATE_1, null, DESCRIPTION, DATE_1);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void notificationTaskCompletedNullDescription() throws VehicleManagerException{
+		notificationTaskService.notificationTaskDone(new Long(99), DATE_1, TIME, null, DATE_1);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void notificationTaskCompletedNullDate() throws VehicleManagerException{
+		notificationTaskService.notificationTaskDone(new Long(99), DATE_1, TIME, DESCRIPTION, null);
 	}
 	
 	/* === NotificationYear === */
@@ -105,8 +218,11 @@ public class NotificationServiceTest extends VehicleManagerServiceTest {
 	public void nextNotificationYearNoti_1() throws VehicleManagerException {
 		Date expected = DateUtil.getSimplifyDate(1,0,2017);
 		Date currentDate = DateUtil.getSimplifyDate(24,9,2019);
-		notificationTaskService.setNextNotificationTask(EXISTING_ID_1,currentDate);
+		notificationTaskService.notificationTaskDone(EXISTING_ID_1, currentDate, TIME, DESCRIPTION, DONE_DATE);
 		NotificationTaskYear n = (NotificationTaskYear) obtainNotification(VEHICLE_NAME, EXISTING_ID_1);
+		List<Registration> regs = obtainRegistrations(VEHICLE_NAME);
+		Assert.assertTrue(regs.get(0).getDescription().equals(DESCRIPTION));
+		Assert.assertTrue(regs.get(0).getTime() == TIME);
 		Assert.assertTrue(n.getNotiDate().equals(expected));
 	}
 	
@@ -129,8 +245,11 @@ public class NotificationServiceTest extends VehicleManagerServiceTest {
 	public void nextNotificationYearNoti_2() throws VehicleManagerException {
 		Date expected = DateUtil.getSimplifyDate(23,9,2017);
 		Date currentDate = DateUtil.getSimplifyDate(24,9,2017);
-		notificationTaskService.setNextNotificationTask(EXISTING_ID_3,currentDate);
+		notificationTaskService.notificationTaskDone(EXISTING_ID_3,currentDate,TIME,DESCRIPTION,DONE_DATE);
 		NotificationTaskYear n = (NotificationTaskYear) obtainNotification(VEHICLE_NAME, EXISTING_ID_3);
+		List<Registration> regs = obtainRegistrations(VEHICLE_NAME);
+		Assert.assertTrue(regs.get(0).getDescription().equals(DESCRIPTION));
+		Assert.assertTrue(regs.get(0).getTime() == TIME);
 		Assert.assertTrue(n.getNotiDate().equals(expected));
 	}
 	
@@ -155,8 +274,11 @@ public class NotificationServiceTest extends VehicleManagerServiceTest {
 	public void nextNotificationHalfYearNoti_1() throws VehicleManagerException {
 		Date expected = DateUtil.getSimplifyDate(30,5,2017);
 		Date currentDate = DateUtil.getSimplifyDate(24,9,2019);
-		notificationTaskService.setNextNotificationTask(EXISTING_ID_2,currentDate);
+		notificationTaskService.notificationTaskDone(EXISTING_ID_2,currentDate,TIME,DESCRIPTION,DONE_DATE);
 		NotificationTaskHalfYear n = (NotificationTaskHalfYear) obtainNotification(VEHICLE_NAME, EXISTING_ID_2);
+		List<Registration> regs = obtainRegistrations(VEHICLE_NAME);
+		Assert.assertTrue(regs.get(0).getDescription().equals(DESCRIPTION));
+		Assert.assertTrue(regs.get(0).getTime() == TIME);
 		Assert.assertTrue(n.getNotiDate().equals(expected));
 	}
 	
@@ -181,8 +303,11 @@ public class NotificationServiceTest extends VehicleManagerServiceTest {
 	public void nextNotificationHalfYearNoti_2() throws VehicleManagerException {
 		Date expected = DateUtil.getSimplifyDate(30,8,2016);
 		Date currentDate = DateUtil.getSimplifyDate(24,9,2019);
-		notificationTaskService.setNextNotificationTask(EXISTING_ID_4,currentDate);
+		notificationTaskService.notificationTaskDone(EXISTING_ID_4,currentDate,TIME,DESCRIPTION,DONE_DATE);
 		NotificationTaskHalfYear n = (NotificationTaskHalfYear) obtainNotification(VEHICLE_NAME, EXISTING_ID_4);
+		List<Registration> regs = obtainRegistrations(VEHICLE_NAME);
+		Assert.assertTrue(regs.get(0).getDescription().equals(DESCRIPTION));
+		Assert.assertTrue(regs.get(0).getTime() == TIME);
 		Assert.assertTrue(n.getNotiDate().equals(expected));
 	}
 	

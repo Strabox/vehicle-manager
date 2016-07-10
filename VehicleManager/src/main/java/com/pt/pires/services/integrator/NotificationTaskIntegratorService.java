@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.pt.pires.domain.NotificationTask;
 import com.pt.pires.domain.User;
 import com.pt.pires.domain.UserRole;
@@ -16,16 +14,17 @@ import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.services.external.IEmailService;
 import com.pt.pires.services.local.INotificationTaskService;
 import com.pt.pires.services.local.IUserService;
-import com.pt.pires.services.local.IVehicleService;
 
 @Service("notificationIntegratorService")
 public class NotificationTaskIntegratorService implements INotificationTaskIntegratorService {
 
+	public final static String SUBJECT_HEADER = "Aviso: Manutenção ";
+	
 	@Value("${application.email}")
-	private String emailUsername;
+	public static String emailUsername;
 	
 	@Value("${application.password}")
-	private String emailPassword;
+	public static String emailPassword;
 	
 	@Autowired
 	@Qualifier("emailService")
@@ -36,46 +35,43 @@ public class NotificationTaskIntegratorService implements INotificationTaskInteg
 	private INotificationTaskService notificationService;
 	
 	@Autowired
-	@Qualifier("vehicleService")
-	private IVehicleService vehicleService;
-	
-	@Autowired
 	@Qualifier("userService")
 	private IUserService userService;
 	
 	
 	public NotificationTaskIntegratorService(IEmailService es,INotificationTaskService ns,
-			IVehicleService vs, IUserService us) {
+			IUserService us) {
 		this.emailService = es;
 		this.notificationService = ns;
-		this.vehicleService = vs;
 		this.userService = us;
 	}
 	
 	public NotificationTaskIntegratorService() { }
 	
 	@Override
-	public void sendNotificationTask(Long notificationId) throws VehicleManagerException {
-		boolean notify = notificationService.notifyDay(notificationId, new Date());
-		if(notify) {
-			NotificationTask n = notificationService.getNotificationTask(notificationId);
-			List<User> usersToSend = (List<User>) userService.getUserByRole(UserRole.ROLE_USER);
-			usersToSend.forEach(
-				(v)-> {   
-						/* emailService.sendEmail(emailUsername, emailPassword, emailUsername,
-							v.getEmail(), "Aviso: Manutenção " + n.getVehicle().getName(), n.getDescription()); */
-						System.out.println("[Enviando email para " + v.getUsername() + "]"); 
-					});
+	public void sendNotificationTask(Long notificationId,Date currentDate) throws VehicleManagerException {
+		if(notificationId == null || currentDate == null) {
+			throw new IllegalArgumentException();
 		}
-	}
-
-	@Override
-	@Transactional(readOnly = false)
-	public void notificationTaskCompleted(Long notificationId,Long time,Date date) throws VehicleManagerException {
-		NotificationTask notification = notificationService.getNotificationTask(notificationId);
-		vehicleService.addRegistrationToVehicle(notification.getVehicle().getName(),
-				time, notification.getDescription(), date);
-		notificationService.setNextNotificationTask(notificationId,new Date());
+		boolean notify = notificationService.notifyDay(notificationId, currentDate);
+		NotificationTask n = notificationService.getNotificationTask(notificationId);
+		System.out.println(notificationId + " " + (n.isNotificationSent()) + " " + emailUsername);
+		if(notify && !n.isNotificationSent()) {
+			List<User> usersToSend = (List<User>) userService.getUserByRole(UserRole.ROLE_USER);
+			if(usersToSend.isEmpty()) {
+				System.out.println("VAZIOOOOOOOOOOOOOOOOOO");
+			}
+			for(User u : usersToSend) {
+				System.out.println("OLAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+				boolean sent = emailService.sendEmail(emailUsername, emailPassword, emailUsername,
+						u.getEmail(), SUBJECT_HEADER + n.getVehicle().getName(), n.getDescription()); 
+					if(sent) {
+						System.out.println("HEREEEEEEEEEEEEEEEEEEEEEEEEE");
+						notificationService.setNotificationTaskSent(notificationId, true);
+						System.out.println("[Enviando notificação/email para " + u.getUsername() + "]");
+					}
+			}
+		}
 	}
 
 }

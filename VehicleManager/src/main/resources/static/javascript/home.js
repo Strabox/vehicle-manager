@@ -20,6 +20,25 @@ $(document).ready(function() {
 				"?type=" + type + "\" >" + vehicleName + "</a>";
 	}
 	
+	function getVehiclePortraitHTML(vehicleName,type) {
+		return  "<a href=\"/vehicle/" + vehicleName +
+				"?type=" + type + "\" > <img src=\"/image/" + vehicleName + 
+				"\" width=\"100vw\" height=\"75vh\" class=\"img-thumbnail\" " +
+				"alt=\"Foto do Veículo\"/></a>";
+	}
+	
+	populateYearSelection("fabricationYearU");
+	
+	/* ########## Print all vehicles data ############ */
+	
+	/* Bind print function to print button */
+	$(".printButton").click(function(){
+		var printType = $(this).attr("id");
+		var printUrl = "/vehicles/print";
+		var myWindow = window.open(printUrl,"","width = 800,height = 550");
+		myWindow.print();
+	});
+	
 	/* ################## Task Done ################## */
 	
 	$(document).on("click", ".task-done", function() {
@@ -28,10 +47,12 @@ $(document).ready(function() {
 	
 	$("#taskDoneModal")
 		.on("shown.bs.modal", function (e) {
+			var notiDescription = $("#" + notificationDone + "rowNoti").children("td").eq(1).text();
+			$("#doneDescription").val(notiDescription);
 			$("#taskDoneForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
 					var registration = new Object();
-					registration.description = "fill something";
+					registration.description = $("#doneDescription").val();
 					registration.time = $("#time").val();
 					registration.date = $("#doneDate").val();
 					$.ajax({
@@ -112,7 +133,9 @@ $(document).ready(function() {
 						$("#responseAlertSuccessHeader").text("Criação de Veículo");
 						$("#responseAlertSuccessText").text("Veículo criado com sucesso");
 						$("#responseAlertModalSuccess").modal("toggle");
-						vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"licensed"),vehicle.brand,vehicle.acquisitionDate,
+						vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"licensed"),
+						                       getVehiclePortraitHTML(vehicle.name,"licensed"),
+						                       vehicle.brand,vehicle.acquisitionDate,
 						                         getDeleteButtonHTML(vehicle.name)]).draw(true);
 					},
 					error: function(errMsg) {
@@ -134,6 +157,7 @@ $(document).ready(function() {
 				var vehicle = new Object();
 				vehicle.name = $("#nameU").val();
 				vehicle.brand = $("#brandU").val();
+				vehicle.fabricationYear = $("#fabricationYearU").val();
 				vehicle.acquisitionDate = $("#acquisitionDateU").val();
 				formData.append("file",document.getElementById("fileU").files[0]);
 				formData.append("vehicle",new Blob([JSON.stringify(vehicle)],{ type: "application/json" } ));
@@ -150,7 +174,9 @@ $(document).ready(function() {
 						$("#responseAlertSuccessHeader").text("Criação de Veículo");
 						$("#responseAlertSuccessText").text("Veículo criado com sucesso");
 						$("#responseAlertModalSuccess").modal("toggle");
-						vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"unlicensed"),vehicle.brand,vehicle.acquisitionDate,
+						vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"unlicensed"),
+						                       getVehiclePortraitHTML(vehicle.name,"unlicensed"),
+						                       vehicle.brand,vehicle.acquisitionDate,
 						                         getDeleteButtonHTML(vehicle.name)]).draw(true);
 					},
 					error: function(errMsg) {

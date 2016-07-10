@@ -5,12 +5,17 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 
-import com.pt.pires.domain.exceptions.InvalidNotificationException;
+import com.pt.pires.domain.exceptions.InvalidNotificationTaskException;
 
+/**
+ * Notification alert user with a year periodicity after initDate
+ * @author André
+ *
+ */
 @Entity
 public class NotificationTaskYear extends NotificationTask {
 
-	public NotificationTaskYear(Date initDate, String description) throws InvalidNotificationException {
+	public NotificationTaskYear(Date initDate, String description) throws InvalidNotificationTaskException {
 		super(initDate, description);
 	}
 

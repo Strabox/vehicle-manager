@@ -13,7 +13,8 @@ import com.pt.pires.domain.exceptions.InvalidLicenseException;
 import com.pt.pires.util.DateUtil;
 
 /**
- * Represents a vehicle license Portugal style only.
+ * Represents a vehicle license Portugal style only
+ * NN-NN-AA , NN-AA-NN, AA-NN-NN with A for characters and N for numbers from 0 to 9 
  * @author André
  *
  */

@@ -100,6 +100,7 @@
 	<xs:complexType name="vehicleUnlicensed">
 		<xs:group ref="vehicleCommonContent"/>
 		<xs:attributeGroup ref="vehicleCommonAtt" />
+		<xs:attribute name="fabricationYear" type="xs:integer" use="required"/>
 	</xs:complexType>
 	
 </xs:schema>

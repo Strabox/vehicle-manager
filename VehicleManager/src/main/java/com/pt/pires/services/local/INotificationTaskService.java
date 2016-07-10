@@ -13,14 +13,24 @@ import com.pt.pires.domain.exceptions.VehicleManagerException;
  */
 public interface INotificationTaskService {
 
-	 NotificationTask getNotificationTask(Long notificationId) throws VehicleManagerException; 
+	Long createYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
+	
+	Long createHalfYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
+	
+	Long createOneTimeNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
+	
+	void removeNotification(String vehicleName,long alertId) throws VehicleManagerException;
+		
+	NotificationTask getNotificationTask(Long notificationId) throws VehicleManagerException; 
+		 
+	Collection<NotificationTask> getActiveNotificationsTasks(Date currentDate);
 	 
-	 Collection<NotificationTask> getActiveNotificationsTasks(Date currentDate);
+	Collection<NotificationTask> getAllNotificationsTasks();
 	 
-	 Collection<NotificationTask> getAllNotificationsTasks();
+	boolean notifyDay(Long notificationId,Date currentDate) throws VehicleManagerException;
 	 
-	 boolean notifyDay(Long notificationId,Date currentDate) throws VehicleManagerException;
+	void setNotificationTaskSent(Long notificationId,boolean sent) throws VehicleManagerException;
 	 
-	 void setNextNotificationTask(Long notificationId,Date currentDate) throws VehicleManagerException;
+	void notificationTaskDone(Long notifiationId,Date currentDate,Long time,String description,Date date) throws VehicleManagerException;
 	 
 }

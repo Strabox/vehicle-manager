@@ -8,10 +8,11 @@
 	    
    		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<!-- Bootstrap library -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-		<!-- Bootstrap JavaScript -->
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     <body>
     	<!-- Vehicle Header -->
@@ -22,7 +23,7 @@
     	<!-- Notes Div -->
     	<div th:if="${print.equals('note') || print.equals('regNote')}">
 	    	<h3>Notas</h3>
-	    	<table id="notesTable" class="table table-condensed table-hover table-striped table-bordered">
+	    	<table class="table table-condensed table-hover table-striped table-bordered">
 		    	<thead>
 		    		<tr>
 			    		<th>Nota</th>

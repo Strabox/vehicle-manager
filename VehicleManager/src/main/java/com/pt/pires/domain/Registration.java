@@ -13,7 +13,7 @@ import com.pt.pires.domain.exceptions.InvalidRegistrationException;
 import com.pt.pires.domain.exceptions.InvalidRegistrationTimeException;
 
 /**
- * Represents a registration
+ * Represents a registration of a vehicle task
  * @author André
  *
  */
@@ -34,10 +34,10 @@ public class Registration {
 	@Type(type="date")
 	private Date date;
 	
-	public Registration(long time,String Description,Date date) 
+	public Registration(long time,String description,Date date) 
 			throws InvalidRegistrationException, InvalidRegistrationTimeException {
 		setTime(time);
-		setDescription(Description);
+		setDescription(description);
 		setDate(date);
 	}
 	

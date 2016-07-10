@@ -38,13 +38,14 @@ import org.mockito.MockitoAnnotations;
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 @Transactional
 @Rollback
-public class VehicleIntegratorServiceTest extends VehicleManagerServiceTest{
+public class VehicleIntegratorServiceTest extends VehicleManagerServiceTest {
 
 	private static final String VEHICLE_NAME = "Carro cor de rosa";
 	private static final String VEHICLE_EXISTING_NAME = "Calhambeco do noddy";
 	private static final String VEHICLE_DOESNT_EXIST_NAME = "Calhambeco do pussas";
 	private static final String VEHICLE_BRAND = "Skoda";
 	private static final Date VEHICLE_DATE = DateUtil.getSimplifyDate(new Date());
+	private final static int FABRICATION_YEAR = 1994;
 	
 	private static final String VALID_LICENSE = "GG-56-90";
 	
@@ -65,7 +66,7 @@ public class VehicleIntegratorServiceTest extends VehicleManagerServiceTest{
 	
 	
 	@BeforeClass
-	public static void populateFiles(){
+	public static void populateFiles() {
 		try {
 			imagePNG = Files.readAllBytes(
 					Paths.get(new ClassPathResource(IMAGE_PNG_TEST_RESOURCE_PATH).getFile().getAbsolutePath()));
@@ -80,120 +81,132 @@ public class VehicleIntegratorServiceTest extends VehicleManagerServiceTest{
 	@Override
 	@Before
 	public void populate() throws VehicleManagerException {
-		MockitoAnnotations.initMocks(this);		//Setup Mockito annotations beacause
+		MockitoAnnotations.initMocks(this);		//IMPORTANT: Setup Mockito annotations because !!!
 		vehicleIntegratorService = new VehicleIntegratorService(locaVehicleService, fileService);
-		newUnlicensedVehicle(VEHICLE_EXISTING_NAME, VEHICLE_BRAND, VEHICLE_DATE);
+		newUnlicensedVehicle(VEHICLE_EXISTING_NAME, VEHICLE_BRAND, VEHICLE_DATE,FABRICATION_YEAR);
 	}
 	
 	/* ================== CreateUnlicensedVehicle Integrator Service ==================== */
 	
 	@Test
-	public void createUnlicensedVehicleWithValidImage() throws VehicleManagerException{
+	public void createUnlicensedVehicleWithValidImage() throws VehicleManagerException {
 		vehicleIntegratorService.createUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND,
-				VEHICLE_DATE, true, imagePNG);
+				VEHICLE_DATE, FABRICATION_YEAR, true, imagePNG);
 		VehicleUnlicensed v = obtainUnlicensedVehicle(VEHICLE_NAME);
-		Mockito.verify(fileService,Mockito.times(1)).addPortraitImage(VEHICLE_NAME, imagePNG);
+		Mockito.verify(fileService,Mockito.times(1)).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, imagePNG);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND));
 	}
 	
 	@Test
-	public void createUnlicensedVehicleWithInvalidImage() throws VehicleManagerException{
-		Mockito.doThrow(new ImpossibleSaveFileException()).when(fileService).addPortraitImage(VEHICLE_NAME, filePDF);
-		try{
+	public void createUnlicensedVehicleWithInvalidImage() throws VehicleManagerException {
+		Mockito.doThrow(new ImpossibleSaveFileException()).when(fileService).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, filePDF);
+		try {
 		vehicleIntegratorService.createUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND,
-				VEHICLE_DATE, true, filePDF);
-		} catch(ImpossibleSaveFileException e){
+				VEHICLE_DATE, FABRICATION_YEAR, true, filePDF);
+		} catch(ImpossibleSaveFileException e) {
 			Assert.assertNull(obtainUnlicensedVehicle(VEHICLE_NAME));
 		}
-		Mockito.verify(fileService,Mockito.times(1)).addPortraitImage(VEHICLE_NAME, filePDF);
+		Mockito.verify(fileService,Mockito.times(1)).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, filePDF);
 	}
 	
 	@Test
-	public void createUnlicensedVehicleWithNoImage() throws VehicleManagerException{
+	public void createUnlicensedVehicleWithNoImage() throws VehicleManagerException {
 		vehicleIntegratorService.createUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND,
-				VEHICLE_DATE, false, null);
-		Mockito.verify(fileService,Mockito.never()).addPortraitImage(VEHICLE_NAME, imagePNG);
+				VEHICLE_DATE, FABRICATION_YEAR, false, null);
+		Mockito.verify(fileService,Mockito.never()).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createUnlicensedVehicleNullVehicleName() throws VehicleManagerException{
+	public void createUnlicensedVehicleNullVehicleName() throws VehicleManagerException {
 		vehicleIntegratorService.createUnlicensedVehicle(null, VEHICLE_BRAND,
-				VEHICLE_DATE, true, imagePNG);
+				VEHICLE_DATE, FABRICATION_YEAR, true, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createUnlicensedVehicleNullBrand() throws VehicleManagerException{
+	public void createUnlicensedVehicleNullBrand() throws VehicleManagerException {
 		vehicleIntegratorService.createUnlicensedVehicle(VEHICLE_NAME, null,
-				VEHICLE_DATE, true, imagePNG);
+				VEHICLE_DATE, FABRICATION_YEAR, true, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createUnlicensedVehicleNullDate() throws VehicleManagerException{
+	public void createUnlicensedVehicleNullDate() throws VehicleManagerException {
 		vehicleIntegratorService.createUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND,
-				null, true, imagePNG);
+				null, FABRICATION_YEAR, true, imagePNG);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createUnlicensedVehicleNullImage() throws VehicleManagerException {
+		vehicleIntegratorService.createUnlicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND,
+				VEHICLE_DATE, FABRICATION_YEAR, true, null);
 	}
 	
 	/* ============= CreateLicensedVehicle Integrator Service ========================== */
 	
 	@Test
-	public void createLicensedVehicleWithValidImage() throws VehicleManagerException{
+	public void createLicensedVehicleWithValidImage() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
 				VALID_LICENSE, VEHICLE_DATE, true, imagePNG);
 		VehicleLicensed v = obtainLicensedVehicle(VEHICLE_NAME);
-		Mockito.verify(fileService,Mockito.times(1)).addPortraitImage(VEHICLE_NAME, imagePNG);
+		Mockito.verify(fileService,Mockito.times(1)).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, imagePNG);
 		Assert.assertTrue(v.getName().equals(VEHICLE_NAME));
 		Assert.assertTrue(v.getBrand().equals(VEHICLE_BRAND));
 		Assert.assertTrue(v.getLicense().getLicense().equals(VALID_LICENSE));
 	}
 	
 	@Test
-	public void createLicensedVehicleWithInvalidImage() throws VehicleManagerException{
-		Mockito.doThrow(new ImpossibleSaveFileException()).when(fileService).addPortraitImage(VEHICLE_NAME, filePDF);
-		try{
+	public void createLicensedVehicleWithInvalidImage() throws VehicleManagerException {
+		Mockito.doThrow(new ImpossibleSaveFileException()).when(fileService).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, filePDF);
+		try {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
 				VALID_LICENSE, VEHICLE_DATE, true, filePDF);
-		} catch(ImpossibleSaveFileException e){
+		} catch(ImpossibleSaveFileException e) {
 			Assert.assertNull(obtainLicensedVehicle(VEHICLE_NAME));
 		}
-		Mockito.verify(fileService,Mockito.times(1)).addPortraitImage(VEHICLE_NAME, filePDF);
+		Mockito.verify(fileService,Mockito.times(1)).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, filePDF);
 	}
 	
 	@Test
-	public void createLicensedVehicleWithNoImage() throws VehicleManagerException{
+	public void createLicensedVehicleWithNoImage() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
 				VALID_LICENSE, VEHICLE_DATE, false, null);
-		Mockito.verify(fileService,Mockito.never()).addPortraitImage(VEHICLE_NAME, imagePNG);
+		Mockito.verify(fileService,Mockito.never()).addOrReplaceVehiclePortraitImage(VEHICLE_NAME, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createLicensedVehicleNullVehicleName() throws VehicleManagerException{
+	public void createLicensedVehicleNullVehicleName() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(null, VEHICLE_BRAND, VEHICLE_DATE,
 				VALID_LICENSE, VEHICLE_DATE, true, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createLicensedVehicleNullBrand() throws VehicleManagerException{
+	public void createLicensedVehicleNullBrand() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, null, VEHICLE_DATE, VALID_LICENSE,
 				VEHICLE_DATE, false, null);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createLicensedVehicleNullAcquisitonDate() throws VehicleManagerException{
+	public void createLicensedVehicleNullAcquisitonDate() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, null,
 				VALID_LICENSE, VEHICLE_DATE, true, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createLicensedVehicleNullLicenseDate() throws VehicleManagerException{
+	public void createLicensedVehicleNullLicenseDate() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
 				VALID_LICENSE, null, true, imagePNG);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void createLicensedVehicleNullLicense() throws VehicleManagerException{
+	public void createLicensedVehicleNullLicense() throws VehicleManagerException {
 		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
 				null, VEHICLE_DATE, true, imagePNG);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createLicensedVehicleNullImage() throws VehicleManagerException {
+		vehicleIntegratorService.createLicensedVehicle(VEHICLE_NAME, VEHICLE_BRAND, VEHICLE_DATE,
+				VALID_LICENSE, VEHICLE_DATE, true, null);
 	}
 	
 	/* =========================== RemoveVehicle Integrator Service ====================== */
@@ -217,17 +230,35 @@ public class VehicleIntegratorServiceTest extends VehicleManagerServiceTest{
 	
 	/* =================== AddOrUpdatePortraitImage Integrator Service ====================== */
 	 
+	@Test
 	public void addOrUpdatePortraitImage() throws VehicleManagerException{
 		vehicleIntegratorService.addOrUpdateVehiclePortrait(VEHICLE_EXISTING_NAME, imagePNG);
-		Mockito.verify(fileService).addPortraitImage(VEHICLE_EXISTING_NAME, imagePNG);;
+		Mockito.verify(fileService,Mockito.times(1)).addOrReplaceVehiclePortraitImage(VEHICLE_EXISTING_NAME, imagePNG);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
 	public void addOrUpdatePortraitImageNullVehicleName() throws VehicleManagerException{
 		vehicleIntegratorService.addOrUpdateVehiclePortrait(null, imagePNG);
+		Mockito.verify(fileService,Mockito.times(0)).addOrReplaceVehiclePortraitImage(null, imagePNG);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
 	public void addOrUpdatePortraitImageNullImage() throws VehicleManagerException{
 		vehicleIntegratorService.addOrUpdateVehiclePortrait(VEHICLE_EXISTING_NAME, null);
+		Mockito.verify(fileService,Mockito.times(0)).addOrReplaceVehiclePortraitImage(VEHICLE_EXISTING_NAME, null);
 	}
 	
+	/* =================== GetVehiclePortraitImage Integrator Service ====================== */
+	
+	@Test
+	public void getVehicleIntegratorService() throws VehicleManagerException{
+		vehicleIntegratorService.getVehiclePortraitImage(VEHICLE_EXISTING_NAME);
+		Mockito.verify(fileService,Mockito.times(1)).getVehiclePortraitImage(VEHICLE_EXISTING_NAME);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void getVehicleIntegratorServiceNullVehicleName() throws VehicleManagerException{
+		vehicleIntegratorService.getVehiclePortraitImage(null);
+		Mockito.verify(fileService,Mockito.times(0)).getVehiclePortraitImage(VEHICLE_EXISTING_NAME);
+	}
 }

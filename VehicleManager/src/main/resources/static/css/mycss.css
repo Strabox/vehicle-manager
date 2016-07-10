@@ -1,3 +1,13 @@
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.Site-content {
+  flex: 1;
+}
+
 p.login-success {
 	color: green;
 	text-align: center;
@@ -7,6 +17,7 @@ p.login-error {
 	color: red;
 	text-align: center;
 }
+
 
 .jumbotron.vertical-center {
   margin-bottom: 0; /* Remove the default bottom margin of .jumbotron */

@@ -1,6 +1,6 @@
 package com.pt.pires.domain.exceptions;
 
-public class InvalidNotificationException extends VehicleManagerException{
+public class InvalidNotificationTaskException extends VehicleManagerException{
 
 	/**
 	 * 

@@ -20,6 +20,8 @@ public class VehicleTest {
 	private static final String VEHICLE_NAME = "Automovel Verfde";
 	private static final String VEHICLE_BRAND = "Citroen";
 	
+	private static final int FABRICATION_YEAR = 1994;
+	
 	@Test
 	public void vehicleYears() throws VehicleManagerException {
 		Calendar c1 = Calendar.getInstance();
@@ -30,7 +32,7 @@ public class VehicleTest {
 		c2.setTime(new Date());
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,(currentMonth - 1) % 11);
-		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime(),FABRICATION_YEAR);
 		Assert.assertTrue(v.calculateAcquisitionYears() == 10);
 	}
 	
@@ -44,7 +46,7 @@ public class VehicleTest {
 		c2.setTime(new Date());
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,(currentMonth + 1) % 11);
-		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime(),FABRICATION_YEAR);
 		Assert.assertTrue(v.calculateAcquisitionYears() == 9);
 	}
 	
@@ -60,7 +62,7 @@ public class VehicleTest {
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,currentMonth);
 		c2.set(Calendar.DATE, (currentDay + 1) % 31);
-		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime(),FABRICATION_YEAR);
 		Assert.assertTrue(v.calculateAcquisitionYears() == 9);
 	}
 	
@@ -76,7 +78,7 @@ public class VehicleTest {
 		c2.set(Calendar.YEAR,currentYear - 10);
 		c2.set(Calendar.MONTH,currentMonth);
 		c2.set(Calendar.DATE, (currentDay - 1) % 31);
-		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime());
+		VehicleUnlicensed v = new VehicleUnlicensed(VEHICLE_NAME,VEHICLE_BRAND,c2.getTime(),FABRICATION_YEAR);
 		Assert.assertTrue(v.calculateAcquisitionYears() == 10);
 	}
 	

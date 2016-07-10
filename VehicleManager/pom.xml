@@ -21,6 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<start-class>com.pt.pires.VehicleManagerApplication</start-class>
 	</properties>
 
 	<dependencies>
@@ -31,6 +32,13 @@
 			<scope>runtime</scope>
 		</dependency>
 		-->
+		<!-- https://mvnrepository.com/artifact/org.im4java/im4java -->
+		<!-- Used to generate image thumbnails -->
+		<dependency>
+		    <groupId>org.im4java</groupId>
+		    <artifactId>im4java</artifactId>
+		    <version>1.4.0</version>
+		</dependency>
 		<!-- Used to email validation -->
 		<!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
 		<dependency>

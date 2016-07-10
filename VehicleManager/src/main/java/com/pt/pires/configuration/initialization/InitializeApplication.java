@@ -13,7 +13,7 @@ import com.pt.pires.util.FileUtil;
 @Component
 public class InitializeApplication {
 	
-	@Value("${application.init:false}")
+	@Value("${application.init:false}")	//By default doesn't initialize
 	private boolean initi;
 	
 	@Autowired

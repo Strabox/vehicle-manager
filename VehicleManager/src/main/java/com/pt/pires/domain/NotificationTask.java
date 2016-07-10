@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Type;
 
-import com.pt.pires.domain.exceptions.InvalidNotificationException;
+import com.pt.pires.domain.exceptions.InvalidNotificationTaskException;
 
 @Entity
 public abstract class NotificationTask {
@@ -28,13 +28,17 @@ public abstract class NotificationTask {
 	@Column
 	private String description;
 	
+	@Column
+	private boolean notificationSent;
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Vehicle vehicle;
 	
 	
-	public NotificationTask(Date initDate,String description) throws InvalidNotificationException {
+	public NotificationTask(Date initDate,String description) throws InvalidNotificationTaskException {
 		setNotiDate(initDate);
 		setDescription(description);
+		setNotificationSent(false);
 	}
 	
 	public NotificationTask() { }		//Needed for JPA/JSON
@@ -42,7 +46,7 @@ public abstract class NotificationTask {
 	/**
 	 * Verify if it is notification day
 	 * @param currentDate Current date
-	 * @return true if current date is after notiDate false otherwise
+	 * @return <b>true</b> if current date is after notiDate, <b>false</b> otherwise
 	 */
 	public boolean notifyDay(Date currentDate) {
 		Calendar initCalendar = Calendar.getInstance();
@@ -52,12 +56,30 @@ public abstract class NotificationTask {
 		return initCalendar.before(currentCalendar);
 	}
 	
-	public final void setNextNotificationDate(Date currentDate) {
-		if(notifyDay(currentDate)) {
+	/**
+	 * Set the next date to send the notification
+	 * @param currentDate
+	 */
+	public final void notificationTaskDone(Date currentDate) {
+		if(notifyDay(currentDate) && isNotificationSent()) {
 			setNextNotification();
+			setNotificationSent(false);
 		}
 	}
 	
+	/**
+	 * Forget the notification this time
+	 * ex: Don't need do the task this time.
+	 */
+	public final void forgetThisNotification(){
+		setNextNotification();
+		setNotificationSent(false);
+	}
+	
+	/**
+	 * Leave the responsibility of setting the new date to the
+	 * sub-classes
+	 */
 	protected abstract void setNextNotification();
 	
 	/* === Getters and Setters === */
@@ -70,9 +92,9 @@ public abstract class NotificationTask {
 		return this.description;
 	}
 
-	public void setDescription(String description) throws InvalidNotificationException {
+	public void setDescription(String description) throws InvalidNotificationTaskException {
 		if(description.isEmpty()) {
-			throw new InvalidNotificationException();
+			throw new InvalidNotificationTaskException();
 		}
 		this.description = description;
 	}
@@ -91,6 +113,14 @@ public abstract class NotificationTask {
 	
 	public void setVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
+	}
+
+	public boolean isNotificationSent() {
+		return notificationSent;
+	}
+
+	public void setNotificationSent(boolean notificationSent) {
+		this.notificationSent = notificationSent;
 	}
 	
 }

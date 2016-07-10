@@ -5,15 +5,21 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import com.pt.pires.domain.exceptions.InvalidNotificationException;
+import com.pt.pires.domain.exceptions.InvalidNotificationTaskException;
 
+/**
+ * Notification that alert user only one time (initDate)
+ * @author André
+ *
+ */
 @Entity
 public class NotificationTaskOneTime extends NotificationTask {
 
 	@Column
 	private boolean expired;
 	
-	public NotificationTaskOneTime(Date initDate,String description) throws InvalidNotificationException {
+	
+	public NotificationTaskOneTime(Date initDate,String description) throws InvalidNotificationTaskException {
 		super(initDate,description);
 		setExpired(false);
 	}

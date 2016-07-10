@@ -39,7 +39,7 @@ public class WebSecurityAdapter extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 				.antMatchers("/license").permitAll()
-				.antMatchers("/home","/vehicles","/vehicle/**").access("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
+				.antMatchers("/home","/vehicles/**","/vehicle/**").access("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
 				.and()
 					.formLogin()
 						.failureUrl("/login?error")

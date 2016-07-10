@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller for unauthorized access to resoruces
+ * Controller for unauthorized access to resources
  * @author André
  *
  */

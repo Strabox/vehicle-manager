@@ -22,7 +22,6 @@ public class LoginController {
 		if (error != null) {
 			model.addAttribute("error", "Combinação de username e password inválida");
 		}
-
 		if (logout != null) {
 			model.addAttribute("msg", "Logout com sucesso");
 		}

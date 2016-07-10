@@ -27,12 +27,19 @@ import com.pt.pires.persistence.RegistrationRepository;
 import com.pt.pires.persistence.UnlicensedVehicleRepository;
 import com.pt.pires.persistence.UserRepository;
 import com.pt.pires.persistence.VehicleRepository;
+import com.pt.pires.util.DateUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 public abstract class VehicleManagerServiceTest {
 
 	protected static final String EMPTY_STRING = "";
+	
+	protected static final String VALID_VEHICLE_NAME = "Carro altamente válido";
+	protected static final String VALID_VEHICLE_BRAND = "Mitsubishi";
+	protected static final String VALID_DESCRIPTION = "Uma descrição altamente bem feita e válida !!!";
+	protected static final Date VALID_CURRENT_DATE = DateUtil.getSimplifyDate(new Date());
+	protected static final Long VALID_TIME = new Long(777);
 	
 	@Autowired
 	private VehicleRepository vehicleRepository; 
@@ -61,7 +68,7 @@ public abstract class VehicleManagerServiceTest {
 	 * @throws VehicleManagerException
 	 */
 	@Before
-	public void beforeTest() throws VehicleManagerException {
+	public final void beforeTest() throws VehicleManagerException {
 		populate();
 	}
 	
@@ -87,9 +94,9 @@ public abstract class VehicleManagerServiceTest {
 	
 	/* ================= Auxiliary Vehicle test methods =============== */
 	
-	protected void newUnlicensedVehicle(String name,String brand,Date acquisitionDate) 
+	protected void newUnlicensedVehicle(String name,String brand,Date acquisitionDate,int fabricationYear) 
 		throws VehicleManagerException {
-		unlicensedRepository.save(new VehicleUnlicensed(name, brand, acquisitionDate));
+		unlicensedRepository.save(new VehicleUnlicensed(name, brand, acquisitionDate,fabricationYear));
 	}
 	
 	protected void newLicensedVehicle(String name,String brand,Date acquisitionDate,
@@ -142,8 +149,10 @@ public abstract class VehicleManagerServiceTest {
 	protected Long newNotification(String vehicleName,NotificationTask notification){
 		if(vehicleRepository.exists(vehicleName)){
 			Vehicle v = vehicleRepository.findOne(vehicleName);
-			NotificationTask note = notiRepository.save(notification);
-			v.addNotification(notification);
+			NotificationTask note = notification;
+			note.setVehicle(v);
+			note = notiRepository.save(note);
+			v.addNotification(note);
 			vehicleRepository.save(v);
 			return note.getId();
 		}

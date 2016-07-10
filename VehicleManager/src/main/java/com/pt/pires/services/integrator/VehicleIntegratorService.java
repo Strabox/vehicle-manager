@@ -12,7 +12,7 @@ import com.pt.pires.services.external.IFileService;
 import com.pt.pires.services.local.IVehicleService;
 
 @Service
-public class VehicleIntegratorService implements IVehicleIntegratorService{
+public class VehicleIntegratorService implements IVehicleIntegratorService {
 
 	@Autowired
 	@Qualifier("vehicleService")
@@ -31,16 +31,16 @@ public class VehicleIntegratorService implements IVehicleIntegratorService{
 	public VehicleIntegratorService() { }
 	
 	@Override
-	public void createUnlicensedVehicle(String vehicleName, String brand, Date acquisitionDate,
-			boolean image, byte[] imageFile)throws VehicleManagerException {
-		if(vehicleName == null || brand == null || acquisitionDate == null){
+	public void createUnlicensedVehicle(String vehicleName, String brand, Date acquisitionDate
+			,int fabricationYear,boolean image, byte[] imageFile)throws VehicleManagerException {
+		if(vehicleName == null || brand == null || acquisitionDate == null || (image && imageFile == null)) {
 			throw new IllegalArgumentException();
 		}
-		localVehicleService.createUnlicensedVehicle(vehicleName, brand, acquisitionDate);
-		if(image){
-			try{
-				fileService.addPortraitImage(vehicleName, imageFile);
-			}catch(VehicleManagerException e){
+		localVehicleService.createUnlicensedVehicle(vehicleName, brand, acquisitionDate,fabricationYear);
+		if(image) {
+			try {
+				fileService.addOrReplaceVehiclePortraitImage(vehicleName, imageFile);
+			} catch(VehicleManagerException e) {
 				localVehicleService.removeVehicle(vehicleName);
 				throw new ImpossibleSaveFileException();
 			}
@@ -51,14 +51,14 @@ public class VehicleIntegratorService implements IVehicleIntegratorService{
 	public void createLicensedVehicle(String vehicleName, String brand, Date acquisitionDate,
 			String license, Date licenseDate,boolean image, byte[] imageFile) throws VehicleManagerException {
 		if(vehicleName == null || brand == null || acquisitionDate == null || licenseDate == null
-				|| license == null){
+				|| license == null || (image && imageFile == null)) {
 			throw new IllegalArgumentException();
 		}
 		localVehicleService.createLicensedVehicle(vehicleName, brand, acquisitionDate, license, licenseDate);
-		if(image){
-			try{
-				fileService.addPortraitImage(vehicleName, imageFile);
-			}catch(VehicleManagerException e){
+		if(image) {
+			try {
+				fileService.addOrReplaceVehiclePortraitImage(vehicleName, imageFile);
+			} catch(VehicleManagerException e) {
 				localVehicleService.removeVehicle(vehicleName);
 				throw new ImpossibleSaveFileException();
 			}
@@ -83,7 +83,15 @@ public class VehicleIntegratorService implements IVehicleIntegratorService{
 		if(vehicleName == null || imageFile == null) {
 			throw new IllegalArgumentException();
 		}
-		fileService.addPortraitImage(vehicleName, imageFile);
+		fileService.addOrReplaceVehiclePortraitImage(vehicleName, imageFile);
+	}
+
+	@Override
+	public byte[] getVehiclePortraitImage(String vehicleName) throws VehicleManagerException {
+		if(vehicleName == null) {
+			throw new IllegalArgumentException();
+		}
+		return fileService.getVehiclePortraitImage(vehicleName);
 	}
 
 }

@@ -13,7 +13,7 @@
 		</user>
 	</users>
 	<vehicles>
-		<vehicleUnlicensed name="Tractor Agria" brand="Agria" acquisitionDate="2015-04-25">
+		<vehicleUnlicensed name="Tractor Agria" brand="Agria" acquisitionDate="2015-04-25" fabricationYear="1900">
 			<registrations>
 				<registration time="0" date="2015-04-25">Comprei manga extriada e balader da fresa novo</registration>
 				<registration time="0" date="2015-07-05">Bateria nova</registration>
@@ -27,22 +27,321 @@
 			<notes>
 				<note>Agria 7714 Nº723718</note>
 			</notes>
-			<notifications>
-			</notifications>
+			<notifications></notifications>
 		</vehicleUnlicensed>
-		<vehicleUnlicensed name="Empilhador" brand="Desconhecida" acquisitionDate="2002-04-25">
+		<vehicleUnlicensed name="Bomba Dab Balão" brand="Desconhecida" acquisitionDate="2009-03-25" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2009-04-19">Substituir roamantos do motor</registration>
+				<registration time="0" date="2009-04-19">Substituir vedante da bomba</registration>
+				<registration time="0" date="2009-04-19">Substituir turbina</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Bomba de 2 polegadas" brand="Desconhecida" acquisitionDate="2009-04-25" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2013-05-19">Substituir foles da transmição Diametro 68 - 22</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Corta-Mato" brand="Desconhecida" acquisitionDate="1995-04-25" fabricationYear="1900">
+			<registrations></registrations>
+			<notes>
+				<note>Correias Ref: DSL B780 B29 =2</note>
+			</notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Cubos J IPodec" brand="Desconhecida" acquisitionDate="2012-01-12" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2012-01-28">2 Rolamentos 6204</registration>
+				<registration time="0" date="2012-01-28">2 Rolamentos 6303</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Empilhador" brand="Desconhecida" acquisitionDate="2002-04-25" fabricationYear="1900">
 			<registrations>
 				<registration time="0" date="2006-05-10">Reparar motor de arranque</registration>
 				<registration time="0" date="2006-05-10">Montagem bomba de gasóleo</registration>
 				<registration time="0" date="2006-05-10">Substituição carreto inversor da caixa</registration>
 			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Decapinador" brand="Desconhecida" acquisitionDate="2010-03-10" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2010-03-10">Fabricado na Serra</registration>
+				<registration time="0" date="2010-03-10">Montagem de um redutor novo</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="FAI" brand="Desconhecida" acquisitionDate="1987-04-10" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2007-06-16">Pintar de novo</registration>
+				<registration time="0" date="2007-06-16">Reparar diferencial da frente</registration>
+				<registration time="0" date="2007-06-16">Reparar diferencial de trás</registration>
+				<registration time="0" date="2007-06-16">Substituir transmissão traseira</registration>
+				<registration time="0" date="2007-06-16">Reparar caixa de velocidades</registration>
+				<registration time="0" date="2007-06-16">Substituir bomba de óleo da caixa</registration>
+				<registration time="0" date="2007-06-16">Substituir discos e vedantes da embraiagem</registration>
+				<registration time="0" date="2007-06-16">Substituir todos os filtros</registration>
+				<registration time="0" date="2007-06-16">Substituir todos os óleos</registration>
+				<registration time="0" date="2007-06-16">Lubrificação geral</registration>
+				<registration time="0" date="2007-06-16">Substituir bomba hidráulica (principal)</registration>
+				<registration time="0" date="2007-06-16">Substituir tubo da caixa de velocidades</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Fresa Mallet" brand="Mallet" acquisitionDate="1991-01-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2007-05-26">2 retentores 50X62X8</registration>
+				<registration time="0" date="2007-05-26">1 retentor 35X72X10</registration>
+				<registration time="0" date="2007-05-27">2 rolamentos 6010</registration>
+				<registration time="0" date="2007-05-28">2 freios veio diâmetro 35</registration>
+				<registration time="0" date="2007-05-29">28 facas</registration>
+				<registration time="0" date="2007-05-30">Substituir todos os óleos</registration>
+				<registration time="0" date="2007-06-01">Redutor</registration>
+				<registration time="0" date="2007-06-02">2 retentores 50X62X8</registration>
+				<registration time="0" date="2007-06-03">1 retentor 35X72X10</registration>
+				<registration time="0" date="2007-06-04">2 rolamentos 6010</registration>
+			</registrations>
 			<notes>
+				<note>Facas Ref: 0188</note>
+				<note>Nº de facas: 14 + 14 = 28</note>
 			</notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Gerador" brand="Desconhecida" acquisitionDate="2005-05-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2007-03-25">Montagem de duas novas baterias</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Tanque Joper" brand="Joper" acquisitionDate="1991-01-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2006-08-20">Reparar bomba</registration>
+				<registration time="0" date="2006-08-20">Palhetas novas</registration>
+				<registration time="0" date="2006-08-20">Todos os rolamentos</registration>
+				<registration time="0" date="2009-08-13">Montagem de travão hidráulico</registration>
+				<registration time="0" date="2012-12-27">Decapagem e pintura</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motoenchada kubota" brand="Kubota" acquisitionDate="2006-04-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2007-03-30">Substituir óleo da caixa e retficar tampa</registration>
+				<registration time="0" date="2009-05-17">Substituir óleo do cárter</registration>
+			</registrations>
+			<notes>
+				<note>Facas ref: 0165</note>
+				<note>Nº de facas: 12 + 12 = 24</note>
+			</notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motor Carmindo" brand="Desconhecida" acquisitionDate="2013-06-30" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2013-09-19">Correia de ventoinha Ref: 10AV0700 Goodyear</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motor Clinton" brand="Clinton" acquisitionDate="2011-04-13" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2011-09-19">Montar novo vedante na bomba diâmetro 25mm</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motor do Joper" brand="Desconhecida" acquisitionDate="1991-01-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2009-08-13">Substituir óleo do cárter</registration>
+				<registration time="0" date="2013-07-06">Substituir óleo do cárter</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motor Kubota" brand="Kubota" acquisitionDate="9999-12-30" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2014-07-30">Substituir óleo do cárter</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motor Lombardine" brand="Lombardine" acquisitionDate="2005-03-18" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2005-07-30">Adaptar bomba de água</registration>
+				<registration time="0" date="2005-07-30">Montagem de um novo depósito</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motoserra Stihl" brand="Stihl" acquisitionDate="1998-04-10" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2008-10-25">Corrente nova</registration>
+				<registration time="0" date="2013-09-18">Lâmina nova</registration>
+				<registration time="0" date="2013-09-18">Corrente nova</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motoserra Stihl 2" brand="Stihl" acquisitionDate="2009-04-01" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2009-11-25">Corrente nova</registration>
+				<registration time="0" date="2009-11-25">Diafragamo carburador</registration>
+				<registration time="0" date="2009-11-25">Fol cabeça carburador</registration>
+				<registration time="0" date="2009-11-25">Tubo de alimentação da gasolina</registration>
+				<registration time="0" date="2009-11-25">Vela nova</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motoserra Jonsered" brand="Jonsered" acquisitionDate="1995-06-01" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2008-10-18">Corrente nova</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Motoserra Stihl MS 192 T" brand="Stihl" acquisitionDate="2013-06-01" fabricationYear="1900">
+			<registrations>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Racha Lenha" brand="Desconhecida" acquisitionDate="2005-06-01" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2008-10-25">Cilindro VED.110X130X16 K33-110/2 PU =3</registration>
+				<registration time="0" date="2008-10-25">Cilindro Raspador GA 80X90X7/10 =1</registration>
+				<registration time="0" date="2008-10-25">Cilindro VED.80X90X13 K38-080/2 PU =2</registration>
+				<registration time="0" date="2008-10-25">Diâmetro da camisa interior 130 mm</registration>
+				<registration time="0" date="2008-10-25">Diâmetro da haste 80 mm</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Reboque Joper" brand="Joper" acquisitionDate="2015-05-15" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2015-05-15">Reparar macaco báscula</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Reboque Honda" brand="Honda" acquisitionDate="1991-01-16" fabricationYear="1900">
+			<registrations>
+			</registrations>
+			<notes>
+				<note>2 rolamentos 6205 2RS</note>
+				<note>2 rolamentos 6204 2RS</note>
+				<note>2 retentores</note>
+			</notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Reboque Motoenchada" brand="Desconhecida" acquisitionDate="2010-03-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2011-01-20">Substituir todos os rolamentos da caixa de velocidade</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<vehicleUnlicensed name="Retro Casse" brand="Desconhecida" acquisitionDate="2007-05-16" fabricationYear="1900">
+			<registrations>
+				<registration time="0" date="2007-05-16">Reparar eixo da frente</registration>
+				<registration time="0" date="2007-05-16">Reforçar apoio das rodas de trás</registration>
+				<registration time="0" date="2009-05-08">Substituir pneus da frente</registration>
+				<registration time="0" date="2009-05-08">Bateria nova</registration>
+			</registrations>
+			<notes></notes>
+			<notifications></notifications>
+		</vehicleUnlicensed>
+		<!-- Vehicles with licenses -->
+		<vehicleLicensed name="Tractor MF" brand="Massey Fergunson" acquisitionDate="2005-05-23">
+			<license date="1966-03-23">GI-48-39</license>
+			<registrations>
+				<registration time="0" date="2007-01-02">Reparação geral</registration>
+				<registration time="0" date="2007-01-02">Montagem de novo modelo de motor de arranque</registration>
+				<registration time="0" date="2007-01-02">Montagem de nova bomba de óleo hidráulica</registration>
+				<registration time="0" date="2007-01-02">Substituir veio do carreto da caixa de velocidades</registration>
+				<registration time="0" date="2007-01-02">Substituir todos os filtros (filtro de ar novo modelo)</registration>
+				<registration time="0" date="2007-01-02">Substituir todos os óleos</registration>
+				<registration time="0" date="2007-01-02">Substituir ninho do radiador</registration>
+				<registration time="0" date="2007-01-02">Montagem de novos manípulos hidráulicos</registration>
+				<registration time="0" date="2007-01-02">Fabricar novo deposito de gasóleo</registration>
+				<registration time="0" date="2007-01-02">Montagem de uma bomba eléctrica de gasóleo</registration>
+				<registration time="0" date="2007-01-02">Reparar bomba injectora</registration>
+				<registration time="0" date="2007-01-02">Substituir duas rotulas de direcção</registration>
+				<registration time="0" date="2007-01-02">Substituir retentor da roda traseira lado direito</registration>
+				<registration time="0" date="2007-01-02">Substituir pneus da frente</registration>
+				<registration time="0" date="2007-01-02">Montagem de novo alternador</registration>
+				<registration time="0" date="2007-01-02">Substituir retentor da tomada de força 35x72x10</registration>
+				<registration time="0" date="2007-01-02">Substituir rolamento da tomada de força 6207=2</registration>
+				<registration time="0" date="2007-01-02">Substituir retentor da cambota (poli)</registration>
+				<registration time="0" date="2007-01-02">Substituir correia de ventoinha</registration>
+				<registration time="0" date="2007-01-02">Adaptar manómetro de temperatura</registration>
+				<registration time="0" date="2009-08-13">Substituir o óleo do carter</registration>
+				<registration time="0" date="2009-08-13">Substituir o filtro de óleo</registration>
+				<registration time="0" date="2009-08-13">Novo filtro de gasóleo</registration>
+				<registration time="0" date="2009-08-13">Substituir líquido do radiador</registration>
+				<registration time="0" date="2009-08-13">Montagem de novas pastilhas (móvel com sutamento)</registration>
+				<registration time="0" date="2010-03-03">Reparar motor duas camisas novas segmentos e juntas</registration>
+				<registration time="0" date="2010-03-03">Substituir o óleo do carter</registration>
+				<registration time="0" date="2010-03-03">Substituir o filtro de óleo</registration>
+				<registration time="0" date="2011-07-30">Substituir pastilhas de travão</registration>
+				<registration time="0" date="2013-08-03">Substituir o óleo do carter 15W40 (Paulo)</registration>
+				<registration time="0" date="2013-08-03">Substituir o filtro de óleo</registration>
+				<registration time="0" date="2013-08-03">Substituir o oleo da caixa  Ref: THB68</registration>
+				<registration time="0" date="2016-03-12">Substituir óleo do motor 15W40 GALP</registration>
+				<registration time="0" date="2016-03-12">Substituir o filtro de óleo do motor</registration>
+			</registrations>
+			<notes></notes>
 			<notifications>
 			</notifications>
-		</vehicleUnlicensed>
+		</vehicleLicensed>
+		<vehicleLicensed name="Tractor Kubota" brand="Kubota" acquisitionDate="1996-03-30">
+			<license date="1996-03-30">30-38-BV</license>
+			<registrations>
+				<registration time="357" date="1996-04-11">Substituir bicha do conta rotações</registration>
+				<registration time="370" date="1996-05-06">Reparar diferencial da frente</registration>
+				<registration time="636" date="1998-06-01">Substituir correia de ventoinha LUCAS KDB950(9.5X950)</registration>
+				<registration time="636" date="1998-06-01">Substituir bicha do conta rotações</registration>
+				<registration time="636" date="1998-06-01">Substituir correa do alternador AVx10x685</registration>
+				<registration time="636" date="1998-06-01">Substituir rolamentos do rolo tensor 2-6301</registration>
+				<registration time="1027" date="2001-05-01">Revisão das 1000 horas</registration>
+				<registration time="1027" date="2001-05-01">Substituir filtro de óleo</registration>
+				<registration time="1027" date="2001-05-01">Substituir óleo do motor</registration>
+				<registration time="1027" date="2001-05-01">Substituir óleo do diferencial da frente</registration>
+				<registration time="1027" date="2001-05-01">Substituir óleo da caixa de velocidades</registration>
+				<registration time="1027" date="2001-05-01">Substituir filtro de gasóleo</registration>
+				<registration time="1127" date="2007-09-17">Substituir filtro de ar</registration>
+				<registration time="1703" date="2008-08-15">Medição de horas</registration>
+				<registration time="1710" date="2008-10-19">Medição de horas</registration>
+				<registration time="1786" date="2009-08-13">Substituir óleo do motor</registration>
+				<registration time="1786" date="2009-08-13">Substituir filtro do óleo</registration>
+				<registration time="1786" date="2009-08-13">Substituir filtro do gasóleo</registration>
+				<registration time="1786" date="2009-08-13">Substituir correia de ventoinha QH QBA 950</registration>
+				<registration time="1786" date="2009-08-13">Substituir correia do alternador QH QBA 687</registration>
+				<registration time="1902" date="2011-04-12">Reparar diferencial da frente (Eixo central)</registration>
+				<registration time="1902" date="2011-04-12">Montar distribuidor hidráulico novo</registration>
+				<registration time="1978" date="2013-09-22">Medição de horas</registration>
+				<registration time="2000" date="2014-06-01">Medição de horas</registration>
+				<registration time="2039" date="2015-06-27">Revisão das 2000 Horas</registration>
+				<registration time="2039" date="2015-06-27">Substituir óleo da caixa</registration>
+				<registration time="2039" date="2015-06-27">Substituir o oléo do motor 15w40 (Paulo)</registration>
+				<registration time="2039" date="2015-06-27">Substituir o filtro de óleo do motor Ref: 01.09.OC115 Tomar</registration>
+				<registration time="2039" date="2015-06-27">Substituir o filtro de ar Ref: 01.09.CH1245K Tomar</registration>
+				<registration time="2060" date="2016-01-12">Medição de horas</registration>
+				<registration time="2100" date="2016-03-12">Reparar fuga de óleo roda da frente esquerda</registration>
+			</registrations>
+			<notes></notes>
+			<notifications>
+			</notifications>
+		</vehicleLicensed>
 		<vehicleLicensed name="Tractor Ford" brand="Ford" acquisitionDate="2014-04-25">
-			<license date="1969-01-01">XX-00-00</license>
+			<license date="1969-01-01">AR-68-23</license>
 			<registrations>
 				<registration time="7300" date="2013-04-25">Substituir filtro de óleo do motor</registration>
 				<registration time="7300" date="2013-04-25">Substituir filtro de gasóleo = 2</registration>
@@ -93,7 +392,7 @@
 				<registration time="90019" date="2006-02-23">Velas</registration>
 				<registration time="90019" date="2006-02-23">Jogo de pastilhas frente</registration>
 				<registration time="90019" date="2006-02-23">Bomba de água</registration>
-				<registration time="90019" date="2006-02-23">óleo motor 3,30L</registration>
+				<registration time="90019" date="2006-02-23">Óleo motor 3,30L</registration>
 				<registration time="90019" date="2006-02-23">valvulina caixa 3L</registration>
 				<registration time="90019" date="2006-02-23">Anti-congelante 2L</registration>
 				<registration time="99142" date="2006-10-02">Sensor Electr.oxigenio</registration>
@@ -106,12 +405,12 @@
 				<registration time="131324" date="2008-08-15">Filtro óleo elemento</registration>
 				<registration time="134792" date="2008-11-02">Medição kilómetros</registration>
 				<registration time="140630" date="2009-03-13">Medição kilómetros</registration>
-				<registration time="141147" date="2009-03-22">óleo motor 3,30L (REPSOL)</registration>
+				<registration time="141147" date="2009-03-22">Óleo motor 3,30L (REPSOL)</registration>
 				<registration time="141147" date="2009-03-22">Filtro óleo elemento</registration>
-				<registration time="177631" date="2011-06-11">óleo motor 3,30L (REPSOL)</registration>
+				<registration time="177631" date="2011-06-11">Óleo motor 3,30L (REPSOL)</registration>
 				<registration time="177631" date="2011-06-10">Filtro óleo elemento</registration>
 				<registration time="177631" date="2011-06-10">Pastilhas de travão da frente</registration>
-				<registration time="191470" date="2012-05-05">óleo motor 3,30L (SHEL HELIX  HX7 10W- 40) PAULO 30€</registration>
+				<registration time="191470" date="2012-05-05">Óleo motor 3,30L (SHEL HELIX  HX7 10W- 40) PAULO 30€</registration>
 				<registration time="191470" date="2012-05-05">Filtro óleo elemento</registration>
 				<registration time="199640" date="2013-02-04">Inspeção sem problemasmento</registration>
 				<registration time="200144" date="2013-03-25">Substituir bomba auxiliar da embraiagem</registration>
@@ -125,7 +424,7 @@
 				<registration time="217074" date="2014-08-07">Substituir velas (Originais)</registration>
 				<registration time="217074" date="2014-08-07">Substituir fol inferior alavanca das mudanças (Original)</registration>
 				<registration time="217074" date="2014-08-07">Substituir óleo caixa de velocidades</registration>
-				<registration time="220000" date="2014-11-08">óleo motor 3,30L (SHEL HELIX  HX7 10W- 40) PAULO 30€</registration>
+				<registration time="220000" date="2014-11-08">Óleo motor 3,30L (SHEL HELIX  HX7 10W- 40) PAULO 30€</registration>
 				<registration time="220000" date="2014-11-08">Filtro óleo elemento</registration>
 				<registration time="220432" date="2015-02-05">Inspeção sem problemas</registration>
 				<registration time="222316" date="2016-01-12">Medição kilómetros</registration>

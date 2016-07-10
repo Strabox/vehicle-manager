@@ -6,8 +6,6 @@ import com.pt.pires.domain.exceptions.VehicleManagerException;
 
 public interface INotificationTaskIntegratorService {
 
-	void sendNotificationTask(Long notificationId) throws VehicleManagerException;
-	
-	void notificationTaskCompleted(Long notifiationId,Long time,Date date) throws VehicleManagerException;
+	void sendNotificationTask(Long notificationId,Date currentDate) throws VehicleManagerException;
 	
 }

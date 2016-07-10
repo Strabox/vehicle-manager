@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.pt.pires.domain.VehicleLicensed;
-import com.pt.pires.domain.Note;
-import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
@@ -21,6 +19,8 @@ public interface IVehicleService {
 	
 	Collection<VehicleUnlicensed> getUnlicensedVehicles();
 	
+	Collection<Vehicle> getAllVehicles();
+	
 	Vehicle getVehicle(String vehicleName) throws VehicleManagerException;
 	
 	VehicleLicensed getLicensedVehicle(String vehicleName) throws VehicleManagerException;
@@ -31,29 +31,22 @@ public interface IVehicleService {
 	
 	boolean vehicleExist(String vehicleName) throws VehicleManagerException;;
 	
-	void createUnlicensedVehicle(String vehicleName,String brand,Date acquisitionDate) throws VehicleManagerException;
+	int calculateVehicleAcquisitionYears(String vehicleName) throws VehicleManagerException;
+	
+	int calculateVehicleLicensedYears(String vehicleName) throws VehicleManagerException;
+	
+	int calculateVehicleUnlicensedYears(String vehicleName) throws VehicleManagerException;
+	
+	void createUnlicensedVehicle(String vehicleName,String brand,Date acquisitionDate,int fabricationYear) throws VehicleManagerException;
 	
 	void createLicensedVehicle(String vehicleName,String brand,Date acquisitionDate,
 			String license ,Date licenseDate) throws VehicleManagerException;
 	
-	Collection<Registration> getVehicleRegistrations(String vehicleName) throws VehicleManagerException;
+	void changeVehicleLicensedData(String vehicleName,String newBrand,
+			Date newAcquisitionDate,String newLicense,Date newLicenseDate) throws VehicleManagerException;
 	
-	Long addRegistrationToVehicle(String vehicleName,long time,String description,Date date) throws VehicleManagerException;
+	void changeVehicleUnlicensedData(String vehicleName,String newBrand,
+			Date newAcquisitionDate,int newFabricationYear) throws VehicleManagerException;
 	
-	void removeRegistrationFromVehicle(String vehicleName,long regId) throws VehicleManagerException;
-	
-	Collection<Note> getVehicleNotes(String vehicleName) throws VehicleManagerException;
-	
-	Long addNoteToVehicle(String vehicleName,String note) throws VehicleManagerException;
-	
-	void removeNoteFromVehicle(String vehicleName,long noteId) throws VehicleManagerException;
-	
-	Long addYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
-	
-	Long addHalfYearNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
-	
-	Long addOneTimeNotification(String vehicleName,String description,Date initDate) throws VehicleManagerException;
-	
-	void removeNotificationFromVehicle(String vehicleName,long alertId) throws VehicleManagerException;
 	
 }

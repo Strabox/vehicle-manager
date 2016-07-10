@@ -5,7 +5,8 @@ $(document).ready(function(){
 	var registrationIdToDelete;
 	var alertIdToDelete;
 	// Awesome Tables initializations (Datatable plugin)
-	var registriesTable = $("#registrationsTable").DataTable({"order": [[ 0, "desc" ]]});
+	//Order by time (descending order) and untie with date (descending order)
+	var registriesTable = $("#registrationsTable").DataTable({"order" : [[ 0, "desc" ], [2,"desc"]]});
 	var notesTable = $("#notesTable").DataTable();
 	var alertsTable = $("#alertsTable").DataTable();
 	
@@ -33,7 +34,33 @@ $(document).ready(function(){
 				"data-target=\"#confirmAlertDeleteModal\">Apagar</button>";
 	}
 	
-	/* ########################## Printing #############################*/
+	function populateEditForm() {
+		$("#editName").val($("#vehicleName").text());
+		$("#editBrand").val($("#vehicleBrand").text());
+		document.getElementById("editAcquisitionDate").valueAsDate = new Date($("#vehicleAcquistionDate").text());
+		$("#editFabricationYear option").filter(function() { return $(this).text() == $("#vehicleFabricationYear").text(); }).prop("selected",true);
+		$("#editLicense").val($("#vehicleLicense").text());
+		if($("#vehicleLicenseDate").length) {
+			document.getElementById("editLicenseDate").valueAsDate = new Date($("#vehicleLicenseDate").text());
+		}
+	}
+	
+	function updateVehicleInformation(vehicleName) {
+		$("#vehicleBrand").text($("#editBrand").val());
+		$("#vehicleAcquistionDate").text($("#editAcquisitionDate").val());
+		$("#vehicleFabricationYear").text($("#editFabricationYear").val());
+		$("#vehicleLicense").text($("#editLicense").val());
+		$("#vehicleLicenseDate").text($("#editLicenseDate").val());
+		$("#calculationAcquisitionYears").load(encodeURI("/vehicle/"+ vehicleName + "/acquisitionyears"));
+		$("#calculationLicenseYears").load(encodeURI("/vehicle/"+ vehicleName + "/licenseyears"));
+	}
+	
+	/* ################## Populating Elements ########################## */
+	
+	//Populate Edit Form Select options (fabrication Year)
+	populateYearSelection("editFabricationYear");
+	
+	/* ########################## Printing ############################# */
 	
 	/* Bind print function to print buttons */
 	$(".printButton").click(function(){
@@ -254,7 +281,7 @@ $(document).ready(function(){
 	
 	$("#editTabPill")
 		.on("shown.bs.tab", function (e) {
-			$("#editForm").validator().on("submit", function (e) {
+			$("#editImageForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
 					var formData = new FormData(this);
 					$.ajax({
@@ -278,10 +305,42 @@ $(document).ready(function(){
 			  	}
 				return false;	//Prevent submit action from reloading the page
 			});
+			
+			populateEditForm();	//Initialize the edit form with current vehicle data
+			
+			$("#editVehicleForm").validator().on("submit", function (e) {
+				if (!e.isDefaultPrevented()) {	//Valid Form
+					console.log(JSON.stringify($("#editVehicleForm").serializeFormJSON()));
+					$.ajax({
+						beforeSend: addCsrfHeader,
+						url: "/vehicle/" + vehicleType + "/" + vehicleName + "/edit",
+						type: "POST",
+						data: JSON.stringify($("#editVehicleForm").serializeFormJSON()),
+			            contentType: "application/json; charset=utf-8",
+						success: function(data, textStatus, request) {
+							updateVehicleInformation(vehicleName);
+							$("#responseAlertSuccessHeader").text("Editar Informação")
+							$("#responseAlertSuccessText").text("Informação editada com sucesso");
+							$("#responseAlertModalSuccess").modal("toggle");
+						},
+						error: function(errMsg) {
+							populateEditForm();	//Reset the form
+							$("#responseAlertFailHeader").text("Editar Informação")
+							$("#responseAlertFailText").text("Falha ao editar informação");
+							$("#responseAlertModalFail").modal("toggle");
+						},
+					});
+			  	}
+				return false;	//Prevent submit action from reloading the page
+			});
+			
+			$("#editVehicleForm").validator("validate");	//Call validate immediately
 		})
 		.on("hidden.bs.tab", function (e) {
-			$("#editForm").validator().off("submit");
-			$("#editForm").validator("destroy");
+			$("#editImageForm").validator().off("submit");
+			$("#editImageForm").validator("destroy");
+			$("#editVehicleForm").validator().off("submit");
+			$("#editVehicleForm").validator("destroy");
 	});
 
 	/* ##################################################### */
