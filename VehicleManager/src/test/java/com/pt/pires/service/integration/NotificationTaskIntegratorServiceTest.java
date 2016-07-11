@@ -35,7 +35,7 @@ import com.pt.pires.util.DateUtil;
 @SpringApplicationConfiguration(classes = VehicleManagerApplication.class)
 @Transactional
 @Rollback
-public class NotificationTaskIntegratorServiceTest extends VehicleManagerServiceTest{
+public class NotificationTaskIntegratorServiceTest extends VehicleManagerServiceTest {
 
 	@Mock
 	private IEmailService emailService;
@@ -55,6 +55,9 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	private final static String USERNAME = "Bobbob";
 	private final static String PASSWORD = "Bobbob";
 	private final static String EMAIL = "bob@bob.com";
+	
+	private final static String EMAIL_USERNAME = "email_username";
+	private final static String EMAIL_PASSWORD = "email.password";
 	
 	private final static int FABRICATION_YEAR = 1994;
 	
@@ -87,14 +90,14 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	@Test
 	public void sendNotificationTask_1() throws VehicleManagerException {
 		System.out.println(EXISTING_ID_1);
-		Mockito.when(emailService.sendEmail(Mockito.eq(NotificationTaskIntegratorService.emailUsername),
-				Mockito.eq(NotificationTaskIntegratorService.emailPassword), Mockito.eq(NotificationTaskIntegratorService.emailUsername),
+		Mockito.when(emailService.sendEmail(Mockito.eq(EMAIL_USERNAME),
+				Mockito.eq(EMAIL_PASSWORD), Mockito.eq(EMAIL_USERNAME),
 				Mockito.eq(EMAIL),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
 				Mockito.eq(VALID_DESCRIPTION))).thenReturn(true);
-		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_1,new Date());
-		Mockito.verify(emailService,Mockito.times(1)).sendEmail(Mockito.eq(NotificationTaskIntegratorService.emailUsername),
-				Mockito.eq(NotificationTaskIntegratorService.emailPassword), Mockito.eq(NotificationTaskIntegratorService.emailUsername),
+		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_1,new Date(),EMAIL_USERNAME,EMAIL_PASSWORD);
+		Mockito.verify(emailService,Mockito.times(1)).sendEmail(Mockito.eq(EMAIL_USERNAME),
+				Mockito.eq(EMAIL_PASSWORD), Mockito.eq(EMAIL_USERNAME),
 				Mockito.eq(EMAIL),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
 				Mockito.eq(VALID_DESCRIPTION));
@@ -105,7 +108,7 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	@Test
 	public void sendNotificationTask_2() throws VehicleManagerException{
 		Date currentDate = DateUtil.getSimplifyDate(1, 1, 2015);
-		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_2,currentDate);
+		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_2,currentDate,EMAIL_USERNAME,EMAIL_PASSWORD);
 		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
@@ -116,7 +119,7 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	
 	@Test
 	public void sendNotificationTask_3() throws VehicleManagerException{
-		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_3,new Date());
+		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_3,new Date(),EMAIL_USERNAME,EMAIL_PASSWORD);
 		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
@@ -127,7 +130,7 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	
 	@Test(expected = NotificationDoesntExistException.class)
 	public void sendNotificationTaskDoesntExist() throws VehicleManagerException{
-		notificationTaskIntegratorService.sendNotificationTask(INEXISTENT_ID,new Date());
+		notificationTaskIntegratorService.sendNotificationTask(INEXISTENT_ID,new Date(),EMAIL_USERNAME,EMAIL_PASSWORD);
 		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
@@ -136,7 +139,7 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void sendNotificationTaskNullId() throws VehicleManagerException{
-		notificationTaskIntegratorService.sendNotificationTask(null,new Date());
+		notificationTaskIntegratorService.sendNotificationTask(null,new Date(),EMAIL_USERNAME,EMAIL_PASSWORD);
 		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
@@ -145,7 +148,25 @@ public class NotificationTaskIntegratorServiceTest extends VehicleManagerService
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void sendNotificationTaskNullCurrentDate() throws VehicleManagerException{
-		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_1,null);
+		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_1,null,EMAIL_USERNAME,EMAIL_PASSWORD);
+		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
+				Mockito.eq(VALID_DESCRIPTION));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void sendNotificationTaskNullEmailUsername() throws VehicleManagerException{
+		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_1,new Date(),null,EMAIL_PASSWORD);
+		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),
+				Mockito.eq(VALID_DESCRIPTION));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void sendNotificationTaskNullEmailPasssword() throws VehicleManagerException{
+		notificationTaskIntegratorService.sendNotificationTask(EXISTING_ID_1,new Date(),EMAIL_USERNAME,null);
 		Mockito.verify(emailService,Mockito.times(0)).sendEmail(Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
 				Mockito.eq(NotificationTaskIntegratorService.SUBJECT_HEADER + VALID_VEHICLE_NAME),

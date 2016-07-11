@@ -16,7 +16,6 @@ import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.NotificationDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.NotificationRepository;
-import com.pt.pires.persistence.VehicleRepository;
 
 @Service("notificationService")
 public class NotificationTaskService implements INotificationTaskService {
@@ -28,9 +27,6 @@ public class NotificationTaskService implements INotificationTaskService {
 	@Autowired
 	@Qualifier("vehicleService")
 	private IVehicleService vehicleService;
-	
-	@Autowired
-	private VehicleRepository vehicleRepository;
 	
 	@Autowired
 	private NotificationRepository notificationRepository;
@@ -48,7 +44,6 @@ public class NotificationTaskService implements INotificationTaskService {
 		newNotif.setVehicle(v);
 		NotificationTaskYear noti = notificationRepository.save(newNotif);
 		v.addNotification(noti);
-		vehicleRepository.save(v);
 		return noti.getId();
 	}
 
@@ -64,7 +59,6 @@ public class NotificationTaskService implements INotificationTaskService {
 		newNotif.setVehicle(v);
 		NotificationTaskHalfYear noti = notificationRepository.save(newNotif);
 		v.addNotification(noti);
-		vehicleRepository.save(v);
 		return noti.getId();
 	}
 
@@ -80,7 +74,6 @@ public class NotificationTaskService implements INotificationTaskService {
 		newNotif.setVehicle(v);
 		newNotif = notificationRepository.save(newNotif);
 		v.addNotification(newNotif);
-		vehicleRepository.save(v);
 		return newNotif.getId();
 	}
 

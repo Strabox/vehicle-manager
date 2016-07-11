@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,12 @@ import com.pt.pires.services.local.INotificationTaskService;
 
 @Service("schedulingService")
 public class SchedulingIntegratorService implements ISchedulingIntegratorService {
+	
+	@Value("${application.email}")
+	public String emailUsername;
+	
+	@Value("${application.password}")
+	public String emailPassword;
 	
 	@Autowired
 	@Qualifier("notificationService")
@@ -31,7 +38,7 @@ public class SchedulingIntegratorService implements ISchedulingIntegratorService
 		notifications = (List<NotificationTask>) notificationService.getAllNotificationsTasks();
 		for(NotificationTask notif : notifications) {
 			try {
-				notiIntegratorService.sendNotificationTask(notif.getId(),new Date());
+				notiIntegratorService.sendNotificationTask(notif.getId(),new Date(),emailUsername,emailPassword);
 			}catch(VehicleManagerException e){
 				continue;	//Notification was deleted in the meantime!!
 			}

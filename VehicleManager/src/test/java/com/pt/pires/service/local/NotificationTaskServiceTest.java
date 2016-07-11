@@ -134,7 +134,7 @@ public class NotificationTaskServiceTest extends VehicleManagerServiceTest {
 		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_3);
 		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_4);
 		notificationTaskService.removeNotification(VEHICLE_NAME, EXISTING_ID_5);
-		Assert.assertNotNull(obtainNotifications(VEHICLE_NAME));
+		Assert.assertNotNull(obtainVehicle(VEHICLE_NAME));
 		Assert.assertTrue(obtainNotifications(VEHICLE_NAME).isEmpty());
 		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_1));
 		Assert.assertNull(obtainNotification(VEHICLE_NAME, EXISTING_ID_2));

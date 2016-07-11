@@ -21,10 +21,10 @@ public class NotificationTaskIntegratorService implements INotificationTaskInteg
 	public final static String SUBJECT_HEADER = "Aviso: Manutenção ";
 	
 	@Value("${application.email}")
-	public static String emailUsername;
+	public String emailUsername;
 	
 	@Value("${application.password}")
-	public static String emailPassword;
+	public String emailPassword;
 	
 	@Autowired
 	@Qualifier("emailService")
@@ -49,24 +49,19 @@ public class NotificationTaskIntegratorService implements INotificationTaskInteg
 	public NotificationTaskIntegratorService() { }
 	
 	@Override
-	public void sendNotificationTask(Long notificationId,Date currentDate) throws VehicleManagerException {
-		if(notificationId == null || currentDate == null) {
+	public void sendNotificationTask(Long notificationId,Date currentDate,String emailUsername,
+			String emailPassword) throws VehicleManagerException {
+		if(notificationId == null || currentDate == null || emailUsername == null || emailPassword == null) {
 			throw new IllegalArgumentException();
 		}
 		boolean notify = notificationService.notifyDay(notificationId, currentDate);
 		NotificationTask n = notificationService.getNotificationTask(notificationId);
-		System.out.println(notificationId + " " + (n.isNotificationSent()) + " " + emailUsername);
 		if(notify && !n.isNotificationSent()) {
 			List<User> usersToSend = (List<User>) userService.getUserByRole(UserRole.ROLE_USER);
-			if(usersToSend.isEmpty()) {
-				System.out.println("VAZIOOOOOOOOOOOOOOOOOO");
-			}
 			for(User u : usersToSend) {
-				System.out.println("OLAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 				boolean sent = emailService.sendEmail(emailUsername, emailPassword, emailUsername,
 						u.getEmail(), SUBJECT_HEADER + n.getVehicle().getName(), n.getDescription()); 
 					if(sent) {
-						System.out.println("HEREEEEEEEEEEEEEEEEEEEEEEEEE");
 						notificationService.setNotificationTaskSent(notificationId, true);
 						System.out.println("[Enviando notificação/email para " + u.getUsername() + "]");
 					}

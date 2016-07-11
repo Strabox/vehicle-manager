@@ -77,7 +77,7 @@ public abstract class VehicleManagerServiceTest {
 	
 	/* ================= Auxiliary User test methods =============== */
 	
-	protected void newUser(String username,String password,String email,UserRole role) throws VehicleManagerException{
+	protected void newUser(String username,String password,String email,UserRole role) throws VehicleManagerException {
 		User user = new User(username,password,email,role);
 		userRepository.save(user);
 	}
@@ -117,13 +117,13 @@ public abstract class VehicleManagerServiceTest {
 		return licensedRepository.findOne(name);
 	}
 	
-	protected void deleteVehicle(String name){
+	protected void deleteVehicle(String name) {
 		if(vehicleRepository.exists(name))
 			vehicleRepository.delete(name);
 	}
 	
 	protected Long newRegistration(String vehicleName,long time,String description,Date date) throws VehicleManagerException {
-		if(vehicleRepository.exists(vehicleName)){
+		if(vehicleRepository.exists(vehicleName)) {
 			Vehicle v = vehicleRepository.findOne(vehicleName);
 			Registration reg = regRepository.save(new Registration(time,description,date));
 			v.addRegistration(reg);
@@ -135,7 +135,7 @@ public abstract class VehicleManagerServiceTest {
 	}
 	
 	protected Long newNote(String vehicleName,String noteDescription) throws VehicleManagerException {
-		if(vehicleRepository.exists(vehicleName)){
+		if(vehicleRepository.exists(vehicleName)) {
 			Vehicle v = vehicleRepository.findOne(vehicleName);
 			Note note = noteRepository.save(new Note(noteDescription));
 			v.addNote(note);
@@ -146,8 +146,8 @@ public abstract class VehicleManagerServiceTest {
 	}
 	
 	
-	protected Long newNotification(String vehicleName,NotificationTask notification){
-		if(vehicleRepository.exists(vehicleName)){
+	protected Long newNotification(String vehicleName,NotificationTask notification) {
+		if(vehicleRepository.exists(vehicleName)) {
 			Vehicle v = vehicleRepository.findOne(vehicleName);
 			NotificationTask note = notification;
 			note.setVehicle(v);
@@ -159,63 +159,61 @@ public abstract class VehicleManagerServiceTest {
 		return null;
 	}
 	
-	protected void deleteNotification(Long id){
-		if(notiRepository.exists(id)){
+	protected void deleteNotification(Long id) {
+		if(notiRepository.exists(id)) {
 			notiRepository.delete(id);
 		}
 	}
 	
-	protected Registration obtainRegistration(String vehicleName,Long regId){
+	protected Registration obtainRegistration(String vehicleName,Long regId) {
 		List<Registration> regs = (List<Registration>) vehicleRepository.findOne(vehicleName).getRegistries();
-		for(Registration reg : regs){
-			if(reg.getId() == regId){
+		for(Registration reg : regs) {
+			if(reg.getId() == regId) {
 				return reg;
 			}
 		}
 		return null;
 	}
 	
-	protected Note obtainNote(String vehicleName,Long noteId){
+	protected Note obtainNote(String vehicleName,Long noteId) {
 		List<Note> notes = (List<Note>) vehicleRepository.findOne(vehicleName).getNotes();
-		for(Note note : notes){
-			if(note.getId() == noteId){
+		for(Note note : notes) {
+			if(note.getId() == noteId) {
 				return note;
 			}
 		}
 		return null;
 	}
 	
-	protected NotificationTask obtainNotification(String vehicleName,Long notiId){
+	protected NotificationTask obtainNotification(String vehicleName,Long notiId) {
 		List<NotificationTask> notis = (List<NotificationTask>) vehicleRepository.findOne(vehicleName).getNotifications();
-		for(NotificationTask noti : notis){
-			if(noti.getId() == notiId){
+		for(NotificationTask noti : notis) {
+			if(noti.getId() == notiId) {
 				return noti;
 			}
 		}
 		return null;
 	}
 	
-	protected List<Registration> obtainRegistrations(String vehicleName){
-		if(vehicleRepository.exists(vehicleName)){
+	protected List<Registration> obtainRegistrations(String vehicleName) {
+		if(vehicleRepository.exists(vehicleName)) {
 			return (List<Registration>) vehicleRepository.findOne(vehicleName).getRegistries();
 		}
 		return null;
 	}
 	
-	protected List<Note> obtainNotes(String vehicleName){
-		if(vehicleRepository.exists(vehicleName)){
+	protected List<Note> obtainNotes(String vehicleName) {
+		if(vehicleRepository.exists(vehicleName)) {
 			return (List<Note>) vehicleRepository.findOne(vehicleName).getNotes();
 		}
 		return null;
 	}
 	
-	protected List<NotificationTask> obtainNotifications(String vehicleName){
-		if(vehicleRepository.exists(vehicleName)){
+	protected List<NotificationTask> obtainNotifications(String vehicleName) {
+		if(vehicleRepository.exists(vehicleName)) {
 			return (List<NotificationTask>) vehicleRepository.findOne(vehicleName).getNotifications();
 		}
 		return null;
 	}
-	
-	/* ================= Auxiliary Notification test methods =============== */
 	
 }
