@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -34,17 +35,17 @@ public abstract class Vehicle {
 	@Type(type="date")
 	private Date acquisitionDate; 
 	
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Collection<Registration> registries = new ArrayList<>();
 	
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Collection<Note> notes = new ArrayList<>();
 	
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Collection<NotificationTask> notifications = new ArrayList<>();
 	
 	
-	public Vehicle(String name,String brand,Date acquisitionDate) 
+	public Vehicle(String name, String brand, Date acquisitionDate) 
 			throws InvalidVehicleNameException, InvalidVehicleBrandException {
 		setName(name);
 		setBrand(brand);
@@ -53,19 +54,20 @@ public abstract class Vehicle {
 	
 	public Vehicle() { }	//Needed for JPA/JSON	
 	
-	public void addRegistration(Registration reg) {
+	
+	public final void addRegistration(Registration reg) {
 		registries.add(reg);
 	}
 	
-	public void addNote(Note note) {
+	public final void addNote(Note note) {
 		notes.add(note);
 	}
 	
-	public void addNotification(NotificationTask notification) {
+	public final void addNotification(NotificationTask notification) {
 		notifications.add(notification);
 	}
 	
-	public void removeRegistration(long id) {
+	public final void removeRegistration(long id) {
 		for(Registration reg : registries) {
 			if(reg.getId() == id) {
 				registries.remove(reg);
@@ -74,7 +76,7 @@ public abstract class Vehicle {
 		}
 	}
 	
-	public void removeNote(long id) {
+	public final void removeNote(long id) {
 		for(Note note : notes){
 			if(note.getId() == id) {
 				notes.remove(note);
@@ -83,7 +85,7 @@ public abstract class Vehicle {
 		}
 	}
 	
-	public void removeNotification(long id) {
+	public final void removeNotification(long id) {
 		for(NotificationTask noti : notifications) {
 			if(noti.getId() == id) {
 				notifications.remove(noti);
@@ -92,12 +94,13 @@ public abstract class Vehicle {
 		}
 	}
 	
-	public int calculateAcquisitionYears() {
-		Calendar a = DateUtil.getCalendar(acquisitionDate);
-	    Calendar b = DateUtil.getCalendar(new Date());
-	    int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
-	    if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || 
-	        (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
+	public final int calculateAcquisitionYears() {
+		Calendar acquisitionCalendar = DateUtil.getCalendar(acquisitionDate);
+	    Calendar currentCalendar = DateUtil.getCalendar(new Date());
+	    int diff = currentCalendar.get(Calendar.YEAR) - acquisitionCalendar.get(Calendar.YEAR);
+	    if (acquisitionCalendar.get(Calendar.MONTH) > currentCalendar.get(Calendar.MONTH) || 
+	        (acquisitionCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) &&
+	        	acquisitionCalendar.get(Calendar.DATE) > currentCalendar.get(Calendar.DATE))) {
 	        diff--;
 	    }
 	    return diff;

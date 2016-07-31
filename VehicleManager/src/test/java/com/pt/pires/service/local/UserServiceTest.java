@@ -1,10 +1,13 @@
 package com.pt.pires.service.local;
 
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,7 +36,7 @@ public class UserServiceTest extends VehicleManagerServiceTest {
 	private static final String USERNAME_EXIST = "Afpp";
 	private static final String[] INVALID_USERNAMES = { EMPTY_STRING , "a", "sp", "dad" };
 	
-	private static final String VALID_PASSWORD = "suchwow"; 
+	private static final String VALID_PASSWORD = "suchwow!"; 
 	private static final String[] INVALID_PASSWORDS = { EMPTY_STRING, "a", "sp", "dad"};
 	
 	private static final String EMAIL = "no-reply@gmail.com";
@@ -42,25 +45,25 @@ public class UserServiceTest extends VehicleManagerServiceTest {
 	
 	private static final UserRole ROLE = UserRole.ROLE_USER;
 	
-	@Autowired
-	@Qualifier("userService")
+	@Inject
+	@Named("userService")
 	private IUserService userService;
 	
 	
 	@Override
 	public void populate() throws VehicleManagerException {
-		newUser(USERNAME_EXIST, VALID_PASSWORD,EMAIL, ROLE);
+		newUser(USERNAME_EXIST, VALID_PASSWORD, EMAIL, ROLE);
 	}
 
 	/* ================== CreateUser Service =================== */
 	
 	@Test
 	public void createUserSuccess() throws VehicleManagerException {
-		userService.createUser(USERNAME_DOESNT_EXIST, VALID_PASSWORD,EMAIL, ROLE);
+		userService.createUser(USERNAME_DOESNT_EXIST, VALID_PASSWORD, EMAIL, ROLE);
 		User user = obtainUser(USERNAME_DOESNT_EXIST);
 		Assert.assertNotNull(user);
 		Assert.assertTrue(user.getUsername().equals(USERNAME_DOESNT_EXIST));
-		Assert.assertTrue(SecurityUtil.passwordEncoder().matches(VALID_PASSWORD, user.getPassword()));
+		Assert.assertTrue(SecurityUtil.passwordEncoder().matches(VALID_PASSWORD, user.getEncodedPassword()));
 		Assert.assertTrue(user.getRole() == ROLE);
 	}
 	
@@ -79,7 +82,7 @@ public class UserServiceTest extends VehicleManagerServiceTest {
 			} catch (VehicleManagerException e) {
 				throw new RuntimeException("This shouldn't happend in this service");
 			}
-			throw new AssertionError("Email should be invalid: " + invalidUsername);
+			throw new AssertionError("Username should be invalid: " + invalidUsername);
 		}
 	}
 	
@@ -148,6 +151,30 @@ public class UserServiceTest extends VehicleManagerServiceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void removeUserNullUsername() throws VehicleManagerException {
 		userService.removeUser(null);
+	}
+	
+	/* ==================== GetUsersByRole Service ================== */
+	
+	@Test
+	public void getUsersByRole() {
+		List<User> users = (List<User>) userService.getUsersByRole(ROLE);
+		Assert.assertTrue(users.size() == 1);
+		Assert.assertTrue(users.get(0).getUsername().equals(USERNAME_EXIST));
+		Assert.assertTrue(users.get(0).getEncodedPassword().equals(VALID_PASSWORD));
+		Assert.assertTrue(users.get(0).getEmail().equals(EMAIL));
+		Assert.assertTrue(users.get(0).getRole() == ROLE);
+	}
+	
+	@Test
+	public void getUsersByRoleEmptySet() {
+		removeUser(USERNAME_EXIST);
+		List<User> users = (List<User>) userService.getUsersByRole(ROLE);
+		Assert.assertTrue(users.isEmpty());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void getUsersByRoleNullRole() {
+		userService.getUsersByRole(null);
 	}
 	
 }

@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class AccessDeniedController {
-
+	
 	@RequestMapping(value = "/accessDenied",method = RequestMethod.GET)
 	public String accessDenied(Model model) {
-		return "accessDenied";
+		return "/normal/errors/accessDenied";
 	}
 	
 }

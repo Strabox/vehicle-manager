@@ -1,4 +1,4 @@
-package com.pt.pires.services.local;
+ package com.pt.pires.services.local;
 
 import java.util.Collection;
 
@@ -12,10 +12,10 @@ import com.pt.pires.domain.exceptions.VehicleManagerException;
  */
 public interface INoteService {
 
-	Long createNote(String vehicleName,String note) throws VehicleManagerException;
+	Long createNote(String vehicleName, String note) throws VehicleManagerException;
+	
+	void removeNote(String vehicleName, long noteId) throws VehicleManagerException;
 	
 	Collection<Note> getVehicleNotes(String vehicleName) throws VehicleManagerException;
-	
-	void removeNote(String vehicleName,long noteId) throws VehicleManagerException;
 	
 }

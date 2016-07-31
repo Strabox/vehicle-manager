@@ -1,8 +1,10 @@
 package com.pt.pires.controllers.rest;
 
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +33,21 @@ import com.pt.pires.services.local.IVehicleService;
 @RestController
 public class VehicleControllerRest extends ControllerExceptionHandler {
 	
-	@Autowired
-	@Qualifier("vehicleService") 
+	@Inject
+	@Named("vehicleService") 
 	private IVehicleService vehicleService;
 	
-	@Autowired
-	@Qualifier("vehicleIntegratorService")
+	@Inject
+	@Named("vehicleIntegratorService")
 	private IVehicleIntegratorService vehicleIntegratorService;
 	
+	
+	public VehicleControllerRest(IVehicleService vs,IVehicleIntegratorService ivs) {
+		vehicleService = vs;
+		vehicleIntegratorService = ivs;
+	}
+	
+	public VehicleControllerRest() { }
 	
 	/**
 	 * Create an UnlicensedVehicle
@@ -232,5 +241,12 @@ public class VehicleControllerRest extends ControllerExceptionHandler {
     		throws VehicleManagerException {
         return vehicleIntegratorService.getVehiclePortraitImage(vehicleName);
     }
+	
+	@RequestMapping(value = "/image/thumb/{vehicleName}",method = RequestMethod.GET)
+    @ResponseBody
+	public byte[] getVehiclePortraitImageThumb(@PathVariable(value = "vehicleName") String vehicleName)
+			throws VehicleManagerException {
+		return vehicleIntegratorService.getVehiclePortraitThumbImage(vehicleName);
+	}
 	
 }

@@ -7,13 +7,9 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 @Configuration
 public class ServletContainerCustomizer implements EmbeddedServletContainerCustomizer {
-
-	private final static String KEYSTORE_RESOURCE_FILE_PATH = "/other/myKeystore.p12";
 	
 	private final static String KEYSTORE_TYPE = "PKCS12";
 	
@@ -23,13 +19,19 @@ public class ServletContainerCustomizer implements EmbeddedServletContainerCusto
 
 	private TomcatCustomizerConnector customizer;
 
-	@Value("${application.https:false}")
+	// By default is error
+	@Value("${application.keystore.fullPath: error}")
+	private String keyStoreFullpath;
+	
+	// Don't use TLS/HTTPS by default
+	@Value("${application.https: false}")
 	private boolean https;
 	
 	public ServletContainerCustomizer() throws IOException {
-		Resource resource = new ClassPathResource(KEYSTORE_RESOURCE_FILE_PATH);
-		customizer = new TomcatCustomizerConnector(resource.getFile().getAbsolutePath(), KEYSTORE_PASSWORD,
-				KEYSTORE_TYPE, KEYSTORE_ALIAS);
+		if(https) {
+			customizer = new TomcatCustomizerConnector(keyStoreFullpath, KEYSTORE_PASSWORD,
+					KEYSTORE_TYPE, KEYSTORE_ALIAS);
+		}
 	}
 	
 	@Override

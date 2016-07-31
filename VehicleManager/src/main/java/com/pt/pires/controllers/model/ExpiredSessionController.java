@@ -15,7 +15,7 @@ public class ExpiredSessionController {
 
 	@RequestMapping(value = "/expiredSession",method = RequestMethod.GET)
 	public String accessDenied(Model model) {
-		return "expiredSession";
+		return "/normal/errors/expiredSession";
 	}
 	
 }

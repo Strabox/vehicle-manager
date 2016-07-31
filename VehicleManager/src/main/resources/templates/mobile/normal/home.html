@@ -1,0 +1,131 @@
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Inicio</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+		<!-- CSRF Header and Token -->
+		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	    <meta name="_csrf" th:content="${_csrf.token}"/>
+		
+		<!-- jQuery library -->
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<!-- jQuery Mobile library -->
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		
+	    <!-- jQuery Mobile CSS -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"></link>
+	
+		<script src="/javascript/common.js"></script>
+		<link rel="stylesheet" href="/css/mobile/mycss.css"/>
+	</head>
+	<body>
+	
+		<!-- ==================== Home Tab ====================== -->
+		
+		<div id="homeTab" data-role="page" data-theme="b">
+			<div data-role="header">
+	   	 		<h1>Inicio</h1>
+	   	 		<a class="ui-btn ui-icon-power ui-btn-icon-left logout">Sair</a>
+	   	 		<div data-role="navbar">
+				    <ul>
+			      		<li><a href="#homeTab" class="ui-btn-active ui-state-persist" data-transition="slide" data-icon="home">Inicio</a></li>
+				      	<li><a href="#tasksToDoTab" data-transition="slide" data-icon="alert">Tarefas para fazer</a></li>
+				      	<li><a href="#vehiclesTab" data-transition="slide" data-icon="grid">Veículos</a></li>
+				      	<li><a href="#printTab" data-transition="slide" data-icon="calendar">Imprimir</a></li>
+				    </ul>
+		 		</div>	
+		  	</div>
+		  	<div data-role="main" class="ui-content">
+				<h2>Sistema de Manutenção</h2>
+				<br></br>
+				<p>Com este sistema é possivel gerir a manutenção de veículos e alfaias bem como manter um histórico do que foi feito a cada uma delas.</p>
+				<p>Para além destas funcionalidades é possível manter alertas sobre tarefas que devem ser feitas num veículo. Quando for data de realizar a tarefa o sistema envia-lhe um email a avisar.</p>
+ 			</div>
+ 			<footer data-role="footer">
+		   	 	<!-- @copyrights.date@, @project.version@ come from Maven filtering that get it from maven pom file (replaced in file at resources:resources phase) -->
+	        	<p>&copy; @copyrights.date@ ANDRÉ PIRES TODOS OS DIREITOS RESERVADOS</p> 
+	        	<p>Versão: @project.version@</p>
+	  		</footer>
+		</div>
+	
+		<!-- ==================== Tasks to do tab ======================== -->
+		
+		<div id="tasksToDoTab" data-role="page" data-theme="b">
+			<div data-role="header">
+	   	 		<h1>Inicio</h1>
+	   	 		<a class="ui-btn ui-icon-power ui-btn-icon-left logout">Sair</a>
+	   	 		<div data-role="navbar">
+				    <ul>
+			      		<li><a href="#homeTab" data-transition="slide" data-icon="home">Inicio</a></li>
+				      	<li><a href="#tasksToDoTab" class="ui-btn-active ui-state-persist" data-transition="slide" data-icon="alert">Tarefas para fazer</a></li>
+				      	<li><a href="#vehiclesTab" data-transition="slide" data-icon="grid">Veículos</a></li>
+				      	<li><a href="#printTab" data-transition="slide" data-icon="calendar">Imprimir</a></li>
+				    </ul>
+		 		</div>	
+		  	</div>
+		  	<div data-role="main" class="ui-content" data-theme="b">
+				<h2>Funcionalidade indisponivel</h2>
+ 			</div>
+ 			<footer data-role="footer">
+		   	 	<!-- @copyrights.date@, @project.version@ come from Maven filtering that get it from maven pom file (replaced in file at resources:resources phase) -->
+	        	<p>&copy; @copyrights.date@ ANDRÉ PIRES TODOS OS DIREITOS RESERVADOS</p> 
+	        	<p>Versão: @project.version@</p>
+	  		</footer>
+		</div>
+		
+		<!-- ==================== Vehicles presentation tab ===================== -->
+		
+		<div id="vehiclesTab" data-role="page" data-theme="b">
+			<div data-role="header">
+	   	 		<h1>Inicio</h1>
+	   	 		<a class="ui-btn ui-icon-power ui-btn-icon-left logout">Sair</a>
+	   	 		<div data-role="navbar">
+				    <ul>
+			      		<li><a href="#homeTab" data-transition="slide" data-icon="home">Inicio</a></li>
+				      	<li><a href="#tasksToDoTab" data-transition="slide" data-icon="alert">Tarefas para fazer</a></li>
+				      	<li><a href="#vehiclesTab" class="ui-btn-active ui-state-persist" data-transition="slide" data-icon="grid">Veículos</a></li>
+				      	<li><a href="#printTab" data-transition="slide" data-icon="calendar">Imprimir</a></li>
+				    </ul>
+		 		</div>	
+		  	</div>
+		  	<div data-role="main" class="ui-content">
+				
+				<ul data-role="listview" data-inset="true" data-autodividers="true">
+  					<li th:each="vehicleL : ${listLicensed}"><a th:href="${'vehicle/' + vehicleL.name + '?type=licensed'}" ><img th:src="${'/image/thumb/' + vehicleL.name}"></img><span th:text="${vehicleL.name}"></span></a><a href="#" data-icon="delete"></a></li>
+					<li th:each="vehicleU : ${listUnlicensed}"><a th:href="${'vehicle/' + vehicleU.name + '?type=unlicensed'}"><img th:src="${'/image/thumb/' + vehicleU.name}"></img><span th:text="${vehicleU.name}"></span></a><a href="#" data-icon="delete"></a></li>
+				</ul>
+				
+ 			</div>
+ 			<footer data-role="footer">
+		   	 	<!-- @copyrights.date@, @project.version@ come from Maven filtering that get it from maven pom file (replaced in file at resources:resources phase) -->
+	        	<p>&copy; @copyrights.date@ ANDRÉ PIRES TODOS OS DIREITOS RESERVADOS</p> 
+	        	<p>Versão: @project.version@</p>
+	  		</footer>
+		</div>
+		
+		<!-- ======================== Print Tab =========================== -->
+		
+		<div id="printTab" data-role="page" data-theme="b">
+			<div data-role="header">
+	   	 		<h1>Inicio</h1>
+	   	 		<a class="ui-btn ui-icon-power ui-btn-icon-left logout">Sair</a>
+	   	 		<div data-role="navbar">
+				    <ul>
+			      		<li><a href="#homeTab" data-transition="slide" data-icon="home">Inicio</a></li>
+				      	<li><a href="#tasksToDoTab" data-transition="slide" data-icon="alert">Tarefas para fazer</a></li>
+				      	<li><a href="#vehiclesTab" data-transition="slide" data-icon="grid">Veículos</a></li>
+				      	<li><a href="#printTab" class="ui-btn-active ui-state-persist" data-transition="slide" data-icon="calendar">Imprimir</a></li>
+ 					</ul>
+		 		</div>	
+		  	</div>
+		  	<div data-role="main" class="ui-content">
+				<h2>Funcionalidade indisponivel</h2>
+ 			</div>
+ 			<footer data-role="footer">
+		   	 	<div th:replace="fragments/footer :: footer"></div> 
+	  		</footer>
+		</div>
+
+	</body>
+</html>

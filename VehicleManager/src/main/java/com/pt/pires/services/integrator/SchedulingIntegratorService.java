@@ -2,8 +2,10 @@ package com.pt.pires.services.integrator;
 
 import java.util.Date;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -12,28 +14,31 @@ import com.pt.pires.domain.NotificationTask;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.services.local.INotificationTaskService;
 
-@Service("schedulingService")
+@Service
+@Named("schedulingService")
 public class SchedulingIntegratorService implements ISchedulingIntegratorService {
 	
-	@Value("${application.email}")
+	@Value("${application.email: error}")
 	public String emailUsername;
 	
-	@Value("${application.password}")
+	@Value("${application.password: error}")
 	public String emailPassword;
 	
-	@Autowired
-	@Qualifier("notificationService")
+	@Inject
+	@Named("notificationService")
 	private INotificationTaskService notificationService;
 	
-	@Autowired
-	@Qualifier("notificationIntegratorService")
+	@Inject
+	@Named("notificationIntegratorService")
 	private INotificationTaskIntegratorService notiIntegratorService;
 	
-	
+	/**
+	 * Schedule is every day at midnight by DEFAULT
+	 */
 	@Override
-	@Scheduled(cron = "${application.sendNotifications.time: 0 1 12 1/1 * ?}")	//Default: every day at midnight
+	@Scheduled(cron = "${application.sendNotifications.time: 0 1 12 1/1 * ?}")
 	public void sendNotificationsTaskScheduler() {
-		System.out.println(("[Executing send notification task....]"));
+		System.out.println(("[Executing notifications scheduler task....]"));
 		List<NotificationTask> notifications; 
 		notifications = (List<NotificationTask>) notificationService.getAllNotificationsTasks();
 		for(NotificationTask notif : notifications) {

@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -16,8 +18,6 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -33,31 +33,32 @@ import com.pt.pires.services.local.IRegistrationService;
 import com.pt.pires.services.local.IUserService;
 import com.pt.pires.services.local.IVehicleService;
 
-@Service("importIntegratorService")
+@Service
+@Named("importIntegratorService")
 public class ImportIntegratorService implements IImportIntegratorService{
 
 	private static final String CONFIG_FILE_PATH = "/other/Initialize.xml";
 	
 	private static final String CONFIG_XSD_FILE_PATH = "/other/InitializeXSD.xml";
 	
-	@Autowired
-	@Qualifier("vehicleService")
+	@Inject
+	@Named("vehicleService")
 	private IVehicleService vehicleService;
 	
-	@Autowired
-	@Qualifier("userService")
+	@Inject
+	@Named("userService")
 	private IUserService userService;
 	
-	@Autowired
-	@Qualifier("registrationService")
+	@Inject
+	@Named("registrationService")
 	private IRegistrationService registrationService;
 	
-	@Autowired
-	@Qualifier("noteService")
+	@Inject
+	@Named("noteService")
 	private INoteService noteService;
 	
-	@Autowired
-	@Qualifier("notificationService")
+	@Inject
+	@Named("notificationService")
 	private INotificationTaskService notificationTaskService;
 	
 	

@@ -1,11 +1,99 @@
-.Site {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+/* ##### My Bootstrap 3 Customization ##### */
+
+/* IMPORTANT NOTE: !important sometimes is needed due to bootstrap
+   use of jquery stuffs, and we need force the use of our definitions. */
+
+/* === Primary Button === */
+
+.btn-primary {
+	background-color: #fc4a1a !important;
+	color: black !important;
+	border-color: black !important;
 }
 
-.Site-content {
-  flex: 1;
+.btn-primary:hover {
+	background-color: #f7b733 !important;
+	color: black !important;
+	border-color: black !important;
+}
+
+.btn-primary:focus {
+	background-color: #f7b733 !important;
+	color: black !important;
+	border-color: black !important;
+	outline-color: black !important;
+}
+
+/* === Navigation Tabs and Pills === */
+
+.nav-pills > li.active > a , .nav-tabs > li.active > a {
+	background-color: #4ABDAC !important;
+	color: black !important;
+}
+
+.nav-pills > li > a:hover , .nav-tabs > li > a:hover ,
+.nav-pills > li > a:hover:active , .nav-tabs > li > a:hover:active {
+	background-color: #f7b733;
+	color: black;
+}
+
+.nav-pills > li > a , .nav-tabs > li > a {
+	background-color: #fc4a1a;
+	color: black;
+	border-color: white;
+}
+
+/* === Tables === */
+
+.table > tbody > tr > td , .table > tbody > tr > th {
+   /* Fallback for web browsers that doesn't support RGBa */ 
+	background: rgb(223, 220, 227) !important; 
+	background: rgba(223, 220, 227, 0.55) !important;
+}
+
+.table-hover > tbody > tr:hover > td {
+   /* Fallback for web browsers that doesn't support RGBa */ 
+	background: rgb(223, 220, 227) !important; 
+	background: rgba(223, 220, 227, 1) !important;
+}
+
+/* === Modals === */
+
+.modal-body > .tab-content {
+	background-color: #4ABDAC;
+}
+
+.modal-content {
+	background-color: #4ABDAC;
+}
+
+/* ######## Other Customizations ######### */
+
+/* === General === */
+
+body {
+	background: url(/images/background.jpg) no-repeat center center fixed;
+	background-image: linear-gradient(to bottom, rgba(74,189,172,0.82) 0%,rgba(74,189,172,0.82) 100%), url(/images/background.jpg); 
+  	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+	-o-background-size: cover;
+ 	background-size: cover;
+}
+
+img {
+	max-width:100%;
+	max-height:100%;
+}
+
+footer > div {
+	color: #0d0d0d;
+	text-align: center;
+}
+
+/* Login Page */
+
+.login-btn {
+	width: 100%;
 }
 
 p.login-success {
@@ -18,49 +106,22 @@ p.login-error {
 	text-align: center;
 }
 
+/* ############ Pages Layout Structure ############ */
 
-.jumbotron.vertical-center {
-  margin-bottom: 0; /* Remove the default bottom margin of .jumbotron */
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-.vertical-center {
-  min-height: 100%;  /* Fallback for vh unit */
-  min-height: 100vh; /* You might also want to use
-                        'height' property instead.
-                        
-                        Note that for percentage values of
-                        'height' or 'min-height' properties,
-                        the 'height' of the parent element
-                        should be specified explicitly.
-  
-                        In this case the parent of '.vertical-center'
-                        is the <body> element */
+.Site-content {
+  flex: 1;
+}
 
-  /* Make it a flex container */
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex; 
-  
-  /* Align the bootstrap's container vertically */
-    -webkit-box-align : center;
-  -webkit-align-items : center;
-       -moz-box-align : center;
-       -ms-flex-align : center;
-          align-items : center;
-  
-  /* In legacy web browsers such as Firefox 9
-     we need to specify the width of the flex container */
-  width: 100%;
-  
-  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
-     hence the bootstrap's container won't be aligned to the center anymore.
-  
-     Therefore, we should use the following declarations to get it centered again */
-         -webkit-box-pack : center;
-            -moz-box-pack : center;
-            -ms-flex-pack : center;
-  -webkit-justify-content : center;
-          justify-content : center;
+.middle-screen-center {
+	width:100%;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }

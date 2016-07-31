@@ -2,7 +2,9 @@ package com.pt.pires.services.local;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,26 +15,27 @@ import com.pt.pires.domain.exceptions.InvalidPasswordException;
 import com.pt.pires.domain.exceptions.InvalidUsernameException;
 import com.pt.pires.domain.exceptions.UserAlreadyExistsException;
 import com.pt.pires.domain.exceptions.UserDoesntExistException;
-import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.persistence.UserRepository;
+import com.pt.pires.persistence.IUserRepository;
 import com.pt.pires.security.SecurityUtil;
 
-@Service("userService")
-public class UserService implements IUserService{
+@Service
+@Named("userService")
+public class UserService implements IUserService {
 
-	@Autowired
-	private UserRepository userRepository;
+	@Inject
+	private IUserRepository userRepository;
 	
 	/**
-	 * @throws UserAlreadyExistsException 
-	 * @throws InvalidUsernameException 
-	 * @throws InvalidPasswordException 
-	 * @throws InvalidEmailException 
-	 * 
+	 * Create a new user in the system
+	 * @param username User's id in the system
+	 * @throws UserAlreadyExistsException User's id already taken by another user
+	 * @throws InvalidUsernameException Invalid user's username
+	 * @throws InvalidPasswordException Invalid user's password
+	 * @throws InvalidEmailException Invalid user's email
 	 */
 	@Override
 	@Transactional(readOnly = false)
-	public void createUser(String username, String plainPassword,String email,UserRole role) 
+	public void createUser(String username, String plainPassword, String email, UserRole role) 
 			throws UserAlreadyExistsException, InvalidUsernameException, InvalidPasswordException,
 			InvalidEmailException {
 		if(username == null || plainPassword == null || email == null || role == null){
@@ -50,10 +53,10 @@ public class UserService implements IUserService{
 	}
 
 	/**
-	 * Remove a user given his username (ID) if it already exists otherwise
+	 * Remove a user given his username (Id) if it already exists otherwise
 	 * do nothing.
 	 * @param String User's username
-	 * @throws UserDoesntExistException 
+	 * @throws UserDoesntExistException User doesn't exist
 	 */
 	@Override
 	@Transactional(readOnly = false)
@@ -72,11 +75,11 @@ public class UserService implements IUserService{
 	/**
 	 * Get a collection of users that have the given role
 	 * @param UserRole User's role
-	 * @return User's collection
+	 * @return User's collection that has the given role
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Collection<User> getUserByRole(UserRole role) throws VehicleManagerException{
+	public Collection<User> getUsersByRole(UserRole role) {
 		if(role == null) {
 			throw new IllegalArgumentException();
 		}

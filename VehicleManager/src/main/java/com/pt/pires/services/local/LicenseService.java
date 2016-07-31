@@ -1,10 +1,13 @@
 package com.pt.pires.services.local;
 
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 
 import com.pt.pires.domain.License;
 
-@Service("licenseService")
+@Service
+@Named("licenseService")
 public class LicenseService implements ILicenseService {
 
 	@Override

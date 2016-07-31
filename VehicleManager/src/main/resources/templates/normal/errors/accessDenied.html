@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <title th:text="#{accessDenied.title}">Access Denied</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+	    
+	    <!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<!-- Bootstrap library -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+		
+		<link rel="stylesheet" href="/css/mycss.css"/>
+	</head>
+	<body class="Site">
+		<div class="Site-content">
+			<div class="middle-screen-center"> 
+	  			<h1 class="text-center"><b th:text="#{accessDenied.header1}">Doesn't have authorization to see this page</b></h1>
+	  			<h2 class="text-center" th:text="#{accessDenied.header2}">If you found this page get back</h2>
+	  			<h2 class="text-center" th:text="#{accessDenied.header3}">If nothing works call André but don't wake him</h2>
+	  			<h3 class="text-center"><a href="/login" th:text="#{accessDenied.header4}">Click here to login</a></h3>
+			</div>
+		</div>
+		<footer>
+			<div th:replace="fragments/footer :: footer"></div> 
+		</footer>
+	</body>
+</html>

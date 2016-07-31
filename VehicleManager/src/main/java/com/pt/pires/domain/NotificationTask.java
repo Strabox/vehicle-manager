@@ -13,6 +13,11 @@ import org.hibernate.annotations.Type;
 
 import com.pt.pires.domain.exceptions.InvalidNotificationTaskException;
 
+/**
+ * NotificationTask entities scheduled tasks
+ * @author André
+ *
+ */
 @Entity
 public abstract class NotificationTask {
 
@@ -34,7 +39,7 @@ public abstract class NotificationTask {
 	private Vehicle vehicle;
 	
 	
-	public NotificationTask(Date initDate,String description) throws InvalidNotificationTaskException {
+	public NotificationTask(Date initDate, String description) throws InvalidNotificationTaskException {
 		setNotiDate(initDate);
 		setDescription(description);
 		setNotificationSent(false);
@@ -70,7 +75,7 @@ public abstract class NotificationTask {
 	 * Forget the notification this time
 	 * ex: Don't need do the task this time.
 	 */
-	public final void forgetThisNotification(){
+	public final void forgetThisNotification() {
 		setNextNotification();
 		setNotificationSent(false);
 	}

@@ -11,7 +11,8 @@ import com.pt.pires.domain.exceptions.InvalidVehicleNameException;
 import com.pt.pires.util.DateUtil;
 
 /**
- * Represents a vehicle that doesn't have a license plate
+ * Represents a vehicle that doesn't have a license plate but
+ * has a fabrication year
  * @author André
  *
  */
@@ -30,8 +31,11 @@ public class VehicleUnlicensed extends Vehicle {
 	
 	public VehicleUnlicensed() { }	//Needed for JPA/JSON
 
-	
-	public int calculateAge() {
+	/**
+	 * Calculate the years between current date and the fabrication year
+	 * @return Years difference
+	 */
+	public final int calculateFabricationAge() {
 		Calendar currentCalendar = DateUtil.getCalendar(new Date());
 		int currentYear = currentCalendar.get(Calendar.YEAR);
 		return currentYear - fabricationYear;

@@ -25,7 +25,7 @@ public class LoginController {
 		if (logout != null) {
 			model.addAttribute("msg", "Logout com sucesso");
 		}
-		return "login";
+		return "/normal/login";
 	}
 	
 }

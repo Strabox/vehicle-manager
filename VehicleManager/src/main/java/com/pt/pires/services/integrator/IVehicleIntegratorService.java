@@ -16,6 +16,8 @@ public interface IVehicleIntegratorService {
 	
 	byte[] getVehiclePortraitImage(String vehicleName) throws VehicleManagerException;
 	
+	byte[] getVehiclePortraitThumbImage(String vehicleName) throws VehicleManagerException;
+	
 	void removeVehicle(String vehicleName) throws VehicleManagerException;
 	
 }

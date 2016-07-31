@@ -40,10 +40,10 @@ public class User {
 	private UserRole role;
 
 	
-	public User(String username,String encodedPassword,String email,UserRole role) 
+	public User(String username, String encodedPassword, String email, UserRole role) 
 			throws InvalidUsernameException, InvalidEmailException, InvalidPasswordException {
 		setUsername(username);
-		setPassword(encodedPassword);
+		setEncodedPassword(encodedPassword);
 		setEmail(email);
 		setRole(role);
 	}
@@ -64,11 +64,11 @@ public class User {
 		this.username = username;
 	}
 	
-	public String getPassword() {
+	public String getEncodedPassword() {
 		return this.encodedPassword;
 	}
 	
-	public void setPassword(String encodedPasswod) {
+	public void setEncodedPassword(String encodedPasswod) {
 		this.encodedPassword = encodedPasswod;
 	}
 	

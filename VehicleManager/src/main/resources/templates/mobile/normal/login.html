@@ -1,0 +1,56 @@
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Login</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+		
+		<!-- jQuery library -->
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<!-- jQuery Mobile library -->
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		
+	    <!-- jQuery Mobile CSS -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"></link>
+	
+		<link rel="stylesheet" href="/css/mobile/mycss.css"/>
+	</head>
+	<body data-role="page" data-theme="b"> 
+	
+		<div data-role="header">
+   	 		<h1>Login</h1>
+	  	</div>
+	
+		<div data-role="main" class="ui-content">
+			<!-- Login form (ajax disabled in form to spring redirect work !!!!!) -->
+	   		<form name="loginForm" method="post" action="/login" data-ajax="false">
+				<label for="username">Username:</label>
+				<input id="username" name="username" type="text" required="required" />
+				
+				<label for="password">Password</label>
+				<input name="password" type="password" required="required" />
+				
+				<fieldset data-role="controlgroup">
+					<label for="remember-me">Lembrar-se</label>
+					<input id="remember-me" name="remember-me" type="checkbox"/>
+				</fieldset>
+				
+				<!-- Important to counter Cross Site Forgery Attacks. NEEDED by Spring Security module with crsf protection enabled -->
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			
+				<button type="submit" name="submit">Login</button>
+			</form>
+			<p class="login-error"><b th:text="${error}"></b></p>
+			<p class="login-success"><b th:text="${msg}"></b></p>
+ 		</div>
+	
+	  	<footer data-role="footer">
+	   	 	<div th:replace="fragments/footer :: footer"></div> 
+	  	</footer>
+	  	<script type="text/javascript">
+			$(document).ready(function() {
+				$("#username").focus();
+			});	
+		</script>
+	</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>	
+		<!-- Footer Fragment -->
+		<!-- @copyrights.date@, @project.version@ come from Maven filtering that get it from maven pom file (replaced in file at resources:resources phase) -->
+    	
+    	<div th:fragment="footer">
+    		<p><b th:text="#{footer.language}">Language</b><b> :</b><a href="?lang=en">English</a>|<a href="?lang=pt">Português</a></p>
+    		<p>&copy; @copyrights.date@  ANDRÉ PIRES <span th:text="#{footer.copyrights}">TODOS OS DIREITOS RESERVADOS</span> <span th:text="#{footer.version}">Versão</span><span>:</span> @project.version@</p>
+    	</div>
+    	
+	</body>
+	
+</html>

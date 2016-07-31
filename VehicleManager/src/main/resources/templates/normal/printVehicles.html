@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <title>Imprimir Veículos</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+	    
+   		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<!-- Bootstrap library -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    </head>
+    <body>
+    	<div th:each="vehicle : ${vehicles}">
+    		<h2 th:text="${vehicle.name}"></h2>
+    		<h4 th:text="${'Marca: ' + vehicle.brand}"></h4>
+    		<h4 th:text="${'Data de Aquisição: ' + vehicle.acquisitionDate}"></h4>
+    		<h3>Notas</h3>
+	    	<table class="table table-condensed table-hover table-striped table-bordered">
+		    	<thead>
+		    		<tr>
+			    		<th>Nota</th>
+			    	</tr>
+		    	</thead>
+		    	<tbody>
+		    		<tr th:each="note : ${vehicle.notes}">
+		    			<td th:text="${note.description}"></td>	 
+		    		</tr>
+		    	</tbody>
+		    </table>
+		    
+		    <h3>Registos</h3>
+	    	<table class="table table-condensed table-hover table-striped table-bordered">
+		    	<thead>
+		    		<tr>
+		    			<th>NºHoras/Km</th>
+		    			<th>Descrição</th>
+		    			<th>Data</th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+	   				<tr th:each="registration : ${vehicle.registries}">
+		    			<td th:text="${registration.time}"></td>
+		    			<td th:text="${registration.description}"></td>
+		    			<td th:text="${registration.date}"></td>
+		    		</tr>
+		    	</tbody>
+		    </table>
+    	</div>
+    </body>
+</html>

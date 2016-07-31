@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>	
+
+		<tr th:fragment="lol" th:id="${vehicleName + 'row'}">
+			<td><a th:href="${'vehicle/' + vehicleName + '?type=' + vehicleType}" th:text="${vehicleName}"></a></td>
+			<td><a th:href="${'vehicle/' + vehicleName + '?type=' + vehicleType}"><img th:src="${'/image/thumb/' + vehicleName}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
+			<td th:text="${vehicleBrand}"></td>
+			<td th:text="${vehicleAcquisitionDate}"></td>
+			<td><button th:id="${vehicleName}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Delete</button></td>
+		</tr>
+		
+	</body>
+</html>

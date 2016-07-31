@@ -2,8 +2,9 @@ package com.pt.pires.services.integrator;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 
 import com.pt.pires.domain.exceptions.ImpossibleSaveFileException;
@@ -12,14 +13,15 @@ import com.pt.pires.services.external.IFileService;
 import com.pt.pires.services.local.IVehicleService;
 
 @Service
+@Named("vehicleIntegratorService")
 public class VehicleIntegratorService implements IVehicleIntegratorService {
 
-	@Autowired
-	@Qualifier("vehicleService")
+	@Inject
+	@Named("vehicleService")
 	private IVehicleService localVehicleService;
 	
-	@Autowired
-	@Qualifier("fileService")
+	@Inject
+	@Named("fileService")
 	private IFileService fileService;
 	
 	
@@ -94,4 +96,11 @@ public class VehicleIntegratorService implements IVehicleIntegratorService {
 		return fileService.getVehiclePortraitImage(vehicleName);
 	}
 
+	@Override
+	public byte[] getVehiclePortraitThumbImage(String vehicleName) throws VehicleManagerException {
+		if(vehicleName == null) {
+			throw new IllegalArgumentException();
+		}
+		return fileService.getVehiclePortraitThumbImage(vehicleName);
+	}
 }

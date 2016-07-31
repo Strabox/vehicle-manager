@@ -34,7 +34,8 @@ public class Registration {
 	@Type(type="date")
 	private Date date;
 	
-	public Registration(long time,String description,Date date) 
+	
+	public Registration(long time, String description, Date date) 
 			throws InvalidRegistrationException, InvalidRegistrationTimeException {
 		setTime(time);
 		setDescription(description);

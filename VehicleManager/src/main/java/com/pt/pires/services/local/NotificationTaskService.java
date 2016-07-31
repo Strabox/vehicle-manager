@@ -3,8 +3,10 @@ package com.pt.pires.services.local;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,21 +17,22 @@ import com.pt.pires.domain.NotificationTaskYear;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.NotificationDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.persistence.NotificationRepository;
+import com.pt.pires.persistence.INotificationRepository;
 
-@Service("notificationService")
+@Service
+@Named("notificationService")
 public class NotificationTaskService implements INotificationTaskService {
 
-	@Autowired
-	@Qualifier("registrationService")
+	@Inject
+	@Named("registrationService")
 	private IRegistrationService registrationService;
 	
-	@Autowired
-	@Qualifier("vehicleService")
+	@Inject
+	@Named("vehicleService")
 	private IVehicleService vehicleService;
 	
-	@Autowired
-	private NotificationRepository notificationRepository;
+	@Inject
+	private INotificationRepository notificationRepository;
 	
 	
 	@Override
@@ -117,7 +120,7 @@ public class NotificationTaskService implements INotificationTaskService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public boolean notifyDay(Long notificationId,Date currentDate) throws NotificationDoesntExistException {
+	public boolean notifyDay(Long notificationId, Date currentDate) throws NotificationDoesntExistException {
 		if(notificationId == null || currentDate == null) {
 			throw new IllegalArgumentException();
 		}
@@ -137,7 +140,7 @@ public class NotificationTaskService implements INotificationTaskService {
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void notificationTaskDone(Long notificationId,Date currentDate, Long time,
+	public void notificationTaskDone(Long notificationId, Date currentDate, Long time,
 			String description, Date date)
 			throws VehicleManagerException {
 		if(notificationId == null || currentDate == null || time == null || 
@@ -159,7 +162,5 @@ public class NotificationTaskService implements INotificationTaskService {
 		}
 		return noti;
 	}
-
-
 	
 }

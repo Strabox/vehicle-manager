@@ -2,7 +2,10 @@ package com.pt.pires.services.local;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -13,18 +16,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.UserRole;
-import com.pt.pires.persistence.UserRepository;
+import com.pt.pires.persistence.IUserRepository;
 
 /**
  * Service used to spring's authentication 
  * @author André
  *
  */
-@Service("userDetailsService")
+@Service
+@Named("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	private UserRepository userRepository;
+	@Inject
+	private IUserRepository userRepository;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -42,7 +46,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	/* ======================== Private axiliary methods ====================== */
 
 	private User buildUser(com.pt.pires.domain.User myUser,List<GrantedAuthority> authorities) {
-		return new User(myUser.getUsername(), myUser.getPassword(), true,
+		return new User(myUser.getUsername(), myUser.getEncodedPassword(), true,
 				true, true, true, authorities);
 	}
 	

@@ -1,8 +1,17 @@
 $(document).ready(function() {
 	var vehicleToDelete;
 	var notificationDone;
-	//Awesome Table initialization (Datatable plugin)
-	var vehiclesTable = $("#vehicles").DataTable();
+	// Awesome Table initialization (Datatable plugin)
+	// Only the first column content is searchable
+	var vehiclesTable = $("#vehicles").DataTable( { "aoColumns": [ {"bSearchable": true}, 
+	                                                               {"bSearchable": false},
+	                                                               {"bSearchable": false},
+	                                                               {"bSearchable": false}, 
+	                                                               {"bSearchable": false}] ,
+	                                                "displayStart": $("meta[name='startPage']").attr("content"),
+	                                                "fnInfoCallback": function( oSettings, iStart, iEnd, iMax, iTotal, sPre ) {
+	                                                    alert(iStart + " to " + iEnd);
+	                                                  }});
 	var activeNotificationsTable = $("#activeNotificationsTable").DataTable();
 	
 	function getDeleteButtonHTML(vehicleName) {
@@ -51,15 +60,11 @@ $(document).ready(function() {
 			$("#doneDescription").val(notiDescription);
 			$("#taskDoneForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
-					var registration = new Object();
-					registration.description = $("#doneDescription").val();
-					registration.time = $("#time").val();
-					registration.date = $("#doneDate").val();
 					$.ajax({
 						beforeSend: addCsrfHeader,
 					    url: "/notification/completed/" + notificationDone,
 					    type: "POST",
-					    data: JSON.stringify(registration),
+					    data: JSON.stringify($("#taskDoneForm").serializeFormJSON()),
 					    contentType: "application/json; charset=utf-8",
 					    success: function(result) {
 					    	$("#taskDoneModal").modal("toggle");
@@ -133,10 +138,20 @@ $(document).ready(function() {
 						$("#responseAlertSuccessHeader").text("Criação de Veículo");
 						$("#responseAlertSuccessText").text("Veículo criado com sucesso");
 						$("#responseAlertModalSuccess").modal("toggle");
-						vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"licensed"),
+						$.get({
+							  url: "/home/deleteVehicleButton/" + vehicle.name + "/type/licensed",
+							  data: {vehicleBrand: vehicle.brand ,vehicleAcquisitionDate: vehicle.acquisitionDate},
+							  success: function(response) {
+								  vehiclesTable.row.add($.parseHTML(response)).draw(true);
+							  },
+							  error: function(xhr) {
+							    //window.reload(); TODO
+							  }
+							});
+						/*vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"licensed"),
 						                       getVehiclePortraitHTML(vehicle.name,"licensed"),
 						                       vehicle.brand,vehicle.acquisitionDate,
-						                         getDeleteButtonHTML(vehicle.name)]).draw(true);
+						                         getDeleteButtonHTML(vehicle.name)]).draw(true);*/
 					},
 					error: function(errMsg) {
 						$("#vehicleModal").modal("toggle");
@@ -203,6 +218,8 @@ $(document).ready(function() {
 			$("#createUnlicensedVehicleForm").validator("destroy");
 	});
 	
+	/* Needed due to form is inside tab, we need instanciate/destroy 
+	 * validator in hide/show of the tab. */
 	$("#unlicensedTab")
 		.on("shown.bs.tab", function (e) {
 			$("#nameU").focus();

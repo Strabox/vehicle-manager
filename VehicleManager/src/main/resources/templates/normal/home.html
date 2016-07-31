@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <title th:text="#{home.title}">Home</title>
+	    <meta name="startPage" th:content="${startPage}" />
+	    
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+	    <!-- CSRF Header and Token -->
+		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	    <meta name="_csrf" th:content="${_csrf.token}"/>
+	    
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<!-- Bootstrap library -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>	
+		<!-- Datatable plugin library - Needed for Table Awesomeness :) -->
+		<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+		<!-- Form Validator library (for Bootstrap 3) -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.10.2/validator.min.js"></script>
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+		<!-- Datatable plugin CSS -->
+		<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
+		
+		<script src="/javascript/common.js"></script>
+		<script src="/javascript/home.js"></script>
+		<link rel="stylesheet" href="/css/mycss.css"/>
+	</head>
+	<body class="Site">
+		<div class="Site-content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="container-fluid">
+							<h2><b th:text="#{home.menu.label}">Menu</b></h2>                
+							<ul class="nav nav-pills nav-stacked" role="tablist">
+								<li><a data-toggle="pill" href="#beginTab"><span class="glyphicon glyphicon-home"></span> <span th:text="#{home.menu.home.label}">Home</span></a></li>
+								<li th:class="${!vehicles}? active"><a data-toggle="pill" href="#tasksToDoTab"><span class="glyphicon glyphicon-inbox"></span> <span th:text="#{home.menu.tasks.label}">Tasks to do</span></a></li>
+								<li th:class="${vehicles}? active"><a data-toggle="pill" href="#vehiclesTab"><span class="glyphicon glyphicon-th-list"></span> <span th:text="#{home.menu.vehicles.label}">Vehicles</span></a></li>
+								<li><a data-toggle="pill" href="#printTab"><span class="glyphicon glyphicon-print"></span> <span th:text="#{home.menu.print.label}">Print</span></a></li>
+								<li><a href="#" class="logout"><span class="glyphicon glyphicon-off"></span> <span th:text="#{home.menu.logout.label}">Logout</span></a></li>    
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-10">
+					
+						<div class="tab-content">
+					    
+					    	<!-- ######################### Begin tab ######################## -->
+					    	
+						    <div id="beginTab" class="tab-pane fade">
+							    <div class="container-fluid">
+									<h1><b th:text="#{home.tab.begin.header}">System to Vehicle Management</b></h1>
+									<br></br>
+									<p th:text="#{home.tab.begin.p1}">With this systems is possible manage vehicle maintenance and maintain historic about each.</p>
+									<p th:text="#{home.tab.begin.p2}">The system has a alert system component to advice about tasks that need to be done in a vehicle.</p>
+								</div>
+							</div>
+							
+							<!-- ################## Tasks to do tab ########################## -->
+							
+							<div id="tasksToDoTab" class="tab-pane fade in" th:classappend="${!vehicles}? active">
+								<h2><b th:text="#{home.tab.tasks.header}">Tasks To Do</b></h2>
+								<br></br>
+								<h4 th:if="${activeNotifications.size() == 0}" th:text="#{home.tab.tasks.noTasks}">No tasks to do</h4>
+								<table th:if="${activeNotifications.size() != 0}" id="activeNotificationsTable" class="table table-condensed table-hover table-bordered">
+							    	<thead>
+							    		<tr>
+							    			<th th:text="#{home.tab.tasks.table.vehicle}">Vehicle</th>
+							    			<th th:text="#{home.tab.tasks.table.taskToDo}">Task to do</th>
+							    			<th th:text="#{home.tab.tasks.table.warningDate}">Warning date</th>
+							    			<th><!-- Needed for Datatable Plugin #th == #td  --></th>
+							    		</tr>
+							    	</thead>
+							    	<tbody>
+							    		<tr th:each="activeNotification : ${activeNotifications}" th:id="${activeNotification.id + 'rowNoti'}">
+							    			<td><a th:text="${activeNotification.vehicle.name}"></a></td>	
+							    			<td th:text="${activeNotification.description}"></td>
+							    			<td th:text="${activeNotification.notiDate}"></td>
+							    			<td><button th:id="${activeNotification.id}" class="btn btn-primary task-done" data-toggle="modal" data-target="#taskDoneModal" th:text="#{home.tab.tasks.table.taskDone.button}">Done</button></td>		
+							    		</tr>
+							    	</tbody>
+							    </table>
+			
+							    
+							    <div id="taskDoneModal" class="modal fade" role="dialog">
+							    	<div class="modal-dialog">
+							    		<div class="modal-content">
+							    			<div class="modal-header">
+							    				<h2 th:text="#{home.tab.tasks.modal.taskDone.header}">Task done</h2>
+							    			</div>
+							    			<div class="modal-body">
+							    				<form id="taskDoneForm" role="form">
+							    					<div class="form-group has-feedback">
+							    						<label for="time"><span th:text="#{home.tab.tasks.modal.taskDone.time.label}">Hours/Km</span>:</label>
+							    						<input id="time" class="form-control" name="time" type="number" data-minlength="1" placeholder="61500,100..." required="required"/>
+							    						<div class="help-block with-errors"></div>
+							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+							    					</div>
+							    					<div class="form-group has-feedback">
+						    							<label for="doneDescription"><span th:text="#{home.tab.tasks.modal.taskDone.description.label}">Description</span>:</label>
+						    							<input id="doneDescription" class="form-control" name="description" type="text" required="required"/>
+						    							<div class="help-block with-errors"></div>
+							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						    						</div>
+							    					<div class="form-group has-feedback">
+						    							<label for="doneDate"><span th:text="#{home.tab.tasks.modal.taskDone.date.label}">Date</span>:</label>
+						    							<input id="doneDate" class="form-control" name="date" type="date" required="required"/>
+						    							<div class="help-block with-errors"></div>
+							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						    						</div>
+						    						<div class="form-group">
+							    						<button type="submit" class="btn btn-success" th:text="#{general.submit.button}">Submit</button>
+							    						<button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
+							    					</div>
+							    				</form>
+							    			</div>
+							    		</div>
+							    	</div>
+							    </div>
+							    
+							</div>
+							
+							<!-- ############################ Vehicles tab ############################### -->
+							
+							<div id="vehiclesTab" class="tab-pane fade in" th:classappend="${vehicles}? active">
+							
+								<h2><b th:text="#{home.tab.vehicles.header}">Vehicles</b></h2>
+						
+							    <table id="vehicles" class="table table-condensed table-hover table-bordered">
+								    <thead>
+								      <tr>
+								        <th th:text="#{home.tab.vehicles.table.name}">Name</th>
+								        <th th:text="#{home.tab.vehicles.table.photo}">Photo</th>
+								        <th th:text="#{home.tab.vehicles.table.brand}">Brand</th>
+								        <th th:text="#{home.tab.vehicles.table.acquisitionDate}">Acquisition date</th>
+								        <th><!-- Needed for Datatable Plugin must #th == #td --></th>
+								      </tr>
+								    </thead>
+								    <tbody id="vehiclesBody">
+								      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listLicensed}">
+								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}"  th:text="${vehicle.name}"></a></td>
+								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}"><img th:src="${'/image/thumb/' + vehicle.name}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
+								      	<td th:text="${vehicle.brand}"></td>
+								      	<td th:text="${vehicle.acquisitionDate}"></td>
+								      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Delete</button></td>
+								      </tr>
+								      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listUnlicensed}">
+								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}" th:text="${vehicle.name}"></a></td>
+								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}"><img th:src="${'/image/thumb/' + vehicle.name}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
+								      	<td th:text="${vehicle.brand}"></td>
+								      	<td th:text="${vehicle.acquisitionDate}"></td>
+								      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Apagar</button></td>
+								      </tr>
+								    </tbody>
+				  				</table>
+		  				
+				  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal"><span th:text="#{home.tab.vehicles.addVehicle.button}">Add vehicle</span> <span class="glyphicon glyphicon-modal-window"></span></button>
+				  				
+				  				<!-- =========== Modal Add vehicles =============== -->
+								<div id="vehicleModal" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title" th:text="#{home.tab.vehicles.modal.addVehicle.header}">Add Vehicle</h4>
+											</div>
+											<div class="modal-body">
+											
+												<ul class="nav nav-tabs">
+												  <li class="active"><a id="unlicensedTab" href="#unlicensed" data-toggle="tab" th:text="#{home.tab.vehicles.modal.addVehicle.unlicensedVehicle}">Without license</a></li>
+												  <li><a id="licensedTab" href="#licensed" data-toggle="tab" th:text="#{home.tab.vehicles.modal.addVehicle.licensedVehicle}">With license</a></li>
+												</ul>
+												
+												<div class="tab-content">
+												
+			  										<div id="unlicensed" class="tab-pane fade in active">
+														<form id="createUnlicensedVehicleForm" role="form">
+															<div class="form-group has-feedback">
+																<label for="nameU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.name.label}">Name</span>:</label>
+																<input id="nameU" name="name" class="form-control" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="brandU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.brand.label}">Brand</span>:</label>
+																<input id="brandU" name="brandU" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="acquisitionDateU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.acquisitionDate.label}">Acquisition Date</span>:</label>
+																<input id="acquisitionDateU" name="acquisitionDateU" class="form-control" type="date" required="required"></input>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="fabricationYearU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.year.label}">Year</span>:</label>
+																<select id="fabricationYearU" name="fabricationYearU" class="form-control" required="required">
+																	<!-- Years Generated with Javascript -->
+																</select>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="fileU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.photo.label}">Vehicle's photo (Optional)</span>:</label>
+																<input id="fileU" name="fileU" type="file"></input>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group">
+																<button type="submit" class="btn btn-success" th:text="#{general.submit.button}">Submit</button>
+																<button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
+																<button type="reset" class="btn btn-primary" th:text="#{general.reset.button}">Reset</button>
+															</div>
+														</form>
+													</div>
+													
+													<div id="licensed" class="tab-pane fade">
+														<form id="createLicensedVehicleForm" role="form">
+															<div class="form-group has-feedback">
+																<label for="nameL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.name.label}">Name</span>:</label>
+																<input id="nameL" class="form-control" name="name" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="brandL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.brand.label}">Brand</span>:</label>
+																<input id="brandL" name="brandL" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="acquisitionDateL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.acquisitionDate.label}">Acquisition Date</span>:</label>
+																<input id="acquisitionDateL" name="acquisitionDateL" class="form-control" type="date" required="required"></input>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+							
+															<div class="form-group has-feedback">
+																<label for="licenseL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.license.label}">License</span>:</label>
+																<input id="licenseL" name="license" class="form-control" data-remote="/license" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.." required="required"/>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">	
+																<label for="licenseDateL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.acquisitionDate.label}">License Date</span>:</label>
+																<input id="licenseDateL" name="licenseDate" class="form-control" type="date" required="required"/>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group has-feedback">
+																<label for="fileL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.photo.label}">Vehicle's photo (Optional)</span>:</label>
+																<input id="fileL" name="file" type="file"></input>
+																<div class="help-block with-errors"></div>
+																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+															</div>
+															<div class="form-group">
+																<button type="submit" class="btn btn-success" th:text="#{general.submit.button}">Submit</button>
+																<button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
+																<button type="reset" class="btn btn-primary" th:text="#{general.reset.button}">Reset</button>
+															</div>
+														</form>
+													</div>
+													
+												</div>
+											</div>
+											<div class="modal-footer">
+											</div>
+										</div>
+									</div>
+								</div>
+				  				
+				  				<!-- ====== Confirm Vehicle Delete Modal ====== -->
+				  				
+				  				<div id="confirmModal" class="modal fade" role="dialog">
+				  					<div class="modal-dialog">
+				  						<div class="modal-content">
+					  						<div class="modal-header">
+					  							<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h2 class="modal-title" th:text="#{home.tab.vehicles.modal.deleteVehicle.header}">Remove Vehicle</h2>
+					  						</div>
+					  						<div class="modal-body">
+					 							<h5><span th:text="#{home.tab.vehicles.modal.deleteVehicle.message}">Are you sure want delete the vehicle</span>?</h5>
+					  						</div>
+					  						<div class="modal-footer">
+					 							<button id="confirm" type="button" class="btn btn-danger" th:text="#{general.confirm.button}">Confirm</button>
+					 							<button id="cancel" type="button" class="btn btn-success" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button> 						
+					  						</div>
+					  					</div>
+				  					</div>
+				  				</div>	  				
+							
+						</div>
+						
+						<!-- ################################## Print tab #################################### -->
+						
+						<div id="printTab" class="tab-pane fade">
+							<h2><b th:text="#{home.tab.print.header}">Print</b></h2>
+					    	<br></br>
+					    	<p th:text="#{home.tab.print.p}">Print all data from all vehicles</p>
+					    	<br></br>
+					    	<button class="printButton btn btn-primary" th:text="#{home.tab.print.button.print.label}">Print All</button>
+						</div>
+						
+						
+						<!-- Modals to show server responses -->					 			    	
+				     	<div th:replace="fragments/generalServerResponsesModals :: responseModals"></div>
+				     	 
+					</div>					
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			<div th:replace="fragments/footer :: footer"></div> 
+		</footer>
+	</body>
+</html>

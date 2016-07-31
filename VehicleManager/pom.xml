@@ -5,7 +5,7 @@
 
 	<groupId>com.pt.pires</groupId>
 	<artifactId>VehicleManager</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.0-Dev</version>
 	<packaging>jar</packaging>
 
 	<name>VehicleManager</name>
@@ -19,26 +19,20 @@
 	</parent>
 
 	<properties>
+		<copyrights.date>2015-2016</copyrights.date>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<start-class>com.pt.pires.VehicleManagerApplication</start-class>
 	</properties>
 
 	<dependencies>
-		<!-- Only need if we dont have MysqlDB
+		<!-- Only need if we dont have MysqlDB and want try it local
 		 <dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		-->
-		<!-- https://mvnrepository.com/artifact/org.im4java/im4java -->
-		<!-- Used to generate image thumbnails -->
-		<dependency>
-		    <groupId>org.im4java</groupId>
-		    <artifactId>im4java</artifactId>
-		    <version>1.4.0</version>
-		</dependency>
 		<!-- Used to email validation -->
 		<!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
 		<dependency>
@@ -46,11 +40,13 @@
 		    <artifactId>commons-validator</artifactId>
 		    <version>1.5.1</version>
 		</dependency>
+		<!-- Used to manipulate xml files -->
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom2</artifactId>
 		</dependency> 		
 		<!-- http://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+		<!-- Used to validate image files -->
 		<dependency>
 		    <groupId>org.apache.tika</groupId>
 		    <artifactId>tika-core</artifactId>
@@ -61,12 +57,14 @@
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
 		    <version>2.5</version>
-		</dependency>		
+		</dependency>
+				
+		<!-- ============= Spring boot stuff =================  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency> 	
-		<!-- Html weaver like PHP -->
+		<!-- HTML weaver like PHP -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -77,6 +75,12 @@
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-devtools</artifactId>
    		</dependency>
+   		<!-- Necessary for redirect mobile and tablet requests to
+   		the respective pages -->
+ 		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mobile</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -120,6 +124,15 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<!--IMPORTANT!!! 
+			Use Maven filtering to introduce maven properties in resource files
+			ex: The project version in footer -->
+		<resources>
+			<resource>
+	      		<directory>src/main/resources</directory>
+	       		<filtering>true</filtering>
+   	 		</resource>
+		</resources>
 	</build>
 	
 

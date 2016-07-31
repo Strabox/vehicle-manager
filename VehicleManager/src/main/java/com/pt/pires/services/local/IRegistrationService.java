@@ -15,8 +15,8 @@ public interface IRegistrationService {
 
 	Long createRegistration(String vehicleName,long time,String description,Date date) throws VehicleManagerException;
 	
-	Collection<Registration> getVehicleRegistrations(String vehicleName) throws VehicleManagerException;
-	
 	void removeRegistration(String vehicleName,long regId) throws VehicleManagerException;
+	
+	Collection<Registration> getVehicleRegistrations(String vehicleName) throws VehicleManagerException;
 	
 }

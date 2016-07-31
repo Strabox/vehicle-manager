@@ -51,8 +51,9 @@ $(document).ready(function(){
 		$("#vehicleFabricationYear").text($("#editFabricationYear").val());
 		$("#vehicleLicense").text($("#editLicense").val());
 		$("#vehicleLicenseDate").text($("#editLicenseDate").val());
-		$("#calculationAcquisitionYears").load(encodeURI("/vehicle/"+ vehicleName + "/acquisitionyears"));
-		$("#calculationLicenseYears").load(encodeURI("/vehicle/"+ vehicleName + "/licenseyears"));
+		$("#calculationAcquisitionYears").load(encodeURI("/vehicle/" + vehicleName + "/acquisitionyears"));
+		$("#calculationLicenseYears").load(encodeURI("/vehicle/" + vehicleName + "/licenseyears"));
+		$("#calculationFabricationAge").load(encodeURI("/vehicle/" + vehicleName + "/years"));
 	}
 	
 	/* ################## Populating Elements ########################## */
@@ -145,25 +146,21 @@ $(document).ready(function(){
 			$("#time").focus();					//Focus the first input field.
 			$("#registrationForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
-					var registration = new Object();
-					registration.time = $("#time").val();
-					registration.description = $("#description").val(); 
-					registration.date = $("#date").val();
 					$.ajax({
 						beforeSend: addCsrfHeader,
 						url: "/vehicle/" + vehicleName + "/registration",
 						type: "POST",
-						data: JSON.stringify(registration),
+						data: JSON.stringify($("#registrationForm").serializeFormJSON()),
 						contentType: "application/json; charset=utf-8",
 						success: function(data, textStatus, request) {
 							$("#registrationModal").modal("toggle");
 							$("#responseAlertSuccessHeader").text("Registo")
 							$("#responseAlertSuccessText").text("Registo adicionado com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
-							var row = registriesTable.row.add([registration.time,
-		                         registration.description,
-		                         registration.date,
-		                         getDeleteRegButtonHtml(data)]).draw(true).node();
+							var row = registriesTable.row.add([$("#time").val(),
+                               $("#description").val(),
+                               $("#date").val(),
+                               getDeleteRegButtonHtml(data)]).draw(true).node();
 							$(row).attr("id",data+"reg");
 						},
 						error: function(errMsg) {
@@ -191,22 +188,18 @@ $(document).ready(function(){
 			$("#note").focus();
 			$("#noteForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
-					var token = $("meta[name='_csrf']").attr("content");
-					var header = $("meta[name='_csrf_header']").attr("content");
-					var note = new Object();
-					note.description = $("#note").val();
 					$.ajax({
 						beforeSend: addCsrfHeader,
 						url: "/vehicle/" + vehicleName + "/note",
 						type: "POST",
-						data: JSON.stringify(note),
+						data: JSON.stringify($("#noteForm").serializeFormJSON()),
 						contentType: "application/json; charset=utf-8",
 						success: function(data, textStatus, request) {
 							$("#notesModal").modal("toggle");
 							$("#responseAlertSuccessHeader").text("Notas")
 							$("#responseAlertSuccessText").text("Nota adicionada com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
-							var row = notesTable.row.add([note.description,
+							var row = notesTable.row.add([$("#note").val(),
 			                     getDeleteNoteButtonHtml(data)]).draw(true).node();
 							$(row).attr("id",data+"note");
 						},
@@ -235,10 +228,7 @@ $(document).ready(function(){
 			$("#alertDescription").focus();
 			$("#alertForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
-					var alert = new Object();
 					var url;
-					alert.description = $("#alertDescription").val();
-					alert.notiDate = $("#notiDate").val();
 					if($("#periodicity").val() == "Ano a ano"){
 						url = "/vehicle/" + vehicleName + "/notification?type=Year";
 					} else if($("#periodicity").val() == "De meio em meio ano"){
@@ -250,14 +240,14 @@ $(document).ready(function(){
 						beforeSend: addCsrfHeader,
 						url: url,
 						type: "POST",
-						data: JSON.stringify(alert),
+						data: JSON.stringify($("#alertForm").serializeFormJSON()),
 						contentType: "application/json; charset=utf-8",
 						success: function(data, textStatus, request) {
 							$("#alertsModal").modal("toggle");
 							$("#responseAlertSuccessHeader").text("Alertas")
 							$("#responseAlertSuccessText").text("Alerta adicionado com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
-							var row = alertsTable.row.add([alert.description,alert.notiDate,
+							var row = alertsTable.row.add([$("#alertDescription").val(),$("#notiDate").val(),
 										                     getDeleteAlertButtonHtml(data)]).draw(true).node();
 							$(row).attr("id",data+"alert");
 						},
@@ -283,18 +273,18 @@ $(document).ready(function(){
 		.on("shown.bs.tab", function (e) {
 			$("#editImageForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
-					var formData = new FormData(this);
 					$.ajax({
 						beforeSend: addCsrfHeader,
 						url: "/vehicle/" + vehicleName + "/portrait",
 						type: "POST",
-						data: formData,
+						data: new FormData(this),
 						cache: false,
 			            contentType: false,
 			            processData: false,
 						success: function(data, textStatus, request) {
-							// Reload the image
+							// Reload the images
 							$("#portraitImage").attr("src", $("#portraitImage").attr("src"));
+							$("#vehiclePortraitFull").attr("src", $("#vehiclePortraitFull").attr("src"));
 						},
 						error: function(errMsg) {
 							$("#responseAlertFailHeader").text("Editar")
@@ -310,7 +300,6 @@ $(document).ready(function(){
 			
 			$("#editVehicleForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
-					console.log(JSON.stringify($("#editVehicleForm").serializeFormJSON()));
 					$.ajax({
 						beforeSend: addCsrfHeader,
 						url: "/vehicle/" + vehicleType + "/" + vehicleName + "/edit",

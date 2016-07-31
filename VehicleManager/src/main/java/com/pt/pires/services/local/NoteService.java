@@ -2,24 +2,26 @@ package com.pt.pires.services.local;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.persistence.NoteRepository;
+import com.pt.pires.persistence.INoteRepository;
 
-@Service("noteService")
-public class NoteService implements INoteService{
+@Service
+@Named("noteService")
+public class NoteService implements INoteService {
 
-	@Autowired
-	private NoteRepository noteRepository;
+	@Inject
+	private INoteRepository noteRepository;
 	
-	@Autowired
-	@Qualifier("vehicleService")
+	@Inject
+	@Named("vehicleService")
 	private IVehicleService vehicleService;
 	
 	

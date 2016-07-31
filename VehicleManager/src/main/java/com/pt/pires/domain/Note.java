@@ -22,6 +22,7 @@ public class Note {
 	@Column
 	private String description;
 	
+	
 	public Note(String description) throws InvalidNoteException {
 		setDescription(description);
 	}

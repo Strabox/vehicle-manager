@@ -1,0 +1,13 @@
+p.login-success {
+	color: green;
+	text-align: center;
+}
+
+p.login-error {
+	color: red;
+	text-align: center;
+}
+
+footer > div {
+	text-align: center;
+}

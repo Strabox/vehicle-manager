@@ -1,8 +1,9 @@
 package com.pt.pires.controllers.rest;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +22,16 @@ import com.pt.pires.services.local.ILicenseService;
 @RestController
 public class LicenseControllerRest extends ControllerExceptionHandler {
 
-	@Autowired
-	@Qualifier("licenseService")
+	@Inject
+	@Named("licenseService")
 	private ILicenseService licenseService;
 	
+	
+	public LicenseControllerRest(ILicenseService ls) { 
+		licenseService = ls;
+	}
+	
+	public LicenseControllerRest() { }
 	
 	/**
 	 * Verify if a given license is valid or not

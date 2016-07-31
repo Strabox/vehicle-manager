@@ -21,11 +21,11 @@ public interface IVehicleService {
 	
 	Collection<Vehicle> getAllVehicles();
 	
-	Vehicle getVehicle(String vehicleName) throws VehicleManagerException;
-	
 	VehicleLicensed getLicensedVehicle(String vehicleName) throws VehicleManagerException;
 	
 	VehicleUnlicensed getUnlicensedVehicle(String vehicleName) throws VehicleManagerException;
+	
+	Vehicle getVehicle(String vehicleName) throws VehicleManagerException;
 	
 	void removeVehicle(String vehicleName) throws VehicleManagerException;;
 	
@@ -37,16 +37,15 @@ public interface IVehicleService {
 	
 	int calculateVehicleUnlicensedYears(String vehicleName) throws VehicleManagerException;
 	
-	void createUnlicensedVehicle(String vehicleName,String brand,Date acquisitionDate,int fabricationYear) throws VehicleManagerException;
+	void createUnlicensedVehicle(String vehicleName, String brand, Date acquisitionDate, int fabricationYear) throws VehicleManagerException;
 	
-	void createLicensedVehicle(String vehicleName,String brand,Date acquisitionDate,
-			String license ,Date licenseDate) throws VehicleManagerException;
+	void createLicensedVehicle(String vehicleName, String brand, Date acquisitionDate,
+			String license, Date licenseDate) throws VehicleManagerException;
 	
-	void changeVehicleLicensedData(String vehicleName,String newBrand,
-			Date newAcquisitionDate,String newLicense,Date newLicenseDate) throws VehicleManagerException;
+	void changeVehicleLicensedData(String vehicleName, String newBrand,
+			Date newAcquisitionDate, String newLicense, Date newLicenseDate) throws VehicleManagerException;
 	
-	void changeVehicleUnlicensedData(String vehicleName,String newBrand,
-			Date newAcquisitionDate,int newFabricationYear) throws VehicleManagerException;
-	
+	void changeVehicleUnlicensedData(String vehicleName, String newBrand,
+			Date newAcquisitionDate, int newFabricationYear) throws VehicleManagerException;
 	
 }

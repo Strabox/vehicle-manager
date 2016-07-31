@@ -3,9 +3,10 @@ package com.pt.pires.service;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,13 +21,14 @@ import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.VehicleLicensed;
 import com.pt.pires.domain.VehicleUnlicensed;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.persistence.LicensedVehicleRepository;
-import com.pt.pires.persistence.NoteRepository;
-import com.pt.pires.persistence.NotificationRepository;
-import com.pt.pires.persistence.RegistrationRepository;
-import com.pt.pires.persistence.UnlicensedVehicleRepository;
-import com.pt.pires.persistence.UserRepository;
-import com.pt.pires.persistence.VehicleRepository;
+import com.pt.pires.persistence.ILicenseRepository;
+import com.pt.pires.persistence.ILicensedVehicleRepository;
+import com.pt.pires.persistence.INoteRepository;
+import com.pt.pires.persistence.INotificationRepository;
+import com.pt.pires.persistence.IRegistrationRepository;
+import com.pt.pires.persistence.IUnlicensedVehicleRepository;
+import com.pt.pires.persistence.IUserRepository;
+import com.pt.pires.persistence.IVehicleRepository;
 import com.pt.pires.util.DateUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,30 +39,36 @@ public abstract class VehicleManagerServiceTest {
 	
 	protected static final String VALID_VEHICLE_NAME = "Carro altamente válido";
 	protected static final String VALID_VEHICLE_BRAND = "Mitsubishi";
+	protected static final String VALID_LICENSE = "GP-13-99";
+	protected static final int VALID_FABRICATION_YEAR = 1994;
+	
 	protected static final String VALID_DESCRIPTION = "Uma descrição altamente bem feita e válida !!!";
 	protected static final Date VALID_CURRENT_DATE = DateUtil.getSimplifyDate(new Date());
 	protected static final Long VALID_TIME = new Long(777);
 	
-	@Autowired
-	private VehicleRepository vehicleRepository; 
+	@Inject
+	private IVehicleRepository vehicleRepository; 
 	
-	@Autowired
-	private UnlicensedVehicleRepository unlicensedRepository;
+	@Inject
+	private IUnlicensedVehicleRepository unlicensedRepository;
 	
-	@Autowired
-	private LicensedVehicleRepository licensedRepository;
+	@Inject
+	private ILicensedVehicleRepository licensedRepository;
 	
-	@Autowired
-	private RegistrationRepository regRepository;
+	@Inject
+	private IRegistrationRepository regRepository;
 	
-	@Autowired
-	private NotificationRepository notiRepository;
+	@Inject
+	private INotificationRepository notiRepository;
 	
-	@Autowired
-	private NoteRepository noteRepository;
+	@Inject
+	private INoteRepository noteRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+	@Inject
+	private ILicenseRepository licensesRepository;
+	
+	@Inject
+	private IUserRepository userRepository;
 	
 	
 	/**
@@ -83,7 +91,7 @@ public abstract class VehicleManagerServiceTest {
 	}
 	
 	protected void removeUser(String username) {
-		if(vehicleRepository.exists(username)) {
+		if(userRepository.exists(username)) {
 			userRepository.delete(username);
 		}
 	}
@@ -214,6 +222,10 @@ public abstract class VehicleManagerServiceTest {
 			return (List<NotificationTask>) vehicleRepository.findOne(vehicleName).getNotifications();
 		}
 		return null;
+	}
+	
+	protected boolean licenseExist(String license) {
+		return licensesRepository.exists(license);
 	}
 	
 }

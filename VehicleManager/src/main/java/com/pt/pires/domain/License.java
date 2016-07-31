@@ -33,25 +33,26 @@ public class License {
     @Type(type="date")
 	private Date date;
 	
-	public License(String license,Date date) throws InvalidLicenseException {
+	public License(String license, Date date) throws InvalidLicenseException {
 		setLicense(license);
 		setDate(date);
 	}
 	
 	public License() { }	// Needed for JPA/JSON
 	
+	
 	public static boolean validateLicense(String license) {
 		return license.matches(LICENSE_PATTERN);
 	}
 	
-	public int calculateLicenseYears() {
-		Calendar a = DateUtil.getCalendar(date);
-		Calendar b = DateUtil.getCalendar(new Date());
-		int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
-		if(a.get(Calendar.MONTH) > b.get(Calendar.MONTH)) {
-			diff--;
+	public final int calculateLicenseYears() {
+		Calendar licenseCalendar = DateUtil.getCalendar(date);
+		Calendar currentCalendar = DateUtil.getCalendar(new Date());
+		int diffYears = currentCalendar.get(Calendar.YEAR) - licenseCalendar.get(Calendar.YEAR);
+		if(licenseCalendar.get(Calendar.MONTH) > currentCalendar.get(Calendar.MONTH)) {
+			diffYears--;
 		}
-		return diff;
+		return diffYears;
 	}
 	
 	/* === Getters and Setters === */

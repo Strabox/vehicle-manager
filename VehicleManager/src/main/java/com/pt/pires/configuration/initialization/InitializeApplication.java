@@ -1,7 +1,8 @@
 package com.pt.pires.configuration.initialization;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -13,11 +14,12 @@ import com.pt.pires.util.FileUtil;
 @Component
 public class InitializeApplication {
 	
-	@Value("${application.init:false}")	//By default doesn't initialize
+	//By default doesn't initialize
+	@Value("${application.init:false}")
 	private boolean initi;
 	
-	@Autowired
-	@Qualifier("importIntegratorService")
+	@Inject
+	@Named("importIntegratorService")
 	private IImportIntegratorService importIntegartorService;
 
 	

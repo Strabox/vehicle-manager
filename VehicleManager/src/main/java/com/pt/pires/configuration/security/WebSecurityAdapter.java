@@ -1,13 +1,19 @@
 package com.pt.pires.configuration.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
 import com.pt.pires.security.SecurityUtil;
 
 /**
@@ -19,17 +25,29 @@ import com.pt.pires.security.SecurityUtil;
 @EnableWebSecurity
 public class WebSecurityAdapter extends WebSecurityConfigurerAdapter {
 
-	private final static int MAXIMUM_SESSIONS = 5;
+	private final static int MAXIMUM_SESSIONS = 3;
 	
-	@Autowired
-	@Qualifier("userDetailsService")
+	// 30 Days (2592000 sec) token validity
+	private final static int TOKEN_VALIDITY_SECONDS = 2592000;
+	
+	@Inject
+	@Named("userDetailsService")
 	private UserDetailsService userDetailsService;
 	
+	@Inject
+    DataSource dataSource;
 	
-	@Autowired
+	@Inject
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(SecurityUtil.passwordEncoder());
     }	
+	
+	@Bean
+	public PersistentTokenRepository persistentTokenRepository() {
+		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+		db.setDataSource(dataSource);
+		return db;
+	}
 	
 	/**
 	 * Method where all the <b>authorization/access</b> logic is written
@@ -39,14 +57,20 @@ public class WebSecurityAdapter extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 				.antMatchers("/license").permitAll()
-				.antMatchers("/home","/vehicles/**","/vehicle/**").access("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
+				.antMatchers("/home","/vehicles/**","/vehicle/**")
+				.access("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
 				.and()
 					.formLogin()
 						.failureUrl("/login?error")
 						.loginPage("/login")
-						.defaultSuccessUrl("/home",true)
+						.defaultSuccessUrl("/home",false)
 						.usernameParameter("username")
 						.passwordParameter("password")
+				.and()
+					.rememberMe()
+					.rememberMeParameter("remember-me")
+					.tokenRepository(persistentTokenRepository())
+					.tokenValiditySeconds(TOKEN_VALIDITY_SECONDS)
 				.and()
 					.logout()
 						.logoutUrl("/logout")
@@ -56,11 +80,11 @@ public class WebSecurityAdapter extends WebSecurityConfigurerAdapter {
 				.and()
 					.csrf()
 				.and()
-					.exceptionHandling().accessDeniedPage("/accessDenied");
-		http
-			.sessionManagement()
-			.maximumSessions(MAXIMUM_SESSIONS)
-			.expiredUrl("/expiredSession");
+					.exceptionHandling().accessDeniedPage("/accessDenied")
+				.and()
+					.sessionManagement()
+					.maximumSessions(MAXIMUM_SESSIONS)
+					.expiredUrl("/expiredSession");
 	}
 
 }

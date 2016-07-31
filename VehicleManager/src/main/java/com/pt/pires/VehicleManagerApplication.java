@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling		//IMPORTANT: Enables Spring @Scheduled annotations
-public class VehicleManagerApplication {
+public class VehicleManagerApplication{
 	
 	public static void main(String[] args) {
 		SpringApplication.run(VehicleManagerApplication.class, args);

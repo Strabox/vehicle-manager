@@ -1,5 +1,5 @@
 /* Add CRSF header and token to the ajax request: POST, DELETE, PUT, FETCH
- * EXCEPT the Logout POST. */
+ * except!! the logout POST. */
 function addCsrfHeader(ajaxRequest){
 	var header = $("meta[name='_csrf_header']").attr("content");
 	var token = $("meta[name='_csrf']").attr("content");
@@ -7,7 +7,8 @@ function addCsrfHeader(ajaxRequest){
 }
 
 /*
- * Populate Select input with all years from 1900 to the current year
+ * Populate Select input with all years from 1900 to the current year,
+ * populate the select with current selectId
  */
 function populateYearSelection(selectId){
 	var currentYear = new Date().getFullYear();
@@ -18,8 +19,8 @@ function populateYearSelection(selectId){
 
 $(document).ready(function(){
 	
-	/* Logout click handler */
-	$("#logout").click(function(){
+	/* Logout click handler  */
+	$(".logout").click(function(){
 		var csrfToken = $("meta[name='_csrf']").attr("content");
 		$.ajax({
 		    url: "/logout",
@@ -27,7 +28,10 @@ $(document).ready(function(){
 		    data: "_csrf=" + csrfToken,
 		    success: function(data, textStatus) {
 		        window.location.href = "/login?logout"
-		    }
+		    },
+			error: function(data, textStatus) {
+				window.location.href = "/expiredSession";
+			}
 		});
 	});
 	

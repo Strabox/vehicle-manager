@@ -2,6 +2,7 @@ package com.pt.pires.services.external;
 
 import java.util.Properties;
 
+import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -13,6 +14,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.stereotype.Service;
 
 @Service
+@Named("emailService")
 public class EmailService implements IEmailService{
 	
 	@Override

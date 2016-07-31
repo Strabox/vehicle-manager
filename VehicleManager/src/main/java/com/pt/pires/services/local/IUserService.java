@@ -17,6 +17,6 @@ public interface IUserService {
 	
 	void removeUser(String username) throws VehicleManagerException;
 	
-	Collection<User> getUserByRole(UserRole role) throws VehicleManagerException;
+	Collection<User> getUsersByRole(UserRole role);
 	
 }

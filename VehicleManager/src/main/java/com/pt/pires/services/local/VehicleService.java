@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,25 +22,26 @@ import com.pt.pires.domain.exceptions.LicenseAlreadyExistException;
 import com.pt.pires.domain.exceptions.VehicleAlreadyExistException;
 import com.pt.pires.domain.exceptions.VehicleDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.persistence.LicenseRepository;
-import com.pt.pires.persistence.LicensedVehicleRepository;
-import com.pt.pires.persistence.UnlicensedVehicleRepository;
-import com.pt.pires.persistence.VehicleRepository;
+import com.pt.pires.persistence.ILicenseRepository;
+import com.pt.pires.persistence.ILicensedVehicleRepository;
+import com.pt.pires.persistence.IUnlicensedVehicleRepository;
+import com.pt.pires.persistence.IVehicleRepository;
 
-@Service("vehicleService")
+@Service
+@Named("vehicleService")
 public class VehicleService implements IVehicleService {
 
-	@Autowired
-	private UnlicensedVehicleRepository unlicensedRepository;
+	@Inject
+	private IUnlicensedVehicleRepository unlicensedRepository;
 	
-	@Autowired
-	private LicensedVehicleRepository licensedRepository;
+	@Inject
+	private ILicensedVehicleRepository licensedRepository;
 	
-	@Autowired
-	private VehicleRepository vehicleRepository;
+	@Inject
+	private IVehicleRepository vehicleRepository;
 	
-	@Autowired
-	private LicenseRepository licenseRepository;
+	@Inject
+	private ILicenseRepository licenseRepository;
 	
 	
 	@Override
@@ -174,8 +177,11 @@ public class VehicleService implements IVehicleService {
 	@Override
 	@Transactional(readOnly = true)
 	public int calculateVehicleUnlicensedYears(String vehicleName) throws VehicleManagerException {
+		if(vehicleName == null) {
+			throw new IllegalArgumentException();
+		}
 		VehicleUnlicensed v = obtainVehicleUnlicensed(vehicleName);
-		return v.calculateAge();
+		return v.calculateFabricationAge();
 	}
 	
 	@Override
@@ -194,7 +200,6 @@ public class VehicleService implements IVehicleService {
 		} else {
 			License currentLicense = v.getLicense();
 			currentLicense.setDate(newLicenseDate);
-			v.setLicense(currentLicense);
 		}
 	}
 	

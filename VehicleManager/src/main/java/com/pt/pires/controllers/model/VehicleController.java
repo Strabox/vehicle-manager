@@ -1,7 +1,8 @@
 package com.pt.pires.controllers.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +27,16 @@ public class VehicleController {
 	private final static String PRINT_OPTION_NOTES = "note";
 	private final static String PRINT_OPTION_NOTES_AND_REGISTRATIONS = "regNote";
 	
-	@Autowired
-	@Qualifier("vehicleService") 
+	@Inject
+	@Named("vehicleService") 
 	private IVehicleService vehicleService;
 	
+	
+	public VehicleController(IVehicleService vs) {
+		vehicleService = vs;
+	}
+	
+	public VehicleController() { }
 	
 	/**
 	 * Build the presentation vehicle page and return it
@@ -40,7 +47,8 @@ public class VehicleController {
 	 */
 	@RequestMapping(value = "/vehicle/{vehicleName}",params = { "type" })
 	public String vehicle(Model model,@PathVariable("vehicleName") String vehicleName,
-			@RequestParam("type")String type) {
+			@RequestParam(value = "type", required = true) String type,
+			@RequestParam(value = "startPage", required = true) Integer startPage) {
 		System.out.println("[Vehicle Page] Vehicle Name: " + vehicleName);
 		try {
 			if(type.equals(VEHICLE_TYPE_LICENSED)) {
@@ -50,16 +58,17 @@ public class VehicleController {
 				model.addAttribute("type", VEHICLE_TYPE_UNLICENSED);
 			}
 			model.addAttribute("vehicle",vehicleService.getVehicle(vehicleName));
-			return "vehicle";
+			model.addAttribute("startPage",startPage.intValue());
+			return "/normal/vehicle";
 		} catch (VehicleManagerException e) {
 			e.printStackTrace();
-			return "error";
+			return "/normal/errors/error";
 		}
 	}
 	
 	/**
 	 * Return a HTML page to be printed from browser
-	 * @param model Model to HTML processor
+	 * @param model Model to HTML processor with a specified vehicle data
 	 * @param vehicleName Name of the vehicle
 	 * @param type {unlicensed , licensed} type of vehicle
 	 * @param print {reg , note, regNote} type of printing
@@ -79,7 +88,7 @@ public class VehicleController {
 				model.addAttribute("type", VEHICLE_TYPE_UNLICENSED);
 			}
 			else {
-				return "error";
+				return "/normal/errors/error";
 			}
 			
 			if(print.equals(PRINT_OPTION_REGISTRATIONS)) {
@@ -92,25 +101,26 @@ public class VehicleController {
 				model.addAttribute("print", PRINT_OPTION_NOTES_AND_REGISTRATIONS);
 			}
 			else {
-				return "error";
+				return "/normal/errors/error";
 			}			
 			model.addAttribute("vehicle",vehicleService.getVehicle(vehicleName));
-			return "printVehicle";
+			return "/normal/printVehicle";
 		} catch (VehicleManagerException e) {
-			return "error";
+			return "/normal/errors/error";
 		}
 	}
 	
 	/**
-	 * Print all vehicles data
-	 * @param model
-	 * @return
+	 * Return a HTML page to be printed from browser with all vehicles data
+	 * @param model Model to HTML processor with a specified vehicle data
+	 * @return HTML file
 	 */
 	@RequestMapping(value = "/vehicles/print")
 	public String printAllVehiclesData(Model model) {
 		System.out.println("[Print all vehicles data] " + vehicleService.getAllVehicles().size());
 		model.addAttribute("vehicles",vehicleService.getAllVehicles());
-		return "printVehicles";
+		return "/normal/printVehicles";
 	}
+	
 	
 }

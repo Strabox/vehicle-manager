@@ -39,6 +39,8 @@ public class NotificationTaskOneTime extends NotificationTask {
 	@Override
 	protected void setNextNotification() {
 		this.expired = true;
+		// Remove itself from the vehicle !!!
+		getVehicle().removeNotification(getId());
 	}
 	
 	/* === Getters and Setters === */

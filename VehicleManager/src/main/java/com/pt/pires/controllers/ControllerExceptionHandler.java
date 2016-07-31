@@ -29,106 +29,106 @@ public class ControllerExceptionHandler {
 	/* !!!!!!! This handlers catch the respective exceptions that arrive in controllers */
 	
 	@ExceptionHandler(VehicleDoesntExistException.class)
-	private ResponseEntity<ResponseError> handler1(VehicleDoesntExistException ex,HttpServletRequest request) {
-		ResponseError response = new ResponseError(404,ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.NOT_FOUND);
+	private ResponseEntity<Response> handler1(VehicleDoesntExistException ex,HttpServletRequest request) {
+		Response response = new Response(404,ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(VehicleAlreadyExistException.class)
-	private ResponseEntity<ResponseError> handler2(VehicleAlreadyExistException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler2(VehicleAlreadyExistException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidVehicleNameException.class)
-	private ResponseEntity<ResponseError> handler3(InvalidVehicleNameException ex,
+	private ResponseEntity<Response> handler3(InvalidVehicleNameException ex,
 			HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidVehicleBrandException.class)
-	private ResponseEntity<ResponseError> handler4(InvalidVehicleBrandException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler4(InvalidVehicleBrandException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidLicenseException.class)
-	private ResponseEntity<ResponseError> handler5(InvalidLicenseException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler5(InvalidLicenseException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidRegistrationException.class)
-	private ResponseEntity<ResponseError> handler6(InvalidRegistrationException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler6(InvalidRegistrationException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidNoteException.class)
-	private ResponseEntity<ResponseError> handler7(InvalidNoteException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler7(InvalidNoteException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(ImpossibleSaveFileException.class)
-	private ResponseEntity<ResponseError> handler8(ImpossibleSaveFileException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler8(ImpossibleSaveFileException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(ImpossibleDeleteDirectoryException.class)
-	private ResponseEntity<ResponseError> handler9(ImpossibleDeleteDirectoryException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler9(ImpossibleDeleteDirectoryException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(LicenseAlreadyExistException.class)
-	private ResponseEntity<ResponseError> handler10(LicenseAlreadyExistException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler10(LicenseAlreadyExistException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidImageFormatException.class)
-	private ResponseEntity<ResponseError> handler11(InvalidImageFormatException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler11(InvalidImageFormatException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidNotificationTaskException.class)
-	private ResponseEntity<ResponseError> handler12(InvalidNotificationTaskException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler12(InvalidNotificationTaskException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidRegistrationTimeException.class)
-	private ResponseEntity<ResponseError> handler13(InvalidRegistrationTimeException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler13(InvalidRegistrationTimeException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(InvalidTimeException.class)
-	private ResponseEntity<ResponseError> handler14(InvalidTimeException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler14(InvalidTimeException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(NotificationDoesntExistException.class)
-	private ResponseEntity<ResponseError> handler15(NotificationDoesntExistException ex,HttpServletRequest req) {
-		ResponseError response = new ResponseError(409, ex.getLocalizedMessage());
-		return new ResponseEntity<ResponseError>(response,HttpStatus.CONFLICT);
+	private ResponseEntity<Response> handler15(NotificationDoesntExistException ex,HttpServletRequest req) {
+		Response response = new Response(409, ex.getLocalizedMessage());
+		return new ResponseEntity<Response>(response,HttpStatus.CONFLICT);
 	}
 	
 	/**
-	 * Catch exceptions not seen by the developer.
+	 * Catch exceptions not seen (forgotten) by the developer.
 	 * @param ex VehicleManagerException
 	 * @param request
 	 * @return 409 HTTP Response
 	 */
 	@ExceptionHandler(VehicleManagerException.class)
-	private ResponseEntity<ResponseError> handlerGeneral(VehicleManagerException ex,
+	private ResponseEntity<Response> handlerGeneral(VehicleManagerException ex,
 			HttpServletRequest request) {
-		return new ResponseEntity<ResponseError>(new ResponseError(409,ex.getLocalizedMessage()),HttpStatus.CONFLICT);
+		return new ResponseEntity<Response>(new Response(409,ex.getLocalizedMessage()),HttpStatus.CONFLICT);
 	}
 	
 }

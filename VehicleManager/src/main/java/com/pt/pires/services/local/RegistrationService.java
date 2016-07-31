@@ -3,24 +3,26 @@ package com.pt.pires.services.local;
 import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.Vehicle;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
-import com.pt.pires.persistence.RegistrationRepository;
+import com.pt.pires.persistence.IRegistrationRepository;
 
-@Service("registrationService")
-public class RegistrationService implements IRegistrationService{
+@Service
+@Named("registrationService")
+public class RegistrationService implements IRegistrationService {
 
-	@Autowired
-	private RegistrationRepository registrationRepository;
+	@Inject
+	private IRegistrationRepository registrationRepository;
 	
-	@Autowired
-	@Qualifier("vehicleService")
+	@Inject
+	@Named("vehicleService")
 	private IVehicleService vehicleService;
 	
 	
@@ -32,7 +34,7 @@ public class RegistrationService implements IRegistrationService{
 			throw new IllegalArgumentException();
 		}
 		Vehicle v = vehicleService.getVehicle(vehicleName);
-		Registration reg = registrationRepository.save(new Registration(time,description,date)); 
+		Registration reg = registrationRepository.save(new Registration(time, description, date)); 
 		v.addRegistration(reg);
 		return reg.getId();
 	}
