@@ -4,8 +4,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +23,7 @@ import com.pt.pires.services.local.IVehicleService;
  *
  */
 @Controller
+@Scope("session")
 public class HomeController {
 
 	@Inject
@@ -50,17 +50,11 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/home",method = RequestMethod.GET)
 	public String homeVehicle(Model model,
-			@RequestParam(value = "vehicles", required = false)String vehicles,
-			@RequestParam(value = "startPage", required = false)Integer startPage) 
+			@RequestParam(value = "vehicles", required = false) String vehicles) 
 			throws VehicleManagerException {
 		System.out.println("[Home]");
 		if(vehicles != null) {
 			model.addAttribute("vehicles",true);
-			if(startPage != null) {
-				model.addAttribute("startPage", startPage.intValue());
-			} else {
-				model.addAttribute("startPage", 0);
-			}
 		} else {
 			model.addAttribute("vehicles",false);
 		}
@@ -70,20 +64,36 @@ public class HomeController {
 		return "/normal/home";
 	}
 	
-	@RequestMapping(value = "/home/deleteVehicleButton/{vehicleName}/type/{vehicleType}",method = RequestMethod.GET)
-	public String homeDeleteVehicleButton(Model model,
-			@PathVariable("vehicleName") String vehicleName,
-			@PathVariable("vehicleType") String vehicleType,
-			@RequestParam(value = "vehicleBrand", required = true) String vehicleBrand,
-			@DateTimeFormat(pattern = "yyyy-MM-dd")@RequestParam(value = "vehicleAcquisitionDate", required = true) Date vehicleAcquisitionDate)
-			throws VehicleManagerException {
+	/* ====================== Get fragments for ajax calls ======================= */
+	
+	/**
+	 * Return a table row for a licensed vehicle
+	 * @param model Model to HTML processor
+	 * @param vehicleName Vehicle's name
+	 * @return
+	 * @throws VehicleManagerException
+	 */
+	@RequestMapping(value = "/home/vehicleTableRow/{vehicleName}/type/licensed",method = RequestMethod.GET)
+	public String homeLicensedVehicleTableRow(Model model,
+			@PathVariable("vehicleName") String vehicleName) throws VehicleManagerException {
 		Vehicle v = vehicleService.getVehicle(vehicleName);
 		model.addAttribute("vehicle",v);
-		model.addAttribute("vehicleName", vehicleName);
-		model.addAttribute("vehicleType", vehicleType);
-		model.addAttribute("vehicleAcquisitionDate", vehicleAcquisitionDate);
-		model.addAttribute("vehicleBrand", vehicleBrand);
-		return "/fragments/tablesFragments :: lol";
+		return "/fragments/tablesFragments :: licensedVehiclesTableRow";
+	}
+	
+	/**
+	 * Return a table row for a unlicensed vehicle
+	 * @param model Model to HTML processor
+	 * @param vehicleName Vehicle's name
+	 * @return
+	 * @throws VehicleManagerException
+	 */
+	@RequestMapping(value = "/home/vehicleTableRow/{vehicleName}/type/unlicensed",method = RequestMethod.GET)
+	public String homeUnlicensedVehicleTableRow(Model model,
+			@PathVariable("vehicleName") String vehicleName) throws VehicleManagerException {
+		Vehicle v = vehicleService.getVehicle(vehicleName);
+		model.addAttribute("vehicle",v);
+		return "/fragments/tablesFragments :: unlicensedVehiclesTableRow";
 	}
 	
 }

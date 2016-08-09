@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.Note;
 import com.pt.pires.domain.Vehicle;
+import com.pt.pires.domain.exceptions.NoteDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.INoteRepository;
 
@@ -55,6 +56,16 @@ public class NoteService implements INoteService {
 		}
 		Vehicle v = vehicleService.getVehicle(vehicleName);
 		v.removeNote(noteId);
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public Note getNoteById(long noteId) throws VehicleManagerException {
+		Note note = noteRepository.findOne(noteId);
+		if(note == null) {
+			throw new NoteDoesntExistException();
+		}
+		return note;
 	}
 
 }

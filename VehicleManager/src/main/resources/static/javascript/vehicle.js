@@ -6,33 +6,9 @@ $(document).ready(function(){
 	var alertIdToDelete;
 	// Awesome Tables initializations (Datatable plugin)
 	//Order by time (descending order) and untie with date (descending order)
-	var registriesTable = $("#registrationsTable").DataTable({"order" : [[ 0, "desc" ], [2,"desc"]]});
-	var notesTable = $("#notesTable").DataTable();
-	var alertsTable = $("#alertsTable").DataTable();
-	
-	function getDeleteRegButtonHtml(id){
-		return "<button id=\"" + id + "\" " +
-				"type=\"button\" " +
-				"class=\"btn btn-danger delete-reg\" " +
-				"data-toggle=\"modal\" " +
-				"data-target=\"#confirmRegDeleteModal\">Apagar</button>";
-	}
-	
-	function getDeleteNoteButtonHtml(id){
-		return "<button id=\"" + id + "\" " +
-				"type=\"button\" " +
-				"class=\"btn btn-danger delete-note\" " +
-				"data-toggle=\"modal\" " +
-				"data-target=\"#confirmNoteDeleteModal\">Apagar</button>";
-	}
-	
-	function getDeleteAlertButtonHtml(id){
-		return "<button id=\"" + id + "\" " +
-				"type=\"button\" " +
-				"class=\"btn btn-danger delete-alert\" " +
-				"data-toggle=\"modal\" " +
-				"data-target=\"#confirmAlertDeleteModal\">Apagar</button>";
-	}
+	var registriesTable = $("#registrationsTable").DataTable({order : [[ 0, "desc" ], [2,"desc"]], language : chosenTableLang});
+	var notesTable = $("#notesTable").DataTable( { language : chosenTableLang } );
+	var alertsTable = $("#alertsTable").DataTable( { language : chosenTableLang } );
 	
 	function populateEditForm() {
 		$("#editName").val($("#vehicleName").text());
@@ -66,7 +42,8 @@ $(document).ready(function(){
 	/* Bind print function to print buttons */
 	$(".printButton").click(function(){
 		var printType = $(this).attr("id");
-		var printUrl = "/vehicle/" + vehicleName + "/print?type=" + vehicleType +"&print=" + printType;
+		var printUrl = "/vehicle/" + vehicleName + "/print?type=" + vehicleType +"&print=" + printType + 
+						"&lang=" + getCurrentLang();
 		var myWindow = window.open(printUrl,"","width = 800,height = 550");
 		myWindow.print();
 	});
@@ -157,11 +134,15 @@ $(document).ready(function(){
 							$("#responseAlertSuccessHeader").text("Registo")
 							$("#responseAlertSuccessText").text("Registo adicionado com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
-							var row = registriesTable.row.add([$("#time").val(),
-                               $("#description").val(),
-                               $("#date").val(),
-                               getDeleteRegButtonHtml(data)]).draw(true).node();
-							$(row).attr("id",data+"reg");
+							$.get({
+								  url: "/vehicle/registrationTableRow/" + vehicleName + "/regId/" + data,
+								  success: function(response) {
+									  var wrapper = document.createElement("thead");
+									  wrapper.innerHTML = response;
+									  registriesTable.row.add(wrapper.firstChild).draw(true);
+								  },
+								  error: function(xhr) { location.reload(true); }
+							});
 						},
 						error: function(errMsg) {
 							$("#registrationModal").modal("toggle");
@@ -199,9 +180,15 @@ $(document).ready(function(){
 							$("#responseAlertSuccessHeader").text("Notas")
 							$("#responseAlertSuccessText").text("Nota adicionada com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
-							var row = notesTable.row.add([$("#note").val(),
-			                     getDeleteNoteButtonHtml(data)]).draw(true).node();
-							$(row).attr("id",data+"note");
+							$.get({
+								  url: "/vehicle/noteTableRow/" + vehicleName + "/noteId/" + data,
+								  success: function(response) {
+									  var wrapper = document.createElement("thead");
+									  wrapper.innerHTML = response;
+									  notesTable.row.add(wrapper.firstChild).draw(true);
+								  },
+								  error: function(xhr) { location.reload(true); }
+							});
 						},
 						error: function(errMsg) {
 							$("#notesModal").modal("toggle");
@@ -229,7 +216,7 @@ $(document).ready(function(){
 			$("#alertForm").validator().on("submit", function (e) {
 				if (!e.isDefaultPrevented()) {	//Valid Form
 					var url;
-					if($("#periodicity").val() == "Ano a ano"){
+					if($("#periodicity").val() == "Todos os anos"){
 						url = "/vehicle/" + vehicleName + "/notification?type=Year";
 					} else if($("#periodicity").val() == "De meio em meio ano"){
 						url = "/vehicle/" + vehicleName + "/notification?type=HalfYear";
@@ -247,9 +234,15 @@ $(document).ready(function(){
 							$("#responseAlertSuccessHeader").text("Alertas")
 							$("#responseAlertSuccessText").text("Alerta adicionado com sucesso");
 							$("#responseAlertModalSuccess").modal("toggle");
-							var row = alertsTable.row.add([$("#alertDescription").val(),$("#notiDate").val(),
-										                     getDeleteAlertButtonHtml(data)]).draw(true).node();
-							$(row).attr("id",data+"alert");
+							$.get({
+								  url: "/vehicle/notificationTaskTableRow/" + vehicleName + "/notiId/" + data,
+								  success: function(response) {
+									  var wrapper = document.createElement("thead");
+									  wrapper.innerHTML = response;
+									  alertsTable.row.add(wrapper.firstChild).draw(true);
+								  },
+								  error: function(xhr) { location.reload(true); }
+							});
 						},
 						error: function(errMsg) {
 							$("#alertsModal").modal("toggle");

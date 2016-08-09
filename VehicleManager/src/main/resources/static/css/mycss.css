@@ -96,7 +96,7 @@ footer > div {
 	width: 100%;
 }
 
-p.login-success {
+p.logout-success {
 	color: green;
 	text-align: center;
 }

@@ -1,49 +1,31 @@
 $(document).ready(function() {
+	/* Awesome Table initialization (Datatable plugin)
+	  - Only the first column content is searchable.
+	  - State save, saves the table state between user navigations to other pages.
+	*/
+	var vehiclesTable = $("#vehicles").DataTable( { aoColumns : [ {"bSearchable": true}, 
+	                                                              {"bSearchable": false},
+	                                                              {"bSearchable": false},
+	                                                              {"bSearchable": false}, 
+	                                                              {"bSearchable": false}],
+	                                                stateSave : true, 
+	                                                language : chosenTableLang
+												});
+	vehiclesTable.state.clear();	// Reset the table on log in (same effect as at logout) !!
+	var activeNotificationsTable = $("#activeNotificationsTable").DataTable( { language : chosenTableLang } );
 	var vehicleToDelete;
 	var notificationDone;
-	// Awesome Table initialization (Datatable plugin)
-	// Only the first column content is searchable
-	var vehiclesTable = $("#vehicles").DataTable( { "aoColumns": [ {"bSearchable": true}, 
-	                                                               {"bSearchable": false},
-	                                                               {"bSearchable": false},
-	                                                               {"bSearchable": false}, 
-	                                                               {"bSearchable": false}] ,
-	                                                "displayStart": $("meta[name='startPage']").attr("content"),
-	                                                "fnInfoCallback": function( oSettings, iStart, iEnd, iMax, iTotal, sPre ) {
-	                                                    alert(iStart + " to " + iEnd);
-	                                                  }});
-	var activeNotificationsTable = $("#activeNotificationsTable").DataTable();
 	
-	function getDeleteButtonHTML(vehicleName) {
-		return "<button id=\"" + vehicleName + "\" " +
-				"type=\"button\" " +
-				"class=\"btn btn-danger del-vehicle\" " +
-				"data-toggle=\"modal\" " +
-				"data-target=\"#confirmModal\">" +
-				"Apagar" +
-				"</button>";
-	}
-	
-	function getVehicleLinkHTML(vehicleName,type) {
-		return  "<a href=\"/vehicle/" + vehicleName +
-				"?type=" + type + "\" >" + vehicleName + "</a>";
-	}
-	
-	function getVehiclePortraitHTML(vehicleName,type) {
-		return  "<a href=\"/vehicle/" + vehicleName +
-				"?type=" + type + "\" > <img src=\"/image/" + vehicleName + 
-				"\" width=\"100vw\" height=\"75vh\" class=\"img-thumbnail\" " +
-				"alt=\"Foto do Veículo\"/></a>";
-	}
+	/* ############ Populate Year Selection Fieldset ############# */
 	
 	populateYearSelection("fabricationYearU");
 	
 	/* ########## Print all vehicles data ############ */
 	
 	/* Bind print function to print button */
-	$(".printButton").click(function(){
+	$(".printButton").click(function() {
 		var printType = $(this).attr("id");
-		var printUrl = "/vehicles/print";
+		var printUrl = "/vehicles/print?lang=" + getCurrentLang();
 		var myWindow = window.open(printUrl,"","width = 800,height = 550");
 		myWindow.print();
 	});
@@ -92,7 +74,7 @@ $(document).ready(function() {
 		vehicleToDelete = $(this).attr("id");
 	});
 	
-	$("#confirm").click(function( ){
+	$("#confirm").click(function() {
 		$.ajax({
 			beforeSend: addCsrfHeader,
 		    url: "/vehicle/" + vehicleToDelete,
@@ -114,7 +96,7 @@ $(document).ready(function() {
 	
 	function activateLicensedFormValidator() {
 		$("#createLicensedVehicleForm").validator().on("submit", function (ei) {
-			if (!ei.isDefaultPrevented()) {	//Valid Form
+			if (!ei.isDefaultPrevented()) {		//Valid Form
 				var formData = new FormData();
 				var vehicle = new Object();
 				vehicle.license = new Object();
@@ -139,19 +121,14 @@ $(document).ready(function() {
 						$("#responseAlertSuccessText").text("Veículo criado com sucesso");
 						$("#responseAlertModalSuccess").modal("toggle");
 						$.get({
-							  url: "/home/deleteVehicleButton/" + vehicle.name + "/type/licensed",
-							  data: {vehicleBrand: vehicle.brand ,vehicleAcquisitionDate: vehicle.acquisitionDate},
+							  url: "/home/vehicleTableRow/" + vehicle.name + "/type/licensed",
 							  success: function(response) {
-								  vehiclesTable.row.add($.parseHTML(response)).draw(true);
+								  var wrapper = document.createElement("thead");
+								  wrapper.innerHTML = response;
+								  vehiclesTable.row.add(wrapper.firstChild).draw(true);
 							  },
-							  error: function(xhr) {
-							    //window.reload(); TODO
-							  }
-							});
-						/*vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"licensed"),
-						                       getVehiclePortraitHTML(vehicle.name,"licensed"),
-						                       vehicle.brand,vehicle.acquisitionDate,
-						                         getDeleteButtonHTML(vehicle.name)]).draw(true);*/
+							  error: function(xhr) { location.reload(true); }
+						});
 					},
 					error: function(errMsg) {
 						$("#vehicleModal").modal("toggle");
@@ -189,10 +166,15 @@ $(document).ready(function() {
 						$("#responseAlertSuccessHeader").text("Criação de Veículo");
 						$("#responseAlertSuccessText").text("Veículo criado com sucesso");
 						$("#responseAlertModalSuccess").modal("toggle");
-						vehiclesTable.row.add([getVehicleLinkHTML(vehicle.name,"unlicensed"),
-						                       getVehiclePortraitHTML(vehicle.name,"unlicensed"),
-						                       vehicle.brand,vehicle.acquisitionDate,
-						                         getDeleteButtonHTML(vehicle.name)]).draw(true);
+						$.get({
+							  url: "/home/vehicleTableRow/" + vehicle.name + "/type/unlicensed",
+							  success: function(response) {
+								  var wrapper = document.createElement("thead");
+								  wrapper.innerHTML = response;
+								  vehiclesTable.row.add(wrapper.firstChild).draw(true);
+							  },
+							  error: function(xhr) { location.reload(true); }
+						});
 					},
 					error: function(errMsg) {
 						$("#vehicleModal").modal("toggle");

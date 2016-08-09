@@ -2,10 +2,8 @@
 <html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
 	<head>
 	    <title th:text="#{home.title}">Home</title>
-	    <meta name="startPage" th:content="${startPage}" />
-	    
-	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
 	    <!-- CSRF Header and Token -->
 		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -50,7 +48,7 @@
 					
 						<div class="tab-content">
 					    
-					    	<!-- ######################### Begin tab ######################## -->
+					    	<!-- ################################### Begin tab ################################### -->
 					    	
 						    <div id="beginTab" class="tab-pane fade">
 							    <div class="container-fluid">
@@ -61,7 +59,7 @@
 								</div>
 							</div>
 							
-							<!-- ################## Tasks to do tab ########################## -->
+							<!-- ############################### Tasks to do tab ################################## -->
 							
 							<div id="tasksToDoTab" class="tab-pane fade in" th:classappend="${!vehicles}? active">
 								<h2><b th:text="#{home.tab.tasks.header}">Tasks To Do</b></h2>
@@ -86,7 +84,7 @@
 							    	</tbody>
 							    </table>
 			
-							    
+							    <!-- ############ Modal Task Done ############ -->
 							    <div id="taskDoneModal" class="modal fade" role="dialog">
 							    	<div class="modal-dialog">
 							    		<div class="modal-content">
@@ -97,19 +95,19 @@
 							    				<form id="taskDoneForm" role="form">
 							    					<div class="form-group has-feedback">
 							    						<label for="time"><span th:text="#{home.tab.tasks.modal.taskDone.time.label}">Hours/Km</span>:</label>
-							    						<input id="time" class="form-control" name="time" type="number" data-minlength="1" placeholder="61500,100..." required="required"/>
+							    						<input id="time" class="form-control" name="time" type="number" data-minlength="1" placeholder="14568" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 							    						<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							    					</div>
 							    					<div class="form-group has-feedback">
 						    							<label for="doneDescription"><span th:text="#{home.tab.tasks.modal.taskDone.description.label}">Description</span>:</label>
-						    							<input id="doneDescription" class="form-control" name="description" type="text" required="required"/>
+						    							<input id="doneDescription" class="form-control" name="description" type="text" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 						    							<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 						    						</div>
 							    					<div class="form-group has-feedback">
 						    							<label for="doneDate"><span th:text="#{home.tab.tasks.modal.taskDone.date.label}">Date</span>:</label>
-						    							<input id="doneDate" class="form-control" name="date" type="date" required="required"/>
+						    							<input id="doneDate" class="form-control" name="date" type="date" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 						    							<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 						    						</div>
@@ -125,7 +123,7 @@
 							    
 							</div>
 							
-							<!-- ############################ Vehicles tab ############################### -->
+							<!-- ################################### Vehicles tab ########################################## -->
 							
 							<div id="vehiclesTab" class="tab-pane fade in" th:classappend="${vehicles}? active">
 							
@@ -133,35 +131,23 @@
 						
 							    <table id="vehicles" class="table table-condensed table-hover table-bordered">
 								    <thead>
-								      <tr>
-								        <th th:text="#{home.tab.vehicles.table.name}">Name</th>
-								        <th th:text="#{home.tab.vehicles.table.photo}">Photo</th>
-								        <th th:text="#{home.tab.vehicles.table.brand}">Brand</th>
-								        <th th:text="#{home.tab.vehicles.table.acquisitionDate}">Acquisition date</th>
-								        <th><!-- Needed for Datatable Plugin must #th == #td --></th>
-								      </tr>
+								      	<tr>
+									        <th th:text="#{home.tab.vehicles.table.name}">Name</th>
+									        <th th:text="#{home.tab.vehicles.table.photo}">Photo</th>
+									        <th th:text="#{home.tab.vehicles.table.brand}">Brand</th>
+									        <th th:text="#{home.tab.vehicles.table.acquisitionDate}">Acquisition date</th>
+									        <th><!-- Needed for Datatable Plugin must #th == #td --></th>
+								      	</tr>
 								    </thead>
-								    <tbody id="vehiclesBody">
-								      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listLicensed}">
-								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}"  th:text="${vehicle.name}"></a></td>
-								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}"><img th:src="${'/image/thumb/' + vehicle.name}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
-								      	<td th:text="${vehicle.brand}"></td>
-								      	<td th:text="${vehicle.acquisitionDate}"></td>
-								      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Delete</button></td>
-								      </tr>
-								      <tr th:id="${vehicle.name + 'row'}" th:each="vehicle : ${listUnlicensed}">
-								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}" th:text="${vehicle.name}"></a></td>
-								      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}"><img th:src="${'/image/thumb/' + vehicle.name}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
-								      	<td th:text="${vehicle.brand}"></td>
-								      	<td th:text="${vehicle.acquisitionDate}"></td>
-								      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Apagar</button></td>
-								      </tr>
+								    <tbody>
+							      		<tr th:each="vehicle : ${listLicensed}" th:include="/fragments/tablesFragments :: licensedVehiclesTableRow"></tr>
+							      		<tr th:each="vehicle : ${listUnlicensed}" th:include="/fragments/tablesFragments :: unlicensedVehiclesTableRow"></tr>
 								    </tbody>
 				  				</table>
 		  				
 				  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicleModal"><span th:text="#{home.tab.vehicles.addVehicle.button}">Add vehicle</span> <span class="glyphicon glyphicon-modal-window"></span></button>
 				  				
-				  				<!-- =========== Modal Add vehicles =============== -->
+				  				<!-- ################# Modal Add vehicles #################### -->
 								<div id="vehicleModal" class="modal fade" role="dialog">
 									<div class="modal-dialog">
 										<div class="modal-content">
@@ -182,25 +168,25 @@
 														<form id="createUnlicensedVehicleForm" role="form">
 															<div class="form-group has-feedback">
 																<label for="nameU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.name.label}">Name</span>:</label>
-																<input id="nameU" name="name" class="form-control" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+																<input id="nameU" name="name" class="form-control" data-remote="/vehicle" data-error="Veículo já existe" type="text" maxlength="40" required="required" th:placeholder="#{home.tab.vehicles.modal.addVehicle.name.placeholder}" th:attr="data-error=#{general.form.field.name.exist.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 															<div class="form-group has-feedback">
 																<label for="brandU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.brand.label}">Brand</span>:</label>
-																<input id="brandU" name="brandU" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+																<input id="brandU" name="brandU" class="form-control" type="text" maxlength="20" placeholder="Citroen" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 															<div class="form-group has-feedback">
 																<label for="acquisitionDateU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.acquisitionDate.label}">Acquisition Date</span>:</label>
-																<input id="acquisitionDateU" name="acquisitionDateU" class="form-control" type="date" required="required"></input>
+																<input id="acquisitionDateU" name="acquisitionDateU" class="form-control" type="date" required="required" th:attr="data-error=#{general.form.field.required.message}"></input>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 															<div class="form-group has-feedback">
 																<label for="fabricationYearU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.year.label}">Year</span>:</label>
-																<select id="fabricationYearU" name="fabricationYearU" class="form-control" required="required">
+																<select id="fabricationYearU" name="fabricationYearU" class="form-control" required="required" th:attr="data-error=#{general.form.field.required.message}">
 																	<!-- Years Generated with Javascript -->
 																</select>
 																<div class="help-block with-errors"></div>
@@ -208,7 +194,11 @@
 															</div>
 															<div class="form-group has-feedback">
 																<label for="fileU" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.photo.label}">Vehicle's photo (Optional)</span>:</label>
-																<input id="fileU" name="fileU" type="file"></input>
+																<br></br>
+																<label class="btn btn-default btn-file">
+																	<span>Seleccionar ficheiro</span>
+																	<input id="fileU" name="fileU" type="file" style="display: none"></input>
+																</label>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
@@ -224,32 +214,32 @@
 														<form id="createLicensedVehicleForm" role="form">
 															<div class="form-group has-feedback">
 																<label for="nameL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.name.label}">Name</span>:</label>
-																<input id="nameL" class="form-control" name="name" data-remote="/vehicle" data-error="Veículo já existe" type="text" placeholder="Nome do Veículo" maxlength="40" required="required"/>
+																<input id="nameL" class="form-control" name="name" data-remote="/vehicle" data-error="Veículo já existe" type="text" maxlength="40" required="required" th:placeholder="#{home.tab.vehicles.modal.addVehicle.name.placeholder}" th:attr="data-error=#{general.form.field.name.exist.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 															<div class="form-group has-feedback">
 																<label for="brandL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.brand.label}">Brand</span>:</label>
-																<input id="brandL" name="brandL" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required"/>
+																<input id="brandL" name="brandL" class="form-control" type="text" maxlength="20" placeholder="Citroen" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 															<div class="form-group has-feedback">
 																<label for="acquisitionDateL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.acquisitionDate.label}">Acquisition Date</span>:</label>
-																<input id="acquisitionDateL" name="acquisitionDateL" class="form-control" type="date" required="required"></input>
+																<input id="acquisitionDateL" name="acquisitionDateL" class="form-control" type="date" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 							
 															<div class="form-group has-feedback">
 																<label for="licenseL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.license.label}">License</span>:</label>
-																<input id="licenseL" name="license" class="form-control" data-remote="/license" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.." required="required"/>
+																<input id="licenseL" name="license" class="form-control" data-remote="/license" placeholder="HH-88-90" required="required" th:attr="data-error=#{general.form.field.wrongFormat.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
 															<div class="form-group has-feedback">	
 																<label for="licenseDateL" class="control-label"><span th:text="#{home.tab.vehicles.modal.addVehicle.acquisitionDate.label}">License Date</span>:</label>
-																<input id="licenseDateL" name="licenseDate" class="form-control" type="date" required="required"/>
+																<input id="licenseDateL" name="licenseDate" class="form-control" type="date" required="required" th:attr="data-error=#{general.form.field.required.message}"/>
 																<div class="help-block with-errors"></div>
 																<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 															</div>
@@ -275,8 +265,7 @@
 									</div>
 								</div>
 				  				
-				  				<!-- ====== Confirm Vehicle Delete Modal ====== -->
-				  				
+				  				<!-- ############# Confirm Vehicle Delete Modal ########## -->
 				  				<div id="confirmModal" class="modal fade" role="dialog">
 				  					<div class="modal-dialog">
 				  						<div class="modal-content">
@@ -309,7 +298,7 @@
 						
 						
 						<!-- Modals to show server responses -->					 			    	
-				     	<div th:replace="fragments/generalServerResponsesModals :: responseModals"></div>
+				     	<div th:replace="/fragments/generalServerResponsesModals :: responseModals"></div>
 				     	 
 					</div>					
 						
@@ -318,7 +307,7 @@
 			</div>
 		</div>
 		<footer>
-			<div th:replace="fragments/footer :: footer"></div> 
+			<div th:replace="/fragments/footer :: footer"></div> 
 		</footer>
 	</body>
 </html>

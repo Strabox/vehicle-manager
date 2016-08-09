@@ -92,7 +92,7 @@ public class NotificationTaskService implements INotificationTaskService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public NotificationTask getNotificationTask(Long notificationId) throws NotificationDoesntExistException {
+	public NotificationTask getNotificationTaskById(Long notificationId) throws NotificationDoesntExistException {
 		if(notificationId == null) {
 			throw new IllegalArgumentException();
 		}

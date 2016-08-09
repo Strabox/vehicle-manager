@@ -43,7 +43,7 @@
 								<li><a data-toggle="pill" href="#filesTab"><span class="glyphicon glyphicon-file"></span> <span th:text="#{vehicle.menu.files.label}">Files</span></a></li>
 								<li><a data-toggle="pill" href="#printTab"><span class="glyphicon glyphicon-print"></span> <span th:text="#{vehicle.menu.print.label}">Print</span></a></li>
 								<li><a data-toggle="pill" href="#editTab" id="editTabPill"><span class="glyphicon glyphicon-cog"></span> <span th:text="#{vehicle.menu.edit.label}">Edit</span></a></li>
-								<li><a th:href="${'/home?vehicles&amp;startPage=' + startPage}"><span class="glyphicon glyphicon-arrow-left"></span> <span th:text="#{vehicle.menu.back.label}">Back</span></a></li>
+								<li><a href="/home?vehicles"><span class="glyphicon glyphicon-arrow-left"></span> <span th:text="#{vehicle.menu.back.label}">Back</span></a></li>
 								<li><a href="#" class="logout" ><span class="glyphicon glyphicon-off"></span> <span th:text="#{vehicle.menu.logout.label}">Logout</span></a></li>        
 							</ul>
 						</div>
@@ -53,18 +53,19 @@
 							<div class="col-sm-8">
 								<h1><b id="vehicleName" th:text="${vehicle.name}"></b></h1>
 								<br></br>
-								<div class="row">	<!-- Vehicle static data row -->
+								<!-- ############################ Vehicle static data row ########################## -->
+								<div class="row">
 									<div class="col-sm-6">
-							    		<p><b>Marca: </b><span id="vehicleBrand" th:text="${vehicle.brand}"></span></p>
+							    		<p><b><span th:text="#{domain.vehicle.brand}">Brand</span><span>: </span></b><span id="vehicleBrand" th:text="${vehicle.brand}"></span></p>
 							    		<br></br>
-							    		<p><b>Data de Aquisição: </b><span id="vehicleAcquistionDate" th:text="${vehicle.acquisitionDate}"></span><span><b> há </b><b id="calculationAcquisitionYears" th:text="${vehicle.calculateAcquisitionYears()}"></b><b> anos</b></span></p>
+							    		<p><b><span th:text="#{domain.vehicle.acquisitionDate}">Acquisition Date</span><span>:</span> </b><span id="vehicleAcquistionDate" th:text="${vehicle.acquisitionDate}"></span><span><b> <span th:text="#{general.at}">at</span> </b><b id="calculationAcquisitionYears" th:text="${vehicle.calculateAcquisitionYears()}"></b><b> <span th:text="#{general.years}">years</span></b></span></p>
 										<br></br>
 									</div>
 									<div class="col-sm-6">
-										<p th:if="${type.equals('unlicensed')}"><b>Ano: </b><span id="vehicleFabricationYear" th:text="${vehicle.fabricationYear}"></span><span><b> têm </b><b id="calculationFabricationAge" th:text="${vehicle.calculateFabricationAge()}"></b><b> anos</b></span></p>
-										<p th:if="${type.equals('licensed')}"><b>Matrícula: </b><span id="vehicleLicense" th:text="${vehicle.license.license}"></span></p>
+										<p th:if="${type.equals('unlicensed')}"><b><span th:text="#{domain.vehicle.fabricationYear}">Year</span><span>: </span></b><span id="vehicleFabricationYear" th:text="${vehicle.fabricationYear}"></span><span> <b th:text="#{general.has}">has</b> <b id="calculationFabricationAge" th:text="${vehicle.calculateFabricationAge()}"></b> <b th:text="#{general.years}">years</b></span></p>
+										<p th:if="${type.equals('licensed')}"><b><span th:text="#{domain.license.license}">License</span><span>:</span> </b><span id="vehicleLicense" th:text="${vehicle.license.license}"></span></p>
 							    		<br></br>
-							    		<p th:if="${type.equals('licensed')}"><b>Data da Matrícula: </b><span id="vehicleLicenseDate" th:text="${vehicle.license.date}"></span><span><b> têm </b><b id="calculationLicenseYears" th:text="${vehicle.license.calculateLicenseYears()}"></b><b> anos</b></span></p>
+							    		<p th:if="${type.equals('licensed')}"><b><span th:text="#{domain.license.date}">License Date</span><span>:</span> </b><span id="vehicleLicenseDate" th:text="${vehicle.license.date}"></span><span> <b th:text="#{general.has}">has</b> <b id="calculationLicenseYears" th:text="${vehicle.license.calculateLicenseYears()}"></b> <b th:text="#{general.years}">years</b></span></p>
 									</div>
 								</div>
 							</div>
@@ -72,6 +73,7 @@
 								<!-- Empty Column -->
 							</div>
 							<div class="col-sm-3">
+								<!-- Column for Vehicle Portrait Image -->
 								<img id="portraitImage" th:src="${'/image/' + vehicle.name}" class="img-thumbnail" data-toggle="modal" data-target="#showPortraitImageModal" alt="Foto do Veículo"/>
 							</div>
 						</div>
@@ -83,58 +85,54 @@
 					    	<!-- ################################# Vehicle Registrations tab ################################### -->
 					    	
 						    <div id="registerTab" class="tab-pane fade in active">
-						    	<h2><b th:text="#{vehicle.tab.registrations.header}">Registos</b></h2>
+						    	<h2><b th:text="#{vehicle.tab.registrations.header}">Registrations</b></h2>
 							    <table id="registrationsTable" class="table table-condensed table-hover table-bordered">
 							    	<thead>
 							    		<tr>
-							    			<th>NºHoras/Km</th>
-							    			<th>Descrição</th>
-							    			<th>Data</th>
+							    			<th th:text="#{vehicle.tab.registrations.table.time}">Hours/Km</th>
+							    			<th th:text="#{vehicle.tab.registrations.table.description}">Description</th>
+							    			<th th:text="#{vehicle.tab.registrations.table.date}">Date</th>
 							    			<th><!-- Needed for Datatable Plugin #th == #td --></th>
 							    		</tr>
 							    	</thead>
 							    	<tbody>
-							    		<tr th:each="registration : ${vehicle.registries}" th:id="${registration.id + 'reg'}" >
-							    			<td th:text="${registration.time}"></td>
-							    			<td th:text="${registration.description}"></td>
-							    			<td th:text="${registration.date}"></td>
-							    			<td><button type="button" th:id="${registration.id}" class="btn btn-danger delete-reg" data-toggle="modal" data-target="#confirmRegDeleteModal">Apagar</button></td>
-							    		</tr>
+							    		<tr th:each="registration : ${vehicle.registries}" th:include="/fragments/tablesFragments :: vehicleRegistrationTableRow" ></tr>
 							    	</tbody>
 							    </table>
 							    
-							    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registrationModal">Adicionar Registo</button>
+							    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registrationModal" th:text="#{vehicle.tab.registrations.addRegistration.button}">Add Registration</button>
 							    
+							    <!-- ########## Modal Add Registration ########### -->
 							    <div id="registrationModal" class="modal fade" role="dialog">
 							    	<div class="modal-dialog">
 							    		<div class="modal-content">
 							    			<div class="modal-header">
 							    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-												<h4 class="modal-title">Adicionar Registo</h4>
+												<h4 class="modal-title" th:text="#{vehicle.tab.registrations.modal.addRegistration.header}">Add Registration</h4>
 							    			</div>
 							    			<div class="modal-body">
 							    				<form id="registrationForm" role="form" >
 							    					<div class="form-group has-feedback">
-							    						<label for="time">NºHoras/Km</label>
+							    						<label for="time" th:text="#{vehicle.tab.registrations.modal.addRegistration.time.label}">Hours/Km</label>
 							    						<input id="time" class="form-control" name="time" type="number" min="0" placeholder="100,61500,..." required="required"/>
 							    						<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							    					</div>
 							    					<div class="form-group has-feedback">
-							    						<label for="description">Descrição</label>
+							    						<label for="description" th:text="#{vehicle.tab.registrations.modal.addRegistration.description.label}">Description</label>
 							    						<input id="description" class="form-control" name="description" type="text" data-minlength="1" placeholder="Mudar o óleo..." required="required"/>
 							    						<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							    					</div>
 							    					<div class="form-group has-feedback">
-							    						<label for="date">Data</label>
+							    						<label for="date" th:text="#{vehicle.tab.registrations.modal.addRegistration.date.label}">Date</label>
 							    						<input id="date" class="form-control" name="date" type="date" required="required"/>
 							    						<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							    					</div>
 							    					<div class="form-group">
-							    						<button type="submit" class="btn btn-success">Adicionar</button>
-							    						<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+							    						<button type="submit" class="btn btn-success" th:text="#{general.add.button}">Add</button>
+							    						<button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
 							    					</div>
 							    				</form>
 							    			</div>
@@ -142,19 +140,20 @@
 							    	</div>
 							    </div>
 							    
+							    <!-- ############# Modal Confirm Registration Deletion ############## -->
 							    <div id="confirmRegDeleteModal" class="modal fade" role="dialog">
 							    	<div class="modal-dialog">
 							    		<div class="modal-content">
 							    			<div class="modal-header">
 							    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-							    				<h4>Apagar Registo</h4>
+							    				<h4 th:text="#{vehicle.tab.registrations.modal.deleteRegistration.header}">Delete Registration</h4>
 							 				</div>
 							    			<div class="modal-body">
-							    				<h3>Deseja apagar o registo?</h3>
+							    				<h3><span th:text="#{vehicle.tab.registrations.modal.deleteRegistration.message}">Are you sure want delete the registration</span><span>?</span></h3>
 							    			</div>
 							    			<div class="modal-footer">
-							    				<button id="deleteRegistration" type="button" class="btn btn-danger">Confirmar</button>
-					    						<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+							    				<button id="deleteRegistration" type="button" class="btn btn-danger" th:text="#{general.confirm.button}">Confirm</button>
+					    						<button type="button" class="btn btn-success" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
 							    			</div>
 							    		</div>
 							    	</div>
@@ -165,42 +164,40 @@
 						    <!-- ################################# Vehicle notes tab ####################### -->
 						    
 						    <div id="notesTab" class="tab-pane fade">
-						    	<h2><b>Notas</b></h2>
+						    	<h2><b th:text="#{vehicle.tab.notes.header}">Notes</b></h2>
 							    <table id="notesTable" class="table table-condensed table-hover table-bordered">
 							    	<thead>
 							    		<tr>
-								    		<th>Nota</th>
+								    		<th th:text="#{vehicle.tab.notes.table.note}">Note</th>
 								    		<th><!-- Needed for Datatable Plugin #th == #td --></th>
 								    	</tr>
 							    	</thead>
 							    	<tbody>
-							    		<tr th:each="note : ${vehicle.notes}" th:id="${note.id + 'note'}" >
-							    			<td th:text="${note.description}"></td>
-							    			<td><button th:id="${note.id}" type="button" class="btn btn-danger delete-note" data-toggle="modal" data-target="#confirmNoteDeleteModal">Apagar</button></td>
-							    		</tr>
+							    		<tr th:each="note : ${vehicle.notes}" th:include="/fragments/tablesFragments :: vehicleNoteTableRow"></tr>
 							    	</tbody>
 							    </table>
 							    
-							    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notesModal">Adicionar Nota</button>
+							    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notesModal" th:text="#{vehicle.tab.notes.addNote.button}">Add Note</button>
 							    
+							    <!-- ####################### Modal Add Note ############################## -->
 							    <div id="notesModal" class="modal fade" role="dialog">
 							    	<div class="modal-dialog">
 							    		<div class="modal-content">
 							    			<div class="modal-header">
 							    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-												<h4 class="modal-title">Adicionar Nota</h4>
+												<h4 class="modal-title" th:text="#{vehicle.tab.notes.modal.addNote.header}">Add Note</h4>
 							    			</div>
 							    			<div class="modal-body">
 							    				<form id="noteForm" role="form">
 							    					<div class="form-group has-feedback">
-									    				<label for="note">Descrição</label>
+									    				<label for="note" th:text="#{vehicle.tab.notes.modal.addNote.description.label}">Description</label>
 							    						<input id="note" class="form-control" name="description" type="text" placeholder="Referência do filtro..." required="required"/>
 							    						<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							    					</div>
 							    					<div class="form-group">
-								    					<button id="addNote" type="submit" class="btn btn-success">Adicionar</button>
-								    					<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+								    					<button id="addNote" type="submit" class="btn btn-success" th:text="#{general.add.button}">Add</button>
+								    					<button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
 							    					</div>
 							    				</form>
 							    			</div>
@@ -208,20 +205,21 @@
 							    		</div>
 							    	</div>
 							    </div>
-							    			
+							    
+							    <!-- ################ Modal Confirm Note Deletion ###################### -->			
 							    <div id="confirmNoteDeleteModal" class="modal fade" role="dialog">
 							    	<div class="modal-dialog">
 							    		<div class="modal-content">
 							    			<div class="modal-header">
 							    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-							    				<h4>Apagar Nota</h4>
+							    				<h4 th:text="#{vehicle.tab.notes.modal.deleteNote.header}">Delete</h4>
 							 				</div>
 							    			<div class="modal-body">
-							    				<h3>Deseja apagar a nota?</h3>
+							    				<h3><span th:text="#{vehicle.tab.notes.modal.deleteNote.message}">Are you sure want delete the note</span><span>?</span></h3>
 							    			</div>
 							    			<div class="modal-footer">
-							    				<button id="deleteNote" type="button" class="btn btn-danger">Confirmar</button>
-					    						<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+							    				<button id="deleteNote" type="button" class="btn btn-danger" th:text="#{general.confirm.button}">Confirm</button>
+					    						<button type="button" class="btn btn-success" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
 							    			</div>
 							    		</div>
 							    	</div>
@@ -229,64 +227,61 @@
 							    
 						    </div>
 						    
-						    <!-- #################################### Vehicle alerts tab ################################# -->
+						    <!-- #################################### Vehicle alerts tab ################################## -->
 						    
 						    <div id="alertsTab" class="tab-pane fade">
-						    	<h2><b>Alertas</b></h2>
+						    	<h2><b th:text="#{vehicle.tab.notifications.header}">Alerts</b></h2>
 						    	
 						    	<table id="alertsTable" class="table table-condensed table-hover table-bordered">
 							    	<thead>
 							    		<tr>
-							    			<th>Descrição</th>
-							    			<th>Próximo Aviso</th>
+							    			<th th:text="#{vehicle.tab.notifications.table.description}">Description</th>
+							    			<th th:text="#{vehicle.tab.notifications.table.warningDate}">Next Warning</th>
 							    			<th><!-- Needed for Datatable Plugin #th == #td --></th>
 							    		</tr>
 							    	</thead>
 							    	<tbody>
-							    		<tr th:each="alert : ${vehicle.notifications}" th:id="${alert.id + 'alert'}">
-							    			<td th:text="${alert.description}"></td>
-							    			<td th:text="${alert.notiDate}"></td>
-							    			<td><button th:id="${alert.id}" type="button" class="btn btn-danger delete-alert" data-toggle="modal" data-target="#confirmAlertDeleteModal">Apagar</button></td>
-							    		</tr>
+							    		<tr th:each="alert : ${vehicle.notifications}" th:include="/fragments/tablesFragments :: vehicleNotificationTaskTableRow"></tr>
 							    	</tbody>
 							    </table>
 						    	
-						    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertsModal">Adicionar alerta</button>
+						    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#alertsModal" th:text="#{vehicle.tab.notifications.addNotification.button}">Add Alert</button>
 						    	
+						    	<!-- ######################### Modal Add Alert ########################## -->
 						    	<div id="alertsModal" class="modal fade" role="dialog">
 						    		<div class="modal-dialog">
 						    			<div class="modal-content">
 						    				<div class="modal-header">
 						    					<button type="button" class="close" data-dismiss="modal">&times;</button>
-						    					<h2>Criar Alerta</h2>
+						    					<h2 th:text="#{vehicle.tab.notifications.modal.addNotification.header}">Add Alert</h2>
 						    				</div>
 						    				<div class="modal-body">
 						    					<form id="alertForm" role="form">
 						    						<div class="form-group has-feedback">
-						    							<label for="alertDescription">Descrição:</label>
-						    							<input id="alertDescription" class="form-control" name="description" type="text" placeholder="Mudar o óleo do motor..." required="required"/>
+						    							<label for="alertDescription"><span th:text="#{vehicle.tab.notifications.modal.addNotification.description.label}">Description</span><span>:</span></label>
+						    							<input id="alertDescription" class="form-control" name="description" type="text" required="required" th:placeholder="#{vehicle.tab.notifications.modal.addNotification.description.placeholder}"/>
 						    							<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 						    						</div>
 						    						<div class="form-group has-feedback">
-						    							<label for="notiDate">Data de aviso inicial:</label>
+						    							<label for="notiDate"><span th:text="#{vehicle.tab.notifications.modal.addNotification.firstWarningDate.label}">First Warning Date</span><span>:</span></label>
 						    							<input id="notiDate" class="form-control" name="notiDate" type="date" required="required"/>
 						    							<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 						    						</div>
 						    						<div class="form-group has-feedback">
-						    							<label for="periodicity">Periodicidade:</label>
+						    							<label for="periodicity"><span th:text="#{vehicle.tab.notifications.modal.addNotification.periodicity.label}">Periodicity</span><span>:</span></label>
 						    							<select id="periodicity" class="form-control" required="required">
-														    <option>Ano a ano</option>
-														    <option>De meio em meio ano</option>
-														    <option>Só uma vez</option>
+														    <option th:text="#{vehicle.tab.notifications.modal.addNotification.periodicity.Year.label}">Every year</option>
+														    <option th:text="#{vehicle.tab.notifications.modal.addNotification.periodicity.HalfYear.label}">Every half year</option>
+														    <option th:text="#{vehicle.tab.notifications.modal.addNotification.periodicity.OneTime.label}">Just once</option>
 											 		 	</select>
 						    							<div class="help-block with-errors"></div>
 							    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 						    						</div>
 						    						<div class="form-group">
-						    							<button class="btn btn-success" type="submit">Submeter</button>
-						    							<button class="btn btn-primary" type="button" data-dismiss="modal">Cancelar</button>
+						    							<button class="btn btn-success" type="submit" th:text="#{general.add.button}">Add</button>
+						    							<button class="btn btn-primary" type="button" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
 						    						</div>
 						    					</form>
 						    				</div>
@@ -294,19 +289,20 @@
 						    		</div>
 						    	</div>
 						    	
+						    	<!-- ####################### Modal Confirm Alert Deletion ########################### -->
 						    	<div id="confirmAlertDeleteModal" class="modal fade" role="dialog">
 							    	<div class="modal-dialog">
 							    		<div class="modal-content">
 							    			<div class="modal-header">
 							    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-							    				<h4>Apagar Alerta</h4>
+							    				<h4 th:text="#{vehicle.tab.notifications.modal.deleteNotification.header}">Delete Alert</h4>
 							 				</div>
 							    			<div class="modal-body">
-							    			<h3>Deseja apagar o alerta?</h3>
+							    			<h3><span th:text="#{vehicle.tab.notifications.modal.deleteNotification.message}">Are you sure want delete the alert</span><span>?</span></h3>
 							    			</div>
 							    			<div class="modal-footer">
-							    				<button id="deleteAlert" type="button" class="btn btn-danger">Confirmar</button>
-					    						<button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+							    				<button id="deleteAlert" type="button" class="btn btn-danger" th:text="#{general.confirm.button}">Confirm</button>
+					    						<button type="button" class="btn btn-success" data-dismiss="modal" th:text="#{general.cancel.button}">Cancel</button>
 							    			</div>
 							    		</div>
 							    	</div>
@@ -317,79 +313,80 @@
 						    <!-- ####################### Files tab ############################# -->
 						    
 						    <div id="filesTab" class="tab-pane fade">
-						    	<h2><b>Ficheiros</b></h2>
+						    	<h2><b th:text="#{vehicle.tab.files.header}">Files</b></h2>
 						    	
-						    	<h3>Funcionalidade dísponivel brevemente</h3>
+						    	<h3 th:text="#{vehicle.tab.files.message}">Feature soon available</h3>
 						    	
 						    </div>
 						 	
-						 	<!-- ################# Print vehicle records tab ################### -->
+						 	<!-- ############"########### Print Vehicle Data Tab ############################# -->
+						 	
 						 	<div id="printTab" class="tab-pane fade">
-						    	<h2><b>Imprimir</b></h2>
+						    	<h2><b th:text="#{vehicle.tab.print.header}">Print</b></h2>
 						    	<br></br>
-						    	<button id="regNote" class="printButton btn btn-primary">Imprimir Registos + Notas</button>
+						    	<button id="regNote" class="printButton btn btn-primary" th:text="#{vehicle.tab.print.registrationsAndNotes.button}">Imprimir Registos + Notas</button>
 						    	<hr></hr>
-						    	<button id="reg" class="printButton btn btn-primary">Imprimir Registos</button>
+						    	<button id="reg" class="printButton btn btn-primary" th:text="#{vehicle.tab.print.registrations.button}">Imprimir Registos</button>
 						    	<hr></hr>
-						    	<button id="note" class="printButton btn btn-primary">Imprimir Notas</button>
+						    	<button id="note" class="printButton btn btn-primary" th:text="#{vehicle.tab.print.notes.button}">Imprimir Notas</button>
 						    </div>
 						    
 						    <!-- ############################ Edit vehicle data tab ################################# -->
 						    
 						    <div id="editTab" class="tab-pane fade">
-						    	<h2><b>Editar</b></h2>
+						    	<h2><b th:text="#{vehicle.tab.edit.header}">Edit</b></h2>
 						    	<div class="row">
 								    <div class="col-sm-4">
-								    	<h4><b>Editar Dados</b></h4>
+								    	<h4><b th:text="#{vehicle.tab.edit.dataForm.header}">Edit Data</b></h4>
 								    	<form id="editVehicleForm" role="form">
 								    		<div class="form-group has-feedback">
-								    			<label for="editBrand">Marca:</label>
+								    			<label for="editBrand"><span th:text="#{vehicle.tab.edit.dataForm.brand.label}">Brand</span><span>:</span></label>
 								    			<input id="editBrand" name="brand" class="form-control" type="text" maxlength="20" placeholder="Ford,Kubota..." required="required" />
 								    			<div class="help-block with-errors"></div>
 					    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								    		</div>
 								    		<div class="form-group has-feedback">
-								    			<label for="editAcquisitionDate">Data de Aquisição:</label>
+								    			<label for="editAcquisitionDate"><span th:text="#{vehicle.tab.edit.dataForm.acquisitionDate.label}">Acquisition Date</span><span>:</span></label>
 								    			<input id="editAcquisitionDate" name="acquisitionDate" class="form-control" type="date" required="required" />
 								    			<div class="help-block with-errors"></div>
 					    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								    		</div>
 								    		<div th:if="${type.equals('unlicensed')}" class="form-group has-feedback">
-								    			<label for="editFabricationYear">Ano:</label>
+								    			<label for="editFabricationYear"><span th:text="#{vehicle.tab.edit.dataForm.year.label}">Year</span><span>:</span></label>
 								    			<select id="editFabricationYear" name="fabricationYear" class="form-control" required="required" >
-								    				<!-- Years Generated with Javascript -->
+								    				<!-- Years Generated with Javascript !!!!!!!! -->
 								    			</select>
 								    			<div class="help-block with-errors"></div>
 					    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								    		</div>
 								    		<div th:if="${type.equals('licensed')}" class="form-group has-feedback">
-								    			<label for="editLicense">Matrícula:</label>
+								    			<label for="editLicense"><span th:text="#{vehicle.tab.edit.dataForm.license.label}">License</span><span>:</span></label>
 								    			<input id="editLicense" name="license" class="form-control" type="text" data-remote="/license" data-error="Formato errado" placeholder="HH-88-90,19-99-AH,.." required="required" />
 								    			<div class="help-block with-errors"></div>
 					    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								    		</div>
 								    		<div th:if="${type.equals('licensed')}" class="form-group has-feedback">
-								    			<label for="editLicenseDate">Data da Matrícula:</label>
+								    			<label for="editLicenseDate"><span th:text="#{vehicle.tab.edit.dataForm.licenseDate.label}">License Date</span><span>:</span></label>
 								    			<input id="editLicenseDate" name="licenseDate" class="form-control" type="date" required="required" />
 								    			<div class="help-block with-errors"></div>
 					    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								    		</div>
 								    		<div class="form-group">
-								    			<button class="btn btn-primary" type="submit">Submeter</button>
+								    			<button class="btn btn-success" type="submit" th:text="#{general.submit.button}">Submit</button>
 								    		</div>
 								    	</form>
 								    </div>
 								    <div class="col-sm-4">
-								    	<h4><b>Editar Imagem</b></h4>
+								    	<h4><b th:text="#{vehicle.tab.edit.imageForm.header}">Edit Image</b></h4>
 								    	<form id="editImageForm" role="form">
 								    		<div class="form-group has-feedback">
-								    			<label for="editImage">Imagem:</label>
+								    			<label for="editImage"><span th:text="#{vehicle.tab.edit.imageForm.image.label}">Image</span><span>:</span></label>
 								    			<input id="editImage" name="editImage" class="form-control" type="file" required="required" />
 								    			<div class="help-block with-errors"></div>
 					    						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								    		</div>
 								    		<div class="form-group">
-								    			<button class="btn btn-primary" type="submit">Submeter</button>
+								    			<button class="btn btn-success" type="submit" th:text="#{general.submit.button}">Submit</button>
 								    		</div>
 								    	</form>
 								    </div>
@@ -398,13 +395,14 @@
 						    
 						</div>
 						
-						<!--  -->
+						<!-- ####################### Modal Show Vehicle Portrait Image ####################### -->
+						
 						<div id="showPortraitImageModal" class="modal fade" role="dialog">
 							<div class="modal-dialog modal-lg">
 				    			<div class="modal-content">
 					    			<div class="modal-header">
 					    				<button type="button" class="close" data-dismiss="modal">&times;</button>
-					    				<h3>Foto do Veículo</h3>
+					    				<h3 th:text="#{vehicle.tab.modal.showVehiclePortraitImage.header}">Vehicle's Photo</h3>
 					    			</div>
 					    			<div class="modal-body">
 					    				<img id="vehiclePortraitFull" th:src="${'/image/' + vehicle.name}" alt="Foto do Veículo"/>
@@ -414,14 +412,14 @@
 						</div>
 						
 						<!-- Modals to show server responses -->					 			    	
-				     	<div th:replace="fragments/generalServerResponsesModals :: responseModals"></div> 				
+				     	<div th:replace="/fragments/generalServerResponsesModals :: responseModals"></div> 				
 						
 					</div>
 				</div>
 			</div>
 		</div>
 		<footer>
-			<div th:replace="fragments/footer :: footer"></div> 
+			<div th:replace="/fragments/footer :: footer"></div> 
 		</footer>
 	</body>
 </html>

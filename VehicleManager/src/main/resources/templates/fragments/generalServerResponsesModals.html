@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
@@ -16,7 +16,7 @@
 		    			</div>
 		    			<div class="modal-body">
 		    				<div class="alert alert-success">
-		    					<strong><span th:text="#{generalResponseModals.success}">Sucesso</span>! </strong><span id="responseAlertSuccessText"></span>
+		    					<strong><span th:text="#{generalResponseModals.success}">Success</span>! </strong><span id="responseAlertSuccessText"></span>
 		    				</div>
 		    			</div>
 		    			<div class="modal-footer">
@@ -35,7 +35,7 @@
 		    			</div>
 		    			<div class="modal-body">
 		    				<div class="alert alert-danger">
-		    					<strong><span th:text="#{generalResponseModals.fail}">Falhou</span>! </strong><span id="responseAlertFailText"></span>
+		    					<strong><span th:text="#{generalResponseModals.fail}">Failed</span>! </strong><span id="responseAlertFailText"></span>
 		    				</div>
 		    			</div>
 		    			<div class="modal-footer">

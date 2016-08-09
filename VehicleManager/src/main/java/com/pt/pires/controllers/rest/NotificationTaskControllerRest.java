@@ -55,7 +55,7 @@ public class NotificationTaskControllerRest extends ControllerExceptionHandler {
 	public ResponseEntity<Long> addNotification(@PathVariable String vehicleName,
 			@RequestBody NotificationTaskYear notification,@RequestParam(value = "type",required = true)String type)
 					throws VehicleManagerException {
-		System.out.println("[Add notification year] Vehicle Name: " + vehicleName);
+		System.out.println("[Add notification] Vehicle Name: " + vehicleName);
 		Long notiId;
 		if(type.equals(NOTIFICATION_TASK_YEAR)) {
 			notiId = notificationTaskService.createYearNotification(vehicleName, notification.getDescription(),

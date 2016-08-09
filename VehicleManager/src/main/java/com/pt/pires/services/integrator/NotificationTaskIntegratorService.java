@@ -57,7 +57,7 @@ public class NotificationTaskIntegratorService implements INotificationTaskInteg
 			throw new IllegalArgumentException();
 		}
 		boolean notify = notificationService.notifyDay(notificationId, currentDate);
-		NotificationTask n = notificationService.getNotificationTask(notificationId);
+		NotificationTask n = notificationService.getNotificationTaskById(notificationId);
 		if(notify && !n.isNotificationSent()) {
 			List<User> usersToSend = (List<User>) userService.getUsersByRole(UserRole.ROLE_USER);
 			for(User u : usersToSend) {

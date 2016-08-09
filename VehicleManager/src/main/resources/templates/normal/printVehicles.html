@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
 	<head>
-	    <title>Imprimir Veículos</title>
+	    <title th:text="#{print.vehicles.title}">Print Vehicles</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
@@ -16,14 +16,17 @@
     </head>
     <body>
     	<div th:each="vehicle : ${vehicles}">
+    	
     		<h2 th:text="${vehicle.name}"></h2>
-    		<h4 th:text="${'Marca: ' + vehicle.brand}"></h4>
-    		<h4 th:text="${'Data de Aquisição: ' + vehicle.acquisitionDate}"></h4>
-    		<h3>Notas</h3>
+    		<h4><span th:text="#{print.header.brand}">Brand</span><span>: </span><span th:text="${vehicle.brand}"></span></h4>
+    		<h4><span th:text="#{print.header.acquisitionDate}">Acquisition Date</span><span>: </span><span th:text="${vehicle.acquisitionDate}"></span></h4>
+    		
+    		<!-- ###################### Notes Section ############################# -->
+    		<h3 th:text="#{print.section.notes.header }">Notes</h3>
 	    	<table class="table table-condensed table-hover table-striped table-bordered">
 		    	<thead>
 		    		<tr>
-			    		<th>Nota</th>
+			    		<th th:text="#{print.section.notes.table.note}">Note</th>
 			    	</tr>
 		    	</thead>
 		    	<tbody>
@@ -33,13 +36,14 @@
 		    	</tbody>
 		    </table>
 		    
-		    <h3>Registos</h3>
+		    <!-- ###################### Registrations Section ############################# -->
+		    <h3 th:text="#{print.section.registrations.header}">Registrations</h3>
 	    	<table class="table table-condensed table-hover table-striped table-bordered">
 		    	<thead>
 		    		<tr>
-		    			<th>NºHoras/Km</th>
-		    			<th>Descrição</th>
-		    			<th>Data</th>
+		    			<th th:text="#{print.section.registrations.table.time}">Hours/Km</th>
+		    			<th th:text="#{print.section.registrations.table.description}">Description</th>
+		    			<th th:text="#{print.section.registrations.table.date}">Date</th>
 		    		</tr>
 		    	</thead>
 		    	<tbody>
@@ -51,5 +55,6 @@
 		    	</tbody>
 		    </table>
     	</div>
+    	
     </body>
 </html>

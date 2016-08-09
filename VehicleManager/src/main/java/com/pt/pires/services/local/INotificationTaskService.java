@@ -21,7 +21,7 @@ public interface INotificationTaskService {
 	
 	void removeNotification(String vehicleName, long alertId) throws VehicleManagerException;
 		
-	NotificationTask getNotificationTask(Long notificationId) throws VehicleManagerException; 
+	NotificationTask getNotificationTaskById(Long notificationId) throws VehicleManagerException; 
 		 
 	Collection<NotificationTask> getActiveNotificationsTasks(Date currentDate);
 	 

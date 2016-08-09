@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "persistent_logins")	//Name required by Spring Security
 public class RememberedLogin {
 
-	@Column
+	@Id
+	private String series;			//Name required by Spring Security
+	
+	@Column(name = "username")		//Name required by Spring Security
 	private String username;
 	
-	@Id
-	private String series;
-	
-	@Column
+	@Column(name = "token")			//Name required by Spring Security
 	private String token;
 	
 	@Column(name = "last_used")		//Name required by Spring Security

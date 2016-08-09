@@ -1,17 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html th:lang="#{general.languague.code}" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
-	<body>	
-
-		<tr th:fragment="lol" th:id="${vehicleName + 'row'}">
-			<td><a th:href="${'vehicle/' + vehicleName + '?type=' + vehicleType}" th:text="${vehicleName}"></a></td>
-			<td><a th:href="${'vehicle/' + vehicleName + '?type=' + vehicleType}"><img th:src="${'/image/thumb/' + vehicleName}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
-			<td th:text="${vehicleBrand}"></td>
-			<td th:text="${vehicleAcquisitionDate}"></td>
-			<td><button th:id="${vehicleName}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Delete</button></td>
-		</tr>
-		
+	<body>
+	
+		<table>
+			<thead>
+				<!-- Licensed vehicle row -->
+				<tr th:fragment="licensedVehiclesTableRow" th:id="${vehicle.name + 'row'}">
+					<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}" th:text="${vehicle.name}"></a></td>
+					<td><a th:href="${'vehicle/' + vehicle.name + '?type=licensed'}"><img th:src="${'/image/thumb/' + vehicle.name}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
+					<td th:text="${vehicle.brand}"></td>
+					<td th:text="${#dates.format(vehicle.acquisitionDate, 'dd-MM-yyyy')}"></td>
+					<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Delete</button></td>
+				</tr>
+				
+				<!-- Unlicensed vehicle row -->
+				<tr th:fragment="unlicensedVehiclesTableRow" th:id="${vehicle.name + 'row'}">
+			      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}" th:text="${vehicle.name}"></a></td>
+			      	<td><a th:href="${'vehicle/' + vehicle.name + '?type=unlicensed'}"><img th:src="${'/image/thumb/' + vehicle.name}" width="100vw" height="75vh" class="img-thumbnail" alt="Foto do Veículo"/></a></td>
+			      	<td th:text="${vehicle.brand}"></td>
+			      	<td th:text="${#dates.format(vehicle.acquisitionDate, 'yyyy-MM-dd')}"></td>
+			      	<td><button th:id="${vehicle.name}" type="button" class="btn btn-danger del-vehicle" data-toggle="modal" data-target="#confirmModal" th:text="#{general.delete.button}">Delete</button></td>
+		      	</tr>
+		      	
+		      	<!-- Registration table row -->
+		      	<tr th:fragment="vehicleRegistrationTableRow" th:id="${registration.id + 'reg'}">
+		   			<td th:text="${registration.time}"></td>
+		   			<td th:text="${registration.description}"></td>
+		   			<td th:text="${registration.date}"></td>
+		   			<td><button type="button" th:id="${registration.id}" class="btn btn-danger delete-reg" data-toggle="modal" data-target="#confirmRegDeleteModal" th:text="#{general.delete.button}">Delete</button></td>
+		   		</tr>
+		      	
+		      	<!-- Note table row -->
+		      	<tr th:fragment="vehicleNoteTableRow" th:id="${note.id + 'note'}" >
+		   			<td th:text="${note.description}"></td>
+		   			<td><button th:id="${note.id}" type="button" class="btn btn-danger delete-note" data-toggle="modal" data-target="#confirmNoteDeleteModal" th:text="#{general.delete.button}">Delete</button></td>
+		   		</tr>
+									    		
+		      	<!-- NotificationTask table row -->
+		      	<tr th:fragment="vehicleNotificationTaskTableRow" th:id="${alert.id + 'alert'}">
+		   			<td th:text="${alert.description}"></td>
+		   			<td th:text="${alert.notiDate}"></td>
+		   			<td><button th:id="${alert.id}" type="button" class="btn btn-danger delete-alert" data-toggle="modal" data-target="#confirmAlertDeleteModal" th:text="#{general.delete.button}">Delete</button></td>
+		   		</tr>
+	      	</thead>
+      	</table>
+      	
 	</body>
 </html>

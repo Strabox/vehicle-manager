@@ -10,10 +10,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+/**
+ * Available languages: pt_PT and en_US
+ * @author André
+ *
+ */
 @Component
 public class InternationalizationConfigurerAdapter extends WebMvcConfigurerAdapter {
 
-	private static final Locale LOCALE_PT = new Locale("pt");
+	private static final Locale LOCALE_PT = new Locale("pt_PT");
 	
 	private static final String LANG_PARAM = "lang";
 	

@@ -16,6 +16,8 @@ public interface INoteService {
 	
 	void removeNote(String vehicleName, long noteId) throws VehicleManagerException;
 	
+	Note getNoteById(long noteId) throws VehicleManagerException;
+	
 	Collection<Note> getVehicleNotes(String vehicleName) throws VehicleManagerException;
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pt.pires.domain.Registration;
 import com.pt.pires.domain.Vehicle;
+import com.pt.pires.domain.exceptions.RegistrationDoesntExistException;
 import com.pt.pires.domain.exceptions.VehicleManagerException;
 import com.pt.pires.persistence.IRegistrationRepository;
 
@@ -57,6 +58,16 @@ public class RegistrationService implements IRegistrationService {
 		}
 		Vehicle v = vehicleService.getVehicle(vehicleName);
 		v.removeRegistration(regId);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Registration getRegistrationById(long regId) throws VehicleManagerException {
+		Registration reg = registrationRepository.findOne(regId);
+		if(reg == null) {
+			throw new RegistrationDoesntExistException();
+		}
+		return reg;
 	}
 
 	
