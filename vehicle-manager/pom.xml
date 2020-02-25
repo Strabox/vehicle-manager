@@ -2,43 +2,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.pt.pires</groupId>
-	<artifactId>VehicleManager</artifactId>
-	<version>1.1.0-Dev</version>
-	<packaging>jar</packaging>
-
-	<name>VehicleManager</name>
-	<description>Project to manage vehicle maintenance</description>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>1.3.5.RELEASE</version>	<!-- Previous Version 1.3.5.RELEASE -->
+		<relativePath/> 					<!-- lookup parent from repository -->
 	</parent>
 
+	<groupId>com.pt.pires</groupId>
+	<artifactId>vehicle-manager</artifactId>
+	<version>1.1.0-Dev</version>
+
+	<packaging>jar</packaging>
+
+	<name>Vehicle Manager</name>
+	<description>Project to manage vehicle maintenance</description>
+
+	<developers>
+		<developer>
+			<name>André Pires</name>
+			<email>pardal.pires@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>Europe/Lisbon</timezone>
+		</developer>
+	</developers>
+
 	<properties>
-		<copyrights.date>2015-2016</copyrights.date>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<copyrights.date>2015-2020</copyrights.date>
 		<start-class>com.pt.pires.VehicleManagerApplication</start-class>
+
+		<docker.image.name>strabox/vehicle-manager</docker.image.name>
+
+		<!-- Java Version -->
+		<java.version>1.8</java.version>
+
+		<!-- Dependencies Versions -->
+		<commons.validator.version>1.5.1</commons.validator.version>
+		<commons.io.version>2.5</commons.io.version>
+		<tika.core.version>1.13</tika.core.version>
+
+		<!-- Plugins Versions -->
+		<maven.compiler.plugin.vesion>3.8.1</maven.compiler.plugin.vesion>
+		<spring.boot.plugin.version>1.3.5.RELEASE</spring.boot.plugin.version>
+		<docker.io.plugin.version>0.33.0</docker.io.plugin.version>
+		<maven.assembly.plugin.version>3.2.0</maven.assembly.plugin.version>
 	</properties>
 
 	<dependencies>
-		<!-- Only need if we dont have MysqlDB and want try it local
-		 <dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		-->
+
 		<!-- Used to email validation -->
 		<!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
 		<dependency>
 		    <groupId>commons-validator</groupId>
 		    <artifactId>commons-validator</artifactId>
-		    <version>1.5.1</version>
+		    <version>${commons.validator.version}</version>
 		</dependency>
 		<!-- Used to manipulate xml files -->
 		<dependency>
@@ -50,13 +70,13 @@
 		<dependency>
 		    <groupId>org.apache.tika</groupId>
 		    <artifactId>tika-core</artifactId>
-		    <version>1.13</version>
+		    <version>${tika.core.version}</version>
 		</dependency>
 		<!-- http://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
-		    <version>2.5</version>
+		    <version>${commons.io.version}</version>
 		</dependency>
 				
 		<!-- ============= Spring boot stuff =================  -->
@@ -75,8 +95,8 @@
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-devtools</artifactId>
    		</dependency>
-   		<!-- Necessary for redirect mobile and tablet requests to
-   		the respective pages -->
+
+   		<!-- Necessary for redirect mobile and tablet requests to the respective pages -->
  		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mobile</artifactId>
@@ -105,30 +125,71 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- ======================== Test Dependencies ============================ -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 	
 	<build>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.plugin.vesion}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				 <!-- <configuration>
-			        <executable>true</executable>
-			    </configuration> -->
 			</plugin>
+
+			<!-- Docker maven plugin used to build, start, remove, push, pull Docker images/containers. -->
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker.io.plugin.version}</version>
+				<configuration>
+					<images>
+						<image>
+							<name>${docker.image.name}:${project.version}</name>
+							<build>
+								<contextDir>${project.build.directory}</contextDir>
+								<dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
+								<args>
+									<arg>BASE_IMAGE=openjdk:8-jdk</arg>
+								</args>
+							</build>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven.assembly.plugin.version}</version>
+			</plugin>
+
 		</plugins>
-		<!--IMPORTANT!!! 
-			Use Maven filtering to introduce maven properties in resource files
+
+		<!-- Use Maven filtering to introduce maven properties in resource files
 			ex: The project version in footer -->
 		<resources>
 			<resource>
@@ -136,7 +197,16 @@
 	       		<filtering>true</filtering>
    	 		</resource>
 		</resources>
+
 	</build>
-	
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+		</profile>
+		<profile>
+			<id>dist</id>
+		</profile>
+	</profiles>
 
 </project>
