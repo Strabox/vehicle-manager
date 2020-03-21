@@ -2,4 +2,4 @@
 
 # VehicleMaintenanceManager
 
-Vehicle Maintenance Manager 
+Vehicle Maintenance Manager for personal use.

@@ -1,7 +1,0 @@
-/bin/
-*.iml
-/.mvn
-/target
-.vscode
-.idea
-.settings
