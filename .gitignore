@@ -14,3 +14,9 @@ files-dir
 /VehicleManager/.classpath
 /VehicleManager/.project
 /VehicleManager/src/main/resources/other/myKeystore.p12
+.idea
+.vscode
+.mvn
+.settings
+*.iml
+.project
