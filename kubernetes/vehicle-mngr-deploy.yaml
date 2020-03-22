@@ -1,0 +1,57 @@
+# Namespace for Vehicle Manager Kubernetes deployment
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vehicle-manager
+---
+# External Service to access MariaDB in maria-db namespace
+kind: Service
+apiVersion: v1
+metadata:
+  name: maria-db
+  namespace: vehicle-manager
+spec:
+  type: ExternalName
+  externalName: mariadb.maria-db.svc.cluster.local
+  ports:
+  - port: 3306
+---
+# Service exposing the Vehicle Manager deployment (Web Server)
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-manager
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 38080
+  selector:
+    app: vehicle-manager
+---
+# Vehicle Manager web app deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-manager
+spec:
+  selector:
+    matchLabels:
+      app: vehicle-manager
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vehicle-manager
+    spec:
+      containers:
+        - image: docker.pkg.github.com/strabox/vehicle-manager/vehicle-mngr-web:latest
+          imagePullPolicy: Always
+          imagePullSecrets:
+            - name: github-reg-cred
+          name: vehicle-manager-web-app
+          ports:
+            - containerPort: 8080
+              name: web-server-port
