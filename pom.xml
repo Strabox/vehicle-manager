@@ -11,7 +11,7 @@
 
 	<groupId>com.pt.pires</groupId>
 	<artifactId>vehicle-manager</artifactId>
-	<version>1.1.0-Dev</version>
+	<version>1.1.1-Dev</version>
 
 	<packaging>jar</packaging>
 
@@ -34,7 +34,7 @@
 		<copyrights.date>2015-2020</copyrights.date>
 		<start-class>com.pt.pires.VehicleManagerApplication</start-class>
 
-		<docker.image.name>strabox/vehicle-manager</docker.image.name>
+		<docker.image.name>docker.pkg.github.com/strabox/vehicle-manager/vehicle-mngr-web</docker.image.name>
 
 		<!-- Java Version -->
 		<java.version>1.8</java.version>
@@ -159,6 +159,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/build</outputDirectory>
+				</configuration>
 			</plugin>
 
 			<!-- Docker maven plugin used to build, start, remove, push, pull Docker images/containers. -->
@@ -171,11 +174,8 @@
 						<image>
 							<name>${docker.image.name}:${project.version}</name>
 							<build>
-								<contextDir>${project.build.directory}</contextDir>
+								<contextDir>${project.build.directory}/build</contextDir>
 								<dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
-								<args>
-									<arg>BASE_IMAGE=openjdk:8-jdk</arg>
-								</args>
 							</build>
 						</image>
 					</images>
@@ -204,6 +204,9 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>dist</id>
