@@ -20,3 +20,4 @@ files-dir
 .settings
 *.iml
 .project
+.classpath

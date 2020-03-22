@@ -54,7 +54,7 @@ spec:
       imagePullSecrets:
         - name: reg-cred
       containers:
-        - image: docker.io/strabox/vehicle-manager:latest
+        - image: docker.io/strabox/vehicle-manager:1.1.3-Dev
           imagePullPolicy: Always
           name: vehicle-manager-web-app
           ports:
