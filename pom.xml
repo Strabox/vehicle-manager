@@ -159,6 +159,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/build</outputDirectory>
+				</configuration>
 			</plugin>
 
 			<!-- Docker maven plugin used to build, start, remove, push, pull Docker images/containers. -->
@@ -171,7 +174,7 @@
 						<image>
 							<name>${docker.image.name}:${project.version}</name>
 							<build>
-								<contextDir>${project.build.directory}</contextDir>
+								<contextDir>${project.build.directory}/build</contextDir>
 								<dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
 								<args>
 									<arg>BASE_IMAGE=openjdk:8-jdk</arg>
@@ -204,6 +207,9 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>dist</id>
