@@ -176,9 +176,6 @@
 							<build>
 								<contextDir>${project.build.directory}/build</contextDir>
 								<dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
-								<args>
-									<arg>BASE_IMAGE=openjdk:8-jdk</arg>
-								</args>
 							</build>
 						</image>
 					</images>

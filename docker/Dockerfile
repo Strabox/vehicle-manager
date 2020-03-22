@@ -1,7 +1,6 @@
-# openjdk:8-jdk
 #ARG BASE_IMAGE=arm32v7/openjdk:8-jdk
-FROM --platform=linux/arm/v7 arm32v7/openjdk:8-jdk
 #FROM openjdk:8-jdk
+FROM --platform=linux/arm/v7 arm32v7/openjdk:8-jdk
 
 LABEL author="André Pires" version="1.0-dev"
 

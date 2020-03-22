@@ -1,4 +1,4 @@
-![Java CI with Maven](https://github.com/Strabox/VehicleMaintenanceManager/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Master branch CI/CD job](https://github.com/Strabox/vehicle-manager/workflows/Master%20branch%20CI/CD%20job/badge.svg?branch=master)
 
 # VehicleMaintenanceManager
 
