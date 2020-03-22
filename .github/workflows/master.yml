@@ -40,6 +40,4 @@ jobs:
     - name: Login to GitHub Package Registry
       run: echo "${{ secrets.DOCKER_GITHUB_REGISTRY_PASSWORD }}" | docker login docker.pkg.github.com -u "${{ secrets.DOCKER_GITHUB_REGISTRY_USERNAME }}" --password-stdin
     - name: Publish Docker Image
-      run: mvn -X -B docker:build
-    - name: Push Image to Registry
-      run: docker push strabox/vehicle-manager:1.1.1-Dev
+      run: mvn -X -B docker:build docker:push
