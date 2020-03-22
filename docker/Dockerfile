@@ -1,6 +1,6 @@
 # openjdk:8-jdk
 #ARG BASE_IMAGE=arm32v7/openjdk:8-jdk
-FROM --platform=armv7 arm32v7/openjdk:8-jdk
+FROM --platform=linux/arm/v7 arm32v7/openjdk:8-jdk
 
 RUN echo "Building Vehicle Manager Docker Container..."
 LABEL author="André Pires" version="1.0-dev"
