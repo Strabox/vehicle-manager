@@ -37,7 +37,7 @@ jobs:
     - name: Available platforms
       run: echo ${{ steps.buildx.outputs.platforms }}
     - name: Login to Container Images Registry...
-      run: echo "${{ secrets.DOCKER_HUB_REGISTRY_PASSWORD }}" | docker login docker.pkg.github.com -u "${{ secrets.DOCKER_HUB_REGISTRY_USERNAME }}" --password-stdin
+      run: echo "${{ secrets.DOCKER_HUB_REGISTRY_PASSWORD }}" | docker login docker.io -u "${{ secrets.DOCKER_HUB_REGISTRY_USERNAME }}" --password-stdin
     - name: Building Docker Image
       run: mvn -B docker:build
     - name: Publish Docker Image (built previously)
