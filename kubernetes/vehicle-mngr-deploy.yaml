@@ -4,19 +4,21 @@ kind: Namespace
 metadata:
   name: vehicle-manager
 ---
-# External Service to access MariaDB in maria-db namespace
+# External Service to access MariaDB in mariadb namespace. Name will be solved by DNS instead of internally forward.
+# Source Link: https://8gwifi.org/docs/kube-externalname.jsp and https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 kind: Service
 apiVersion: v1
 metadata:
-  name: maria-db
+  name: mariadb
   namespace: vehicle-manager
 spec:
   type: ExternalName
-  externalName: mariadb.maria-db.svc.cluster.local
+  # <service>.<namespace>.svc.cluster.local
+  externalName: mariadb.mariadb.svc.cluster.local
   ports:
-  - port: 3306
+    - port: 3306
 ---
-# Service exposing the Vehicle Manager deployment (Web Server)
+# Service exposing the Vehicle Manager deployment to outside cluster (Web Server)
 apiVersion: v1
 kind: Service
 metadata:
@@ -30,7 +32,7 @@ spec:
   selector:
     app: vehicle-manager
 ---
-# Vehicle Manager web app deployment
+# Vehicle Manager Web Server deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,6 +50,7 @@ spec:
       labels:
         app: vehicle-manager
     spec:
+      # This secret must be created beforehanded in order to not expose the secret strings in this file.
       imagePullSecrets:
         - name: reg-cred
       containers:

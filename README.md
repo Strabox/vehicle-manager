@@ -6,21 +6,31 @@
 
 # Vehicle Maintenance Manager
 
-Vehicle Maintenance Manager for personal use.
+Vehicle Maintenance Manager used to maintain maintenance data about different kinds of vehicled in order to track its history.
 
-## Development
+It also support email based notifications to alert about periodic maintenance procedures for some vehicles.
+
+## Contributing/Development
+
+- Maven: Building, Testing and Deploying the application.
+- Github: Code Host, Issues Management, Documentation, CI/CD Pipelines (GitHub actions)
+- Docker: Used to build the container image using 'docker/Dockerfile'.
+- Kubernetes: Deployment of all components.
 
 ## Deployment
 
 ### Kubernetes Deployment
 
-Kubernetes Documentation useful links used to write the vehicle manager deployment.
-
+Kubernetes deployment documentation for vehicle manager:
 1. [Pull an image from private registry (GitHub packages in this case)](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
-   1. Create secret to access private registry when pulling image.
+   1. Create secret to access private registry when pulling image. Necessary before applying the Kuberentes deploy yaml.
 ```bash
-kubectl create secret docker-registry github-reg-cred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+kubectl create secret docker-registry github-reg-cred --docker-server=<your-registry-server e.g. docker.io> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
 ```
+2. Deploy the MariaDB in kubernetes using the respective yaml not present here since this MariaDB will be shared among different apps.
+3. Deploy in the Kuberentes the file 'kubernetes/vehicle-mngr-deploy.yaml' to launch the Web App in Kubernetes.
+
+**Note: Not using docker.github.packages because Containerd can't fetch from it due to a bug/my inability :). Possible workaround https://docs.docker.com/registry/recipes/mirror/  registry service proxying to GitHub packages.**
 
 ## Badge Generation Service
 
@@ -30,4 +40,4 @@ This service (https://badgen.net) is used to generate badge markdown dynamically
 
 Apache Lincese 2.0.
 
-Check LICENSE file.
+Check LICENSE file present in the repository.
