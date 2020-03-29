@@ -25,12 +25,12 @@ Kubernetes deployment documentation for vehicle manager:
 1. [Pull an image from private registry (GitHub packages in this case)](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
    1. Create secret to access private registry when pulling image. Necessary before applying the Kuberentes deploy yaml.
 ```bash
-kubectl create secret docker-registry github-reg-cred --docker-server=<your-registry-server e.g. docker.io> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+kubectl create secret docker-registry reg-cred --docker-server=<your-registry-server e.g. docker.io> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
 ```
 2. Deploy the MariaDB in kubernetes using the respective yaml not present here since this MariaDB will be shared among different apps.
 3. Deploy in the Kuberentes the file 'kubernetes/vehicle-mngr-deploy.yaml' to launch the Web App in Kubernetes.
 
-**Note: Not using docker.github.packages because Containerd can't fetch from it due to a bug/my inability :). Possible workaround https://docs.docker.com/registry/recipes/mirror/  registry service proxying to GitHub packages.**
+**Note: Not using docker.github.packages because Containerd can't fetch from it due to a bug/my inability :). Possible workaround https://docs.docker.com/registry/recipes/mirror/ registry service proxying to GitHub packages.**
 
 ## Badge Generation Service
 

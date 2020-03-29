@@ -32,6 +32,20 @@ spec:
   selector:
     app: vehicle-manager
 ---
+# Persistent volume claim to bind to a NFS volume provisioned by NFS provisioner
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-storage
+  namespace: vehicle-manager
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs-client"
+  resources:
+    requests:
+      storage: 100Mi
+---
 # Vehicle Manager Web Server deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -44,7 +58,7 @@ spec:
       app: vehicle-manager
   replicas: 1
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
@@ -60,3 +74,10 @@ spec:
           ports:
             - containerPort: 8080
               name: web-server-port
+          volumeMounts:
+            - mountPath: "/home/vehicle-mgr/files-dir"
+              name: web-server-storage
+      volumes:
+        - name: web-server-storage
+          persistentVolumeClaim:
+            claimName: nfs-storage
