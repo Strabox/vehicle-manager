@@ -42,8 +42,9 @@ jobs:
       run: mvn -B docker:build
     - name: Publish Docker Image (built previously)
       run: mvn -B docker:push
-    - name: Get RSA Key to K3S
-      run: echo "${{ secrets.SSH_USER_KEY }}" > ssh_key
+    - uses: webfactory/ssh-agent@v0.2.0
+      with:
+          ssh-private-key: ${{ secrets.SSH_USER_KEY }}
     - name: Open Tunnel to K3S
       run: sudo ssh -p "${{ secrets.SSH_PORT }}" -i ssh_key "${{ secrets.SSH_CONNECTION }}" -N -L 25000:pi1:6443
     - uses: azure/k8s-set-context@v1
