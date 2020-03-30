@@ -42,9 +42,11 @@ jobs:
       run: mvn -B docker:build
     - name: Publish Docker Image (built previously)
       run: mvn -B docker:push
-    - uses: webfactory/ssh-agent@v0.2.0
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
       with:
-          ssh-private-key: ${{ secrets.SSH_USER_KEY }}
+        key: ${{ secrets.SSH_USER_KEY }}
+        known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
     - name: Open Tunnel to K3S
       run: sudo ssh -p "${{ secrets.SSH_PORT }}" -i ssh_key "${{ secrets.SSH_CONNECTION }}" -N -L 25000:pi1:6443
     - uses: azure/k8s-set-context@v1
