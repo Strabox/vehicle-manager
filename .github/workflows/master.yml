@@ -48,7 +48,7 @@ jobs:
         key: ${{ secrets.SSH_USER_KEY }}
         known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
     - name: Open Tunnel to K3S
-      run: sudo ssh -p "${{ secrets.SSH_PORT }}" -i ssh_key "${{ secrets.SSH_CONNECTION }}" -N -L 25000:pi1:6443
+      run: sudo ssh -p "${{ secrets.SSH_PORT }}"  "${{ secrets.SSH_CONNECTION }}" -N -L 25000:pi1:6443
     - uses: azure/k8s-set-context@v1
       with:
         method: kubeconfig
