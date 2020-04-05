@@ -61,7 +61,7 @@ jobs:
       # Install the SSH KEY on the VM ssh agent. 
       # SSH key should have .pem format https://therandombits.com/2016/01/create-pem-file-for-your-linux-server/.
       # Known hosts was obtained using ssh-keyscan tool over the SSH server.
-      - name: Install cluster ssh key...
+      - name: Install K3S cluster ssh key...
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_TUNNEL_USER_KEY }}
@@ -71,7 +71,7 @@ jobs:
         run: ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_CONNECTION }}" -f -N -L 25000:pi1:6443
       # Official Azure Action: Sets the 'kubectl' context for subsequente Kubernetes API interactions.
       # The secret is the content of the file kubeconfig-internet.yaml, which is prepared to talk with kubernetes via a SSH tunnel.
-      - name: Set Kubernets context...
+      - name: Set Kubernetes context...
         uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig
