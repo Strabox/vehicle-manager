@@ -32,7 +32,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       # Get project's version from Maven.
       - name: Get project's version...
-        run: echo ::set-env name=VERSION::$(mvn help:evaluate -D expression=project.version -q -D forceStdout -D build.number=${{ github.run_number }})
+        run: echo ::set-env name=PROJECT_VERSION::$(mvn help:evaluate -D expression=project.version -q -D forceStdout -D build.number=${{ github.run_number }})
       # Echo project's version.
       - name: Echo project's version...
         run: echo $VERSION  
@@ -85,5 +85,5 @@ jobs:
           namespace: "vehicle-manager"
           manifests: |
             ./kubernetes/vehicle-mngr-deploy.yaml
-          images: 'docker.io/strabox/vehicle-manager:${{ VERSION }}'
+          images: 'docker.io/strabox/vehicle-manager:${{ PROJECT_VERSION }}'
           kubectl-version: 'latest'
