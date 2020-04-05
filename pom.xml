@@ -47,7 +47,7 @@
 		<!-- Dependencies Versions -->
 		<commons.validator.version>1.5.1</commons.validator.version>
 		<commons.io.version>2.5</commons.io.version>
-		<tika.core.version>1.13</tika.core.version>
+		<tika.core.version>1.22</tika.core.version>
 
 		<!-- Plugins Versions -->
 		<maven.compiler.plugin.vesion>3.8.1</maven.compiler.plugin.vesion>
