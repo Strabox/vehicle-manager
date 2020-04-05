@@ -85,5 +85,5 @@ jobs:
           namespace: "vehicle-manager"
           manifests: |
             ./kubernetes/vehicle-mngr-deploy.yaml
-          images: 'docker.io/strabox/vehicle-manager:${{ PROJECT_VERSION }}'
+          images: 'docker.io/strabox/vehicle-manager:${{ env.PROJECT_VERSION }}'
           kubectl-version: 'latest'
