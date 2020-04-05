@@ -1,5 +1,5 @@
-![Master branch CI/CD workflow](https://github.com/Strabox/vehicle-manager/workflows/Master%20branch%20CI/CD%20job/badge.svg?branch=master)
-![Development branch CI workflow](https://github.com/Strabox/vehicle-manager/workflows/Feature%20development%20branches%20CI%20workflow/badge.svg?branch=feature%2Fdevelopment)
+![Master branch CI/CD workflow](https://github.com/Strabox/vehicle-manager/workflows/Master%20branch%20CI/CD%20workflow/badge.svg)
+![Development branch CI workflow](https://github.com/Strabox/vehicle-manager/workflows/Master%20branch%20CI/CD%20workflow/badge.svg?branch=feature%2Fdevelopment)
 ![Last version](https://badgen.net/github/release/strabox/vehicle-manager)
 ![Last commit](https://badgen.net/github/last-commit/strabox/vehicle-manager)
 ![License](https://badgen.net/github/license/strabox/vehicle-manager)

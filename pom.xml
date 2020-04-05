@@ -32,7 +32,7 @@
 	<properties>
 		<!-- Project Version (CHANGE PROJECT VERSION HERE) -->
 		<build.number>local</build.number>
-		<revision>1.1.3-${build.number}</revision>
+		<revision>1.1.0-${build.number}-SNAPSHOT</revision>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<copyrights.date>2015-2020</copyrights.date>
@@ -151,6 +151,7 @@
 	<build>
 		<plugins>
 
+			<!-- Plugin to compile java source code. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -194,6 +195,7 @@
 			</plugin>
 
 			<!-- Used to obtain project's version to outside maven world. -->
+			<!-- Documentation: http://maven.apache.org/plugins/maven-help-plugin/ -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-help-plugin</artifactId>
@@ -213,6 +215,7 @@
 
 	</build>
 
+	<!-- Profiles: dev for development environment and dist for qa/prd environments. -->
 	<profiles>
 		<profile>
 			<id>dev</id>

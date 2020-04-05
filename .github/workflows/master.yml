@@ -35,7 +35,7 @@ jobs:
         run: echo ::set-env name=PROJECT_VERSION::$(mvn help:evaluate -D expression=project.version -q -D forceStdout -D build.number=${{ github.run_number }})
       # Echo project's version.
       - name: Echo project's version...
-        run: echo $VERSION  
+        run: echo $PROJECT_VERSION  
       # Build and test the project..
       # TODO: Pass this test phase for a Docker image to do it.
       - name: Building and testing...
@@ -51,10 +51,10 @@ jobs:
       # Login in the a Docker registry to push the image. For now using the DockerHub, while K3S can't pull from GitHub packages, due to containerd problem.
       - name: Login to Container Images Registry...
         run: echo "${{ secrets.DOCKER_HUB_REGISTRY_PASSWORD }}" | docker login docker.io -u "${{ secrets.DOCKER_HUB_REGISTRY_USERNAME }}" --password-stdin
-      # Build docker images using maven docker plugin. 
+      # Build docker images (using maven docker plugin). 
       - name: Building Docker Images...
         run: mvn -B docker:build -D build.number=${{ github.run_number }}
-      # Push the previous images into the Docker registry.  
+      # Push the previous images into the Docker registry (using maven docker plugin).  
       - name: Publish Docker Images...
         run: mvn -B docker:push -D build.number=${{ github.run_number }}
 
@@ -69,14 +69,13 @@ jobs:
       # Open a tunnel in background (-f) and and binds a reroutes (-L) a local port to inside cluster K3S API port.
       - name: Open tunnel to K3S cluster...
         run: ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_CONNECTION }}" -f -N -L 25000:pi1:6443
-      # Official Azure Action: Sets the 'kubectl' context for subsequente Kubernetes API interactions.
+      # Official Azure Action: Sets the 'kubectl' context for subsequent Kubernetes API interactions.
       # The secret is the content of the file kubeconfig-internet.yaml, which is prepared to talk with kubernetes via a SSH tunnel.
       - name: Set Kubernetes context...
         uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig
           kubeconfig: "${{ secrets.K3S_KUBECONFIG }}"
-        id: setcontext
       # Official Azure Action: Deploys a kubernetes manifest file via a kubectl submission.
       # Important to pass the namespace for the target deployment.
       - name: Kubernetes deploy...
