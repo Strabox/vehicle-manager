@@ -33,7 +33,7 @@ jobs:
       # Build and test the project..
       # TODO: Pass this test phase for a Docker image to do it.
       - name: Building and testing...
-        run: mvn -B package -D build.number=${{ GITHUB_RUN_NUMBER }} -D skipTests
+        run: mvn -B package -D build.number=$GITHUB_RUN_NUMBER -D skipTests
 
       # Build Docker Images for different architectures https://community.arm.com/developer/tools-software/tools/b/tools-software-ides-blog/posts/getting-started-with-docker-for-arm-on-linux  
       # Used in order for us to be able to build linux/arm/v7 images.
