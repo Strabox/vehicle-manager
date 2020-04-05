@@ -11,12 +11,12 @@
 
 	<groupId>com.pt.pires</groupId>
 	<artifactId>vehicle-manager</artifactId>
-	<version>1.1.3-Dev</version>
+	<version>${revision}</version>
 
 	<packaging>jar</packaging>
 
 	<name>Vehicle Manager</name>
-	<description>Project to manage vehicle maintenance</description>
+	<description>Project to manage vehicle maintenance data.</description>
 
 	<developers>
 		<developer>
@@ -30,10 +30,15 @@
 	</developers>
 
 	<properties>
+		<!-- Project Version (CHANGE PROJECT VERSION HERE) -->
+		<build.number>local</build.number>
+		<revision>1.1.3-${build.number}</revision>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<copyrights.date>2015-2020</copyrights.date>
 		<start-class>com.pt.pires.VehicleManagerApplication</start-class>
 
+		<!-- CI/CD -->
 		<docker.image.name>strabox/vehicle-manager</docker.image.name>
 
 		<!-- Java Version -->
