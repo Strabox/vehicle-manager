@@ -8,7 +8,7 @@
 
 Vehicle Maintenance Manager used to maintain maintenance data about different kinds of vehicled in order to track its history.
 
-It also support email based notifications to alert about periodic maintenance procedures for some vehicles.
+It also support email based notifications to alert about periodic maintenance procedures for some vehicles..
 
 ## Contributing/Development
 
