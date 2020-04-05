@@ -30,10 +30,16 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      # Get project's version from Maven.
+      - name: Get project's version...
+        run: echo ::set-env name=VERSION::$(mvn help:evaluate -D expression=project.version -q -D forceStdout -D build.number=${{ github.run_number }})
+      # Echo project's version.
+      - name: Echo project's version...
+        run: echo $VERSION  
       # Build and test the project..
       # TODO: Pass this test phase for a Docker image to do it.
       - name: Building and testing...
-        run: mvn -B package -D build.number=$GITHUB_RUN_NUMBER -D skipTests
+        run: mvn -B package -D build.number=${{ github.run_number }} -D skipTests
 
       # Build Docker Images for different architectures https://community.arm.com/developer/tools-software/tools/b/tools-software-ides-blog/posts/getting-started-with-docker-for-arm-on-linux  
       # Used in order for us to be able to build linux/arm/v7 images.
@@ -47,10 +53,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_HUB_REGISTRY_PASSWORD }}" | docker login docker.io -u "${{ secrets.DOCKER_HUB_REGISTRY_USERNAME }}" --password-stdin
       # Build docker images using maven docker plugin. 
       - name: Building Docker Images...
-        run: mvn -B docker:build
+        run: mvn -B docker:build -D build.number=${{ github.run_number }}
       # Push the previous images into the Docker registry.  
       - name: Publish Docker Images...
-        run: mvn -B docker:push
+        run: mvn -B docker:push -D build.number=${{ github.run_number }}
 
       # Install the SSH KEY on the VM ssh agent. 
       # SSH key should have .pem format https://therandombits.com/2016/01/create-pem-file-for-your-linux-server/.
@@ -64,7 +70,7 @@ jobs:
       - name: Open tunnel to K3S cluster...
         run: ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_CONNECTION }}" -f -N -L 25000:pi1:6443
       # Official Azure Action: Sets the 'kubectl' context for subsequente Kubernetes API interactions.
-      # The secret is the content of the file kubeconfig-internet.yaml, which is prepared to talk with kubernetes via a tunnel.
+      # The secret is the content of the file kubeconfig-internet.yaml, which is prepared to talk with kubernetes via a SSH tunnel.
       - name: Set Kubernets context...
         uses: azure/k8s-set-context@v1
         with:
@@ -78,5 +84,6 @@ jobs:
         with:
           namespace: "vehicle-manager"
           manifests: |
-              ./kubernetes/vehicle-mngr-deploy.yaml
+            ./kubernetes/vehicle-mngr-deploy.yaml
+          images: 'docker.io/strabox/vehicle-manager:${{ VERSION }}'
           kubectl-version: 'latest'

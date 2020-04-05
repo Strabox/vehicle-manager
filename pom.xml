@@ -54,6 +54,7 @@
 		<spring.boot.plugin.version>1.3.5.RELEASE</spring.boot.plugin.version>
 		<docker.io.plugin.version>0.33.0</docker.io.plugin.version>
 		<maven.assembly.plugin.version>3.2.0</maven.assembly.plugin.version>
+		<maven.help.plugin.version>3.2.0</maven.help.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -190,6 +191,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>${maven.assembly.plugin.version}</version>
+			</plugin>
+
+			<!-- Used to obtain project's version to outside maven world. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-help-plugin</artifactId>
+				<version>${maven.help.plugin.version}</version>
 			</plugin>
 
 		</plugins>
